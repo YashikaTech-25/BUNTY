@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerOS Admin — System Settings</title>
+<style>
+:root { --bg-primary:#0f172a; --bg-secondary:#1e293b; --bg-tertiary:#334155; --text-primary:#f8fafc; --text-secondary:#94a3b8; --text-muted:#64748b; --accent-primary:#6366f1; --accent-success:#22c55e; --accent-warning:#f59e0b; --accent-danger:#ef4444; --border-color:#334155; --radius:10px; --shadow:0 4px 6px -1px rgba(0,0,0,0.3); --shadow-lg:0 10px 25px -5px rgba(0,0,0,0.4); --gradient:linear-gradient(135deg,#6366f1,#8b5cf6); }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg-primary); color:var(--text-primary); min-height:100vh; display:flex; }
+.sidebar { width:260px; background:var(--bg-secondary); border-right:1px solid var(--border-color); display:flex; flex-direction:column; position:fixed; left:0; top:0; bottom:0; z-index:100; transition:transform 0.3s ease; }
+.sidebar-header { padding:24px 20px; border-bottom:1px solid var(--border-color); display:flex; align-items:center; gap:12px; }
+.sidebar-header .logo-icon { width:36px; height:36px; background:var(--gradient); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:bold; color:white; }
+.sidebar-header h1 { font-size:18px; font-weight:700; letter-spacing:-0.5px; }
+.sidebar-header span { font-size:12px; color:var(--accent-primary); font-weight:600; margin-left:4px; }
+.nav-list { padding:16px 12px; list-style:none; flex:1; overflow-y:auto; }
+.nav-list li { margin-bottom:4px; }
+.nav-list a { display:flex; align-items:center; gap:12px; padding:12px 16px; border-radius:var(--radius); color:var(--text-secondary); text-decoration:none; font-size:14px; font-weight:500; transition:all 0.2s ease; cursor:pointer; }
+.nav-list a:hover { background:var(--bg-tertiary); color:var(--text-primary); }
+.nav-list a.active { background:var(--gradient); color:white; box-shadow:var(--shadow); }
+.sidebar-footer { padding:16px; border-top:1px solid var(--border-color); }
+.logout-btn { width:100%; padding:10px; background:transparent; border:1px solid var(--border-color); border-radius:var(--radius); color:var(--text-secondary); font-size:14px; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:8px; }
+.logout-btn:hover { background:var(--accent-danger); color:white; border-color:var(--accent-danger); }
+.main-content { margin-left:260px; flex:1; display:flex; flex-direction:column; min-height:100vh; }
+.top-bar { display:flex; align-items:center; justify-content:space-between; padding:16px 28px; background:var(--bg-secondary); border-bottom:1px solid var(--border-color); position:sticky; top:0; z-index:50; }
+.menu-toggle { display:none; background:none; border:none; color:var(--text-primary); font-size:24px; cursor:pointer; }
+.page-title { font-size:20px; font-weight:700; }
+.content-area { padding:28px; flex:1; max-width:800px; }
+.settings-card { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:24px; margin-bottom:20px; }
+.settings-card h2 { font-size:18px; font-weight:700; margin-bottom:20px; display:flex; align-items:center; gap:10px; }
+.settings-card h2 .icon { font-size:22px; }
+.form-group { margin-bottom:16px; }
+.form-group label { display:block; font-size:13px; font-weight:500; color:var(--text-secondary); margin-bottom:6px; }
+.form-group input, .form-group select, .form-group textarea {
+width:100%; padding:10px 14px; background:var(--bg-primary); border:1px solid var(--border-color); border-radius:var(--radius); color:var(--text-primary); font-size:13px; font-family:inherit; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline:none; border-color:var(--accent-primary); }
+.form-group textarea { min-height:80px; resize:vertical; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.toggle-row { display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid rgba(51,65,85,0.4); }
+.toggle-row:last-child { border-bottom:none; }
+.toggle-info h4 { font-size:14px; font-weight:600; margin-bottom:2px; }
+.toggle-info p { font-size:12px; color:var(--text-muted); }
+.toggle { width:44px; height:24px; background:var(--bg-tertiary); border-radius:12px; position:relative; cursor:pointer; transition:background 0.2s; flex-shrink:0; }
+.toggle.active { background:var(--accent-primary); }
+.toggle::after { content:''; position:absolute; top:2px; left:2px; width:20px; height:20px; background:white; border-radius:50%; transition:transform 0.2s; }
+.toggle.active::after { transform:translateX(20px); }
+.btn { padding:10px 20px; border:none; border-radius:var(--radius); font-size:14px; font-weight:600; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:8px; }
+.btn-primary { background:var(--gradient); color:white; }
+.btn-secondary { background:var(--bg-tertiary); color:var(--text-primary); border:1px solid var(--border-color); }
+.btn-danger { background:var(--accent-danger); color:white; }
+.btn-row { display:flex; gap:12px; margin-top:20px; }
+.danger-zone { border:1px solid rgba(239,68,68,0.3); background:rgba(239,68,68,0.05); }
+.danger-zone h2 { color:var(--accent-danger); }
+.toast-container { position:fixed; top:24px; right:24px; z-index:1000; display:flex; flex-direction:column; gap:10px; }
+.toast { padding:14px 20px; border-radius:var(--radius); font-size:14px; font-weight:500; display:flex; align-items:center; gap:10px; animation:slideIn 0.3s ease; max-width:400px; box-shadow:var(--shadow-lg); }
+.toast.success { background:var(--accent-success); color:white; }
+.toast.error { background:var(--accent-danger); color:white; }
+.toast.info { background:var(--accent-primary); color:white; }
+@keyframes slideIn { from { transform:translateX(100%); opacity:0; } to { transform:translateX(0); opacity:1; } }
+.sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:99; }
+.sidebar-overlay.active { display:block; }
+@media(max-width:768px){ .sidebar { transform:translateX(-100%); } .sidebar.open { transform:translateX(0); } .main-content { margin-left:0; } .menu-toggle { display:block; } .content-area { padding:16px; } .form-row { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<div class="logo-icon">C</div>
+<h1>CareerOS <span>Admin</span></h1>
+</div>
+<ul class="nav-list">
+<li><a href="../admin.html">📅 <span>Social Calendar</span></a></li>
+<li><a href="../analytics.html">📊 <span>Analytics</span></a></li>
+<li><a href="../leads.html">🔥 <span>Hot Leads</span></a></li>
+<li><a href="referrals.html">🎁 <span>Referrals</span></a></li>
+<li><a href="users.html">👥 <span>Users</span></a></li>
+<li><a href="settings.html" class="active">⚙️ <span>Settings</span></a></li>
+</ul>
+<div class="sidebar-footer">
+<button class="logout-btn" onclick="logout()">🚪 <span>Logout</span></button>
+</div>
+</aside>
+<div class="main-content">
+<header class="top-bar">
+<div class="top-bar-left">
+<button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+<div class="page-title">System Settings</div>
+</div>
+</header>
+<main class="content-area">
+<div class="settings-card">
+<h2><span class="icon">🏢</span> Company Information</h2>
+<div class="form-row">
+<div class="form-group">
+<label>Company Name</label>
+<input type="text" id="companyName" value="Imus Info Systems Pvt. Ltd.">
+</div>
+<div class="form-group">
+<label>Website</label>
+<input type="text" id="companyWebsite" value="https://www.imusinfosystems.com">
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label>Support Email</label>
+<input type="email" id="supportEmail" value="support@imusinfosystems.com">
+</div>
+<div class="form-group">
+<label>GSTIN</label>
+<input type="text" id="gstin" value="27AABCZ1234D1Z5">
+</div>
+</div>
+<div class="btn-row">
+<button class="btn btn-primary" onclick="saveSettings()">💾 Save Changes</button>
+</div>
+</div>
+<div class="settings-card">
+<h2><span class="icon">💳</span> Payment Settings</h2>
+<div class="form-row">
+<div class="form-group">
+<label>Razorpay Key ID</label>
+<input type="text" id="razorpayKey" value="rzp_test_************" placeholder="Enter Razorpay Key ID">
+</div>
+<div class="form-group">
+<label>Razorpay Secret</label>
+<input type="password" id="razorpaySecret" value="************" placeholder="Enter Razorpay Secret">
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label>Currency</label>
+<select id="currency">
+<option value="INR" selected>INR (₹)</option>
+<option value="USD">USD ($)</option>
+</select>
+</div>
+<div class="form-group">
+<label>Tax Rate (%)</label>
+<input type="number" id="taxRate" value="18" min="0" max="100">
+</div>
+</div>
+<div class="btn-row">
+<button class="btn btn-primary" onclick="saveSettings()">💾 Save Changes</button>
+<button class="btn btn-secondary" onclick="testPayment()">🧪 Test Payment</button>
+</div>
+</div>
+<div class="settings-card">
+<h2><span class="icon">📧</span> Email Settings</h2>
+<div class="form-row">
+<div class="form-group">
+<label>SMTP Host</label>
+<input type="text" id="smtpHost" value="smtp.sendgrid.net">
+</div>
+<div class="form-group">
+<label>SMTP Port</label>
+<input type="number" id="smtpPort" value="587">
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label>SMTP User</label>
+<input type="text" id="smtpUser" value="apikey">
+</div>
+<div class="form-group">
+<label>SMTP Password</label>
+<input type="password" id="smtpPassword" value="************">
+</div>
+</div>
+<div class="form-group">
+<label>From Name</label>
+<input type="text" id="fromName" value="CareerOS Team">
+</div>
+<div class="btn-row">
+<button class="btn btn-primary" onclick="saveSettings()">💾 Save Changes</button>
+<button class="btn btn-secondary" onclick="testEmail()">🧪 Send Test Email</button>
+</div>
+</div>
+<div class="settings-card">
+<h2><span class="icon">🔔</span> Notifications</h2>
+<div class="toggle-row">
+<div class="toggle-info">
+<h4>Admin Email Alerts</h4>
+<p>Receive alerts for new signups, failed payments, and system errors</p>
+</div>
+<div class="toggle active" id="toggleAdminEmail" onclick="toggleSwitch(this)"></div>
+</div>
+<div class="toggle-row">
+<div class="toggle-info">
+<h4>Weekly Digest</h4>
+<p>Weekly summary of new users, revenue, and top referrals</p>
+</div>
+<div class="toggle active" id="toggleWeekly" onclick="toggleSwitch(this)"></div>
+</div>
+<div class="toggle-row">
+<div class="toggle-info">
+<h4>Lead Notifications</h4>
+<p>Instant notification when a hot lead is detected</p>
+</div>
+<div class="toggle" id="toggleLeads" onclick="toggleSwitch(this)"></div>
+</div>
+<div class="btn-row">
+<button class="btn btn-primary" onclick="saveSettings()">💾 Save Preferences</button>
+</div>
+</div>
+<div class="settings-card danger-zone">
+<h2><span class="icon">⚠️</span> Danger Zone</h2>
+<div class="toggle-row" style="border-bottom:none;">
+<div class="toggle-info">
+<h4>Maintenance Mode</h4>
+<p>Put the entire site in maintenance mode. Only admins can access.</p>
+</div>
+<button class="btn btn-danger" onclick="toggleMaintenance()">🚧 Enable</button>
+</div>
+<div class="toggle-row" style="border-bottom:none; margin-top:12px;">
+<div class="toggle-info">
+<h4>Clear All Cache</h4>
+<p>Clear Redis cache, CDN cache, and service worker cache.</p>
+</div>
+<button class="btn btn-danger" onclick="clearCache()">🗑️ Clear Cache</button>
+</div>
+</div>
+</main>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+<script>
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebarOverlay').classList.toggle('active'); }
+document.getElementById('sidebarOverlay').addEventListener('click',toggleSidebar);
+function logout(){ localStorage.clear(); location.href='login.html'; }
+function toggleSwitch(el){ el.classList.toggle('active'); }
+function saveSettings(){ showToast('Settings saved successfully','success'); }
+function testPayment(){ showToast('Test payment initiated — check Razorpay dashboard','info'); }
+function testEmail(){ showToast('Test email sent to admin email','info'); }
+function toggleMaintenance(){ showToast('Maintenance mode toggled','warning'); }
+function clearCache(){ showToast('All caches cleared successfully','success'); }
+function showToast(m,t='info'){
+const c=document.getElementById('toastContainer'); const d=document.createElement('div'); d.className='toast '+t;
+const i={success:'✅',error:'❌',warning:'⚠️',info:'ℹ️'}; d.innerHTML=(i[t]||'ℹ️')+' '+m; c.appendChild(d); setTimeout(()=>d.remove(),5000);
+}
+</script>
+</body>
+</html>

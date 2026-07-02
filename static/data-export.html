@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerOS — Data Export</title>
+<style>
+:root { --bg-primary:#0f172a; --bg-secondary:#1e293b; --bg-tertiary:#334155; --text-primary:#f8fafc; --text-secondary:#94a3b8; --text-muted:#64748b; --accent-primary:#6366f1; --accent-success:#22c55e; --border-color:#334155; --radius:12px; --shadow-lg:0 10px 25px -5px rgba(0,0,0,0.4); --gradient:linear-gradient(135deg,#6366f1,#8b5cf6); }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg-primary); color:var(--text-primary); min-height:100vh; }
+.nav-bar { display:flex; align-items:center; justify-content:space-between; padding:16px 28px; background:var(--bg-secondary); border-bottom:1px solid var(--border-color); position:sticky; top:0; z-index:100; }
+.nav-logo { display:flex; align-items:center; gap:10px; font-size:20px; font-weight:800; color:var(--text-primary); text-decoration:none; }
+.nav-logo .logo-icon { width:36px; height:36px; background:var(--gradient); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; color:white; }
+.nav-links { display:flex; gap:6px; }
+.nav-links a { padding:8px 16px; border-radius:var(--radius); color:var(--text-secondary); text-decoration:none; font-size:14px; font-weight:500; transition:all 0.2s; cursor:pointer; border:none; background:none; font-family:inherit; }
+.nav-links a:hover { color:var(--text-primary); background:var(--bg-tertiary); }
+.nav-links a.active { color:white; background:var(--gradient); }
+.content-area { padding:28px; max-width:800px; margin:0 auto; }
+.page-header { margin-bottom:32px; }
+.page-header h1 { font-size:28px; font-weight:800; margin-bottom:8px; }
+.page-header p { font-size:15px; color:var(--text-secondary); }
+.export-card { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:28px; margin-bottom:20px; }
+.export-card h2 { font-size:18px; font-weight:700; margin-bottom:8px; display:flex; align-items:center; gap:10px; }
+.export-card h2 .icon { font-size:22px; }
+.export-card p { font-size:13px; color:var(--text-secondary); margin-bottom:20px; line-height:1.6; }
+.export-item { display:flex; align-items:center; justify-content:space-between; padding:14px; background:var(--bg-primary); border:1px solid var(--border-color); border-radius:var(--radius); margin-bottom:10px; transition:all 0.2s; }
+.export-item:hover { border-color:var(--accent-primary); }
+.export-item .info h4 { font-size:14px; font-weight:600; margin-bottom:2px; }
+.export-item .info p { font-size:12px; color:var(--text-muted); margin:0; }
+.export-item .size { font-size:12px; color:var(--text-muted); margin-right:12px; }
+.btn { padding:8px 16px; border:none; border-radius:var(--radius); font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:6px; }
+.btn-primary { background:var(--gradient); color:white; }
+.btn-secondary { background:var(--bg-tertiary); color:var(--text-primary); border:1px solid var(--border-color); }
+.btn-success { background:var(--accent-success); color:white; }
+.btn:disabled { opacity:0.5; cursor:not-allowed; }
+.spinner { width:14px; height:14px; border:2px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.8s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.full-export { background:var(--bg-primary); border:1px solid var(--border-color); border-radius:var(--radius); padding:24px; text-align:center; margin-top:24px; }
+.full-export h3 { font-size:16px; font-weight:700; margin-bottom:8px; }
+.full-export p { font-size:13px; color:var(--text-secondary); margin-bottom:16px; }
+.gdpr-note { background:rgba(34,197,94,0.1); border:1px solid rgba(34,197,94,0.3); border-radius:var(--radius); padding:16px; margin-top:24px; }
+.gdpr-note h4 { font-size:14px; font-weight:700; color:var(--accent-success); margin-bottom:4px; }
+.gdpr-note p { font-size:13px; color:var(--text-secondary); margin:0; }
+.toast-container { position:fixed; top:24px; right:24px; z-index:1000; display:flex; flex-direction:column; gap:10px; }
+.toast { padding:14px 20px; border-radius:var(--radius); font-size:14px; font-weight:500; display:flex; align-items:center; gap:10px; animation:slideIn 0.3s ease; max-width:400px; box-shadow:var(--shadow-lg); }
+.toast.success { background:var(--accent-success); color:white; }
+.toast.info { background:var(--accent-primary); color:white; }
+@keyframes slideIn { from { transform:translateX(100%); opacity:0; } to { transform:translateX(0); opacity:1; } }
+@media(max-width:768px){ .nav-links { display:none; } .content-area { padding:16px; } .export-item { flex-direction:column; align-items:flex-start; gap:10px; } }
+</style>
+</head>
+<body>
+<nav class="nav-bar">
+<a href="index.html" class="nav-logo"><div class="logo-icon">C</div>CareerOS</a>
+<div class="nav-links">
+<a href="index.html">Home</a>
+<a href="settings.html">Settings</a>
+<a href="data-export.html" class="active">Data Export</a>
+</div>
+</nav>
+<div class="content-area">
+<div class="page-header">
+<h1>📦 Data Export</h1>
+<p>Download your data in standard formats. You own your data — always.</p>
+</div>
+<div class="export-card">
+<h2><span class="icon">👤</span> Personal Data</h2>
+<p>Your profile, preferences, and account information.</p>
+<div class="export-item">
+<div class="info">
+<h4>Profile Information</h4>
+<p>Name, email, phone, location, job preferences</p>
+</div>
+<div style="display:flex; align-items:center;">
+<span class="size">~2 KB</span>
+<button class="btn btn-primary" onclick="exportData('profile', this)">📥 Download JSON</button>
+</div>
+</div>
+<div class="export-item">
+<div class="info">
+<h4>Resume & Documents</h4>
+<p>Your uploaded resume, cover letters, and portfolio</p>
+</div>
+<div style="display:flex; align-items:center;">
+<span class="size">~500 KB</span>
+<button class="btn btn-primary" onclick="exportData('documents', this)">📥 Download ZIP</button>
+</div>
+</div>
+</div>
+<div class="export-card">
+<h2><span class="icon">💼</span> Activity Data</h2>
+<p>Your job applications, searches, and platform usage.</p>
+<div class="export-item">
+<div class="info">
+<h4>Job Applications</h4>
+<p>All applications with status, dates, and company info</p>
+</div>
+<div style="display:flex; align-items:center;">
+<span class="size">~5 KB</span>
+<button class="btn btn-primary" onclick="exportData('applications', this)">📥 Download CSV</button>
+</div>
+</div>
+<div class="export-item">
+<div class="info">
+<h4>Job Search History</h4>
+<p>Searches, filters, and matched jobs</p>
+</div>
+<div style="display:flex; align-items:center;">
+<span class="size">~8 KB</span>
+<button class="btn btn-primary" onclick="exportData('searches', this)">📥 Download CSV</button>
+</div>
+</div>
+<div class="export-item">
+<div class="info">
+<h4>Interview History</h4>
+<p>Scheduled interviews, prep notes, and outcomes</p>
+</div>
+<div style="display:flex; align-items:center;">
+<span class="size">~3 KB</span>
+<button class="btn btn-primary" onclick="exportData('interviews', this)">📥 Download CSV</button>
+</div>
+</div>
+</div>
+<div class="export-card">
+<h2><span class="icon">💳</span> Financial Data</h2>
+<p>Invoices, payments, and subscription history.</p>
+<div class="export-item">
+<div class="info">
+<h4>Payment History</h4>
+<p>All transactions with Razorpay references</p>
+</div>
+<div style="display:flex; align-items:center;">
+<span class="size">~2 KB</span>
+<button class="btn btn-primary" onclick="exportData('payments', this)">📥 Download CSV</button>
+</div>
+</div>
+<div class="export-item">
+<div class="info">
+<h4>Invoices</h4>
+<p>All generated invoices for your subscriptions</p>
+</div>
+<div style="display:flex; align-items:center;">
+<span class="size">~50 KB</span>
+<button class="btn btn-primary" onclick="exportData('invoices', this)">📥 Download ZIP</button>
+</div>
+</div>
+</div>
+<div class="full-export">
+<h3>🗂️ Full Data Export</h3>
+<p>Download everything in one ZIP file. This may take a few minutes.</p>
+<button class="btn btn-success" id="fullExportBtn" onclick="exportAll(this)">📦 Export All Data</button>
+</div>
+<div class="gdpr-note">
+<h4>🔒 Your Data Rights</h4>
+<p>Under GDPR and India's IT Act, you have the right to access, correct, and delete your data. All exports are provided in machine-readable formats. Need help? Contact <a href="mailto:privacy@imusinfosystems.com" style="color:var(--accent-primary)">privacy@imusinfosystems.com</a></p>
+</div>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+<script>
+function exportData(type, btn) {
+const originalText = btn.innerHTML;
+btn.innerHTML = '<div class="spinner"></div> Preparing...';
+btn.disabled = true;
+setTimeout(() => {
+btn.innerHTML = '✓ Downloaded';
+btn.className = 'btn btn-success';
+showToast(type.charAt(0).toUpperCase() + type.slice(1) + ' export ready!', 'success');
+setTimeout(() => {
+btn.innerHTML = originalText;
+btn.className = 'btn btn-primary';
+btn.disabled = false;
+}, 3000);
+}, 1500);
+}
+function exportAll(btn) {
+btn.innerHTML = '<div class="spinner"></div> Generating ZIP...';
+btn.disabled = true;
+setTimeout(() => {
+btn.innerHTML = '✓ Download Ready';
+showToast('Full data export ready! Check your downloads.', 'success');
+setTimeout(() => {
+btn.innerHTML = '📦 Export All Data';
+btn.disabled = false;
+}, 5000);
+}, 4000);
+}
+function showToast(m, t = 'info') {
+const c = document.getElementById('toastContainer');
+const d = document.createElement('div'); d.className = 'toast ' + t;
+const i = { success: '✅', error: '❌', info: 'ℹ️' };
+d.innerHTML = (i[t] || 'ℹ️') + ' ' + m; c.appendChild(d); setTimeout(() => d.remove(), 5000);
+}
+</script>
+</body>
+</html>

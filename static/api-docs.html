@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerOS — API Documentation</title>
+<style>
+:root { --bg-primary:#0f172a; --bg-secondary:#1e293b; --bg-tertiary:#334155; --text-primary:#f8fafc; --text-secondary:#94a3b8; --text-muted:#64748b; --accent-primary:#6366f1; --accent-success:#22c55e; --border-color:#334155; --radius:10px; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg-primary); color:var(--text-primary); min-height:100vh; display:flex; }
+.sidebar { width:260px; background:var(--bg-secondary); border-right:1px solid var(--border-color); position:fixed; left:0; top:0; bottom:0; overflow-y:auto; z-index:100; }
+.sidebar-header { padding:20px; border-bottom:1px solid var(--border-color); }
+.sidebar-header h1 { font-size:16px; font-weight:700; }
+.sidebar-header p { font-size:12px; color:var(--text-muted); }
+.nav-group { padding:12px 0; }
+.nav-group h3 { padding:8px 20px; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); font-weight:600; }
+.nav-group a { display:block; padding:8px 20px; color:var(--text-secondary); text-decoration:none; font-size:13px; transition:all 0.2s; }
+.nav-group a:hover, .nav-group a.active { color:var(--text-primary); background:rgba(99,102,241,0.1); border-right:2px solid var(--accent-primary); }
+.main-content { margin-left:260px; flex:1; padding:40px; max-width:900px; }
+.endpoint { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); margin-bottom:24px; overflow:hidden; }
+.endpoint-header { padding:16px 20px; background:rgba(99,102,241,0.1); border-bottom:1px solid var(--border-color); display:flex; align-items:center; gap:12px; }
+.method { padding:4px 10px; border-radius:4px; font-size:11px; font-weight:700; text-transform:uppercase; }
+.method.get { background:rgba(59,130,246,0.2); color:#60a5fa; }
+.method.post { background:rgba(34,197,94,0.2); color:#86efac; }
+.endpoint-header h3 { font-size:14px; font-weight:600; font-family:monospace; }
+.endpoint-body { padding:20px; }
+.endpoint-body h4 { font-size:12px; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); margin:16px 0 8px; }
+.endpoint-body h4:first-child { margin-top:0; }
+.endpoint-body p { font-size:13px; color:var(--text-secondary); line-height:1.6; margin-bottom:8px; }
+.code-block { background:var(--bg-primary); border:1px solid var(--border-color); border-radius:6px; padding:12px; font-family:'Fira Code',monospace; font-size:12px; color:var(--text-secondary); overflow-x:auto; line-height:1.6; }
+.code-block .key { color:#a5b4fc; }
+.code-block .string { color:#86efac; }
+.code-block .number { color:#fcd34d; }
+.code-block .boolean { color:#f472b6; }
+@media(max-width:768px){ .sidebar { display:none; } .main-content { margin-left:0; padding:20px; } }
+</style>
+</head>
+<body>
+<aside class="sidebar">
+<div class="sidebar-header">
+<h1>CareerOS API</h1>
+<p>v1.4.0 Reference</p>
+</div>
+<div class="nav-group">
+<h3>Authentication</h3>
+<a href="#auth" class="active">Overview</a>
+</div>
+<div class="nav-group">
+<h3>Social</h3>
+<a href="#social-draft">GET /social/schedule/draft</a>
+<a href="#social-publish">POST /social/schedule/publish</a>
+<a href="#social-status">GET /social/schedule/status</a>
+</div>
+<div class="nav-group">
+<h3>Referrals</h3>
+<a href="#referral-stats">GET /referral/stats</a>
+</div>
+<div class="nav-group">
+<h3>Leads</h3>
+<a href="#leads-hot">GET /leads/hot</a>
+</div>
+<div class="nav-group">
+<h3>Health</h3>
+<a href="#health">GET /health</a>
+</div>
+</aside>
+<main class="main-content">
+<h1 style="font-size:28px; font-weight:800; margin-bottom:8px;">API Documentation</h1>
+<p style="color:var(--text-secondary); margin-bottom:32px;">Base URL: <code style="background:var(--bg-secondary); padding:4px 8px; border-radius:4px;">https://www.imusinfosystems.com/api</code></p>
+
+<h2 id="auth" style="font-size:20px; font-weight:700; margin-bottom:16px; color:var(--accent-primary);">Authentication</h2>
+<p style="color:var(--text-secondary); margin-bottom:24px; line-height:1.6;">Admin endpoints require <code style="background:var(--bg-secondary); padding:2px 6px; border-radius:4px;">X-Admin-Token</code> header. User endpoints require <code style="background:var(--bg-secondary); padding:2px 6px; border-radius:4px;">Authorization: Bearer {token}</code> header.</p>
+
+<div class="endpoint" id="social-draft">
+<div class="endpoint-header">
+<span class="method get">GET</span>
+<h3>/operations/social/schedule/draft</h3>
+</div>
+<div class="endpoint-body">
+<h4>Description</h4>
+<p>Generates a 30-day social media content calendar with AI-themed posts.</p>
+<h4>Headers</h4>
+<div class="code-block">X-Admin-Token: {your_admin_token}</div>
+<h4>Query Parameters</h4>
+<div class="code-block">admin_session (optional): Override token for session-based auth</div>
+<h4>Response</h4>
+<div class="code-block">{
+  <span class="key">"schedule"</span>: [
+    {
+      <span class="key">"date"</span>: <span class="string">"2026-07-04"</span>,
+      <span class="key">"time"</span>: <span class="string">"10:00"</span>,
+      <span class="key">"platform"</span>: <span class="string">"linkedin"</span>,
+      <span class="key">"theme"</span>: <span class="string">"Career Growth"</span>,
+      <span class="key">"content"</span>: <span class="string">"5 signs you're ready for a promotion..."</span>
+    }
+  ],
+  <span class="key">"total_posts"</span>: <span class="number">30</span>,
+  <span class="key">"status"</span>: <span class="string">"draft"</span>
+}</div>
+</div>
+</div>
+
+<div class="endpoint" id="social-publish">
+<div class="endpoint-header">
+<span class="method post">POST</span>
+<h3>/operations/social/schedule/publish</h3>
+</div>
+<div class="endpoint-body">
+<h4>Description</h4>
+<p>Publishes all draft posts to Postproxy for scheduling.</p>
+<h4>Headers</h4>
+<div class="code-block">X-Admin-Token: {your_admin_token}
+Content-Type: application/json</div>
+<h4>Body</h4>
+<div class="code-block">{
+  <span class="key">"admin_session"</span>: <span class="string">"your_admin_token"</span>
+}</div>
+<h4>Response</h4>
+<div class="code-block">{
+  <span class="key">"published"</span>: <span class="number">29</span>,
+  <span class="key">"failed"</span>: <span class="number">1</span>,
+  <span class="key">"total"</span>: <span class="number">30</span>
+}</div>
+</div>
+</div>
+
+<div class="endpoint" id="social-status">
+<div class="endpoint-header">
+<span class="method get">GET</span>
+<h3>/operations/social/schedule/status</h3>
+</div>
+<div class="endpoint-body">
+<h4>Description</h4>
+<p>Returns current publishing status across all posts.</p>
+<h4>Response</h4>
+<div class="code-block">{
+  <span class="key">"scheduled"</span>: <span class="number">15</span>,
+  <span class="key">"published"</span>: <span class="number">8</span>,
+  <span class="key">"failed"</span>: <span class="number">0</span>,
+  <span class="key">"total"</span>: <span class="number">30</span>
+}</div>
+</div>
+</div>
+
+<div class="endpoint" id="referral-stats">
+<div class="endpoint-header">
+<span class="method get">GET</span>
+<h3>/operations/referral/stats</h3>
+</div>
+<div class="endpoint-body">
+<h4>Description</h4>
+<p>Returns referral statistics for the authenticated user.</p>
+<h4>Headers</h4>
+<div class="code-block">Authorization: Bearer {user_session_token}</div>
+<h4>Response</h4>
+<div class="code-block">{
+  <span class="key">"referrals_pending"</span>: [...],
+  <span class="key">"referrals_converted"</span>: [...],
+  <span class="key">"total_bonus_xp"</span>: <span class="number">300</span>,
+  <span class="key">"total_credit_inr"</span>: <span class="number">3000</span>
+}</div>
+</div>
+</div>
+
+<div class="endpoint" id="leads-hot">
+<div class="endpoint-header">
+<span class="method get">GET</span>
+<h3>/operations/leads/hot</h3>
+</div>
+<div class="endpoint-body">
+<h4>Description</h4>
+<p>Returns high-scoring leads for priority sales outreach.</p>
+<h4>Headers</h4>
+<div class="code-block">X-Admin-Token: {your_admin_token}</div>
+<h4>Response</h4>
+<div class="code-block">{
+  <span class="key">"leads"</span>: [
+    {
+      <span class="key">"id"</span>: <span class="number">1</span>,
+      <span class="key">"name"</span>: <span class="string">"Rahul Sharma"</span>,
+      <span class="key">"email"</span>: <span class="string">"rahul@example.com"</span>,
+      <span class="key">"score"</span>: <span class="number">87</span>,
+      <span class="key">"status"</span>: <span class="string">"hot"</span>
+    }
+  ],
+  <span class="key">"count"</span>: <span class="number">12</span>,
+  <span class="key">"min_score"</span>: <span class="number">70</span>
+}</div>
+</div>
+</div>
+
+<div class="endpoint" id="health">
+<div class="endpoint-header">
+<span class="method get">GET</span>
+<h3>/health</h3>
+</div>
+<div class="endpoint-body">
+<h4>Description</h4>
+<p>Health check endpoint. Returns service status.</p>
+<h4>Response</h4>
+<div class="code-block">{
+  <span class="key">"status"</span>: <span class="string">"healthy"</span>,
+  <span class="key">"version"</span>: <span class="string">"1.4.0"</span>,
+  <span class="key">"timestamp"</span>: <span class="string">"2026-07-03T04:52:00Z"</span>
+}</div>
+</div>
+</div>
+</main>
+</body>
+</html>
