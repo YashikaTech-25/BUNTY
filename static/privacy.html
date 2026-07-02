@@ -5,87 +5,124 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CareerOS — Privacy Policy</title>
 <style>
-:root { --bg-primary:#0f172a; --bg-secondary:#1e293b; --text-primary:#f8fafc; --text-secondary:#94a3b8; --text-muted:#64748b; --accent-primary:#6366f1; --border-color:#334155; --radius:12px; --shadow-lg:0 10px 25px -5px rgba(0,0,0,0.4); }
+:root { --bg-primary:#0f172a; --bg-secondary:#1e293b; --bg-tertiary:#334155; --text-primary:#f8fafc; --text-secondary:#94a3b8; --text-muted:#64748b; --accent-primary:#6366f1; --accent-success:#22c55e; --border-color:#334155; --radius:12px; --shadow-lg:0 10px 25px -5px rgba(0,0,0,0.4); --gradient:linear-gradient(135deg,#6366f1,#8b5cf6); }
 * { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg-primary); color:var(--text-primary); min-height:100vh; line-height:1.7; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg-primary); color:var(--text-primary); min-height:100vh; line-height:1.6; }
 .nav-bar { display:flex; align-items:center; justify-content:space-between; padding:16px 28px; background:var(--bg-secondary); border-bottom:1px solid var(--border-color); position:sticky; top:0; z-index:100; }
 .nav-logo { display:flex; align-items:center; gap:10px; font-size:20px; font-weight:800; color:var(--text-primary); text-decoration:none; }
-.nav-logo .logo-icon { width:36px; height:36px; background:linear-gradient(135deg,#6366f1,#8b5cf6); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; color:white; }
+.nav-logo .logo-icon { width:36px; height:36px; background:var(--gradient); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; color:white; }
+.nav-links { display:flex; gap:6px; }
+.nav-links a { padding:8px 16px; border-radius:var(--radius); color:var(--text-secondary); text-decoration:none; font-size:14px; font-weight:500; transition:all 0.2s; cursor:pointer; border:none; background:none; font-family:inherit; }
+.nav-links a:hover { color:var(--text-primary); background:var(--bg-tertiary); }
 .content-area { padding:28px; max-width:800px; margin:0 auto; }
-.content-area h1 { font-size:28px; font-weight:800; margin-bottom:8px; }
-.content-area .updated { font-size:13px; color:var(--text-muted); margin-bottom:32px; }
-.content-area h2 { font-size:20px; font-weight:700; margin:32px 0 12px; color:var(--accent-primary); }
-.content-area h3 { font-size:16px; font-weight:700; margin:20px 0 8px; }
-.content-area p { font-size:14px; color:var(--text-secondary); margin-bottom:12px; }
-.content-area ul { margin:12px 0 12px 24px; color:var(--text-secondary); font-size:14px; }
-.content-area li { margin-bottom:6px; }
-.content-area a { color:var(--accent-primary); text-decoration:none; }
-.content-area a:hover { text-decoration:underline; }
+.page-header { margin-bottom:32px; }
+.page-header h1 { font-size:28px; font-weight:800; margin-bottom:8px; }
+.page-header p { font-size:15px; color:var(--text-secondary); }
+.legal-card { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:28px; margin-bottom:20px; }
+.legal-card h2 { font-size:18px; font-weight:700; margin-bottom:12px; color:var(--accent-primary); }
+.legal-card h3 { font-size:15px; font-weight:600; margin:16px 0 8px; }
+.legal-card p { font-size:14px; color:var(--text-secondary); margin-bottom:12px; }
+.legal-card ul { margin-left:20px; margin-bottom:12px; }
+.legal-card li { font-size:14px; color:var(--text-secondary); margin-bottom:6px; }
+.legal-card a { color:var(--accent-primary); text-decoration:none; }
+.legal-card a:hover { text-decoration:underline; }
+.legal-card .last-updated { font-size:12px; color:var(--text-muted); font-style:italic; margin-top:16px; padding-top:16px; border-top:1px solid var(--border-color); }
+.contact-box { background:var(--bg-primary); border:1px solid var(--border-color); border-radius:var(--radius); padding:20px; margin-top:20px; text-align:center; }
+.contact-box p { font-size:14px; color:var(--text-secondary); margin-bottom:12px; }
+.contact-box a { color:var(--accent-primary); font-weight:600; }
 @media(max-width:768px){ .content-area { padding:16px; } }
 </style>
 </head>
 <body>
 <nav class="nav-bar">
 <a href="index.html" class="nav-logo"><div class="logo-icon">C</div>CareerOS</a>
+<div class="nav-links">
+<a href="index.html">Home</a>
+<a href="privacy.html" style="color:var(--text-primary); background:var(--bg-tertiary);">Privacy</a>
+<a href="terms.html">Terms</a>
+</div>
 </nav>
 <div class="content-area">
-<h1>Privacy Policy</h1>
-<p class="updated">Last updated: July 3, 2026</p>
-
-<h2>1. Introduction</h2>
-<p>CareerOS ("we", "our", "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, store, and protect your personal information when you use our platform.</p>
-
-<h2>2. Information We Collect</h2>
-<h3>2.1 Personal Information</h3>
+<div class="page-header">
+<h1>🔒 Privacy Policy</h1>
+<p>How we collect, use, and protect your data.</p>
+</div>
+<div class="legal-card">
+<h2>1. Information We Collect</h2>
+<p>We collect information you provide directly to us, including:</p>
 <ul>
-<li>Name, email address, and phone number</li>
-<li>Professional information (resume, skills, experience, salary expectations)</li>
-<li>Job preferences and search history</li>
-<li>Payment information (processed securely via Razorpay)</li>
+<li><strong>Account Information:</strong> Name, email, phone number, and password when you register.</li>
+<li><strong>Profile Information:</strong> Job preferences, skills, experience, location, and salary expectations.</li>
+<li><strong>Resume & Documents:</strong> Files you upload for AI scoring and job matching.</li>
+<li><strong>Usage Data:</strong> Jobs you view, applications you submit, and features you interact with.</li>
+<li><strong>Payment Information:</strong> Processed securely via Razorpay. We do not store card details.</li>
 </ul>
-
-<h3>2.2 Usage Data</h3>
+</div>
+<div class="legal-card">
+<h2>2. How We Use Your Information</h2>
 <ul>
-<li>IP address, browser type, device information</li>
-<li>Pages visited, features used, time spent</li>
-<li>Application tracking data</li>
+<li>Provide personalized job recommendations and AI matching scores.</li>
+<li>Process payments and manage subscriptions.</li>
+<li>Send transactional emails (application updates, interview reminders).</li>
+<li>Improve our AI models and platform features.</li>
+<li>Comply with legal obligations and prevent fraud.</li>
 </ul>
-
-<h2>3. How We Use Your Information</h2>
+</div>
+<div class="legal-card">
+<h2>3. Data Sharing & Third Parties</h2>
+<p>We do <strong>not</strong> sell your personal data. We share data only with:</p>
 <ul>
-<li>Provide AI-powered job matching and resume scoring</li>
-<li>Send relevant job alerts and notifications</li>
-<li>Process payments and manage subscriptions</li>
-<li>Improve our AI algorithms and platform features</li>
-<li>Comply with legal obligations</li>
+<li><strong>Razorpay</strong> — for payment processing.</li>
+<li><strong>SendGrid</strong> — for email delivery.</li>
+<li><strong>Analytics providers</strong> — anonymized usage data for platform improvement.</li>
+<li><strong>Legal authorities</strong> — when required by law or to protect our rights.</li>
 </ul>
-
-<h2>4. Data Storage & Security</h2>
-<p>Your data is stored on secure servers in India, compliant with the Information Technology Act, 2000. We use SSL encryption, access controls, and regular security audits. We never sell your personal data to third parties.</p>
-
-<h2>5. Data Sharing</h2>
-<p>We share data only with:</p>
+</div>
+<div class="legal-card">
+<h2>4. Data Security</h2>
+<p>We implement industry-standard security measures:</p>
 <ul>
-<li>Payment processors (Razorpay) for transaction processing</li>
-<li>Analytics providers (anonymized data only)</li>
-<li>Legal authorities when required by law</li>
+<li>SSL/TLS encryption for all data transmission.</li>
+<li>Passwords hashed with bcrypt.</li>
+<li>Admin tokens with role-based access control.</li>
+<li>Regular security audits and vulnerability scanning.</li>
 </ul>
-
-<h2>6. Your Rights</h2>
-<p>You have the right to:</p>
+</div>
+<div class="legal-card">
+<h2>5. Your Rights (GDPR & IT Act)</h2>
 <ul>
-<li>Access, correct, or delete your personal data</li>
-<li>Export your data (available in Settings)</li>
-<li>Opt out of marketing communications</li>
-<li>Request account deletion</li>
+<li><strong>Access:</strong> Download all your data from <a href="data-export.html">Data Export</a>.</li>
+<li><strong>Correction:</strong> Update your profile anytime in <a href="settings.html">Settings</a>.</li>
+<li><strong>Deletion:</strong> Request account deletion — all data removed within 30 days.</li>
+<li><strong>Objection:</strong> Opt out of non-essential communications.</li>
+<li><strong>Portability:</strong> Receive your data in machine-readable JSON/CSV formats.</li>
 </ul>
-
-<h2>7. Cookies</h2>
-<p>We use essential cookies for platform functionality and optional analytics cookies. You can manage cookie preferences in your browser settings.</p>
-
-<h2>8. Contact Us</h2>
-<p>For privacy-related questions, contact <a href="mailto:privacy@imusinfosystems.com">privacy@imusinfosystems.com</a> or our Data Protection Officer at:</p>
-<p>Imus Info Systems Pvt. Ltd.<br>123 Tech Park, Bangalore, India 560001</p>
+</div>
+<div class="legal-card">
+<h2>6. Cookies & Tracking</h2>
+<p>We use cookies for authentication, preferences, and analytics. You can manage cookie preferences via our <a href="#" onclick="alert('Cookie consent manager opens here'); return false;">Cookie Consent Banner</a>. Essential cookies (login, security) cannot be disabled.</p>
+</div>
+<div class="legal-card">
+<h2>7. Data Retention</h2>
+<ul>
+<li>Active accounts: Data retained while account is active.</li>
+<li>Deleted accounts: All personal data removed within 30 days. Anonymized analytics may be retained.</li>
+<li>Payment records: Retained for 7 years per tax regulations.</li>
+</ul>
+</div>
+<div class="legal-card">
+<h2>8. Children's Privacy</h2>
+<p>CareerOS is not intended for users under 16. We do not knowingly collect data from children. If you believe we have collected data from a minor, contact us immediately.</p>
+</div>
+<div class="legal-card">
+<h2>9. Changes to This Policy</h2>
+<p>We may update this Privacy Policy periodically. Significant changes will be notified via email and posted on this page. Continued use after changes constitutes acceptance.</p>
+<div class="last-updated">Last updated: July 3, 2026</div>
+</div>
+<div class="contact-box">
+<p>Questions about privacy? Contact our Data Protection Officer.</p>
+<a href="mailto:privacy@imusinfosystems.com">privacy@imusinfosystems.com</a>
+</div>
 </div>
 </body>
 </html>
