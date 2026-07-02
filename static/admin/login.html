@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerOS Admin — Login</title>
+<style>
+:root { --bg-primary:#0f172a; --bg-secondary:#1e293b; --bg-tertiary:#334155; --text-primary:#f8fafc; --text-secondary:#94a3b8; --text-muted:#64748b; --accent-primary:#6366f1; --accent-secondary:#8b5cf6; --accent-success:#22c55e; --accent-danger:#ef4444; --border-color:#334155; --radius:12px; --shadow:0 4px 6px -1px rgba(0,0,0,0.3); --shadow-lg:0 10px 25px -5px rgba(0,0,0,0.4); --gradient:linear-gradient(135deg,#6366f1,#8b5cf6); }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg-primary); color:var(--text-primary); min-height:100vh; display:flex; align-items:center; justify-content:center; }
+.login-container { width:100%; max-width:420px; padding:20px; }
+.login-card { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:40px; box-shadow:var(--shadow-lg); text-align:center; }
+.logo { width:64px; height:64px; background:var(--gradient); border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:28px; font-weight:800; color:white; margin:0 auto 20px; }
+.login-card h1 { font-size:24px; font-weight:700; margin-bottom:8px; }
+.login-card p { font-size:14px; color:var(--text-secondary); margin-bottom:28px; }
+.form-group { text-align:left; margin-bottom:16px; }
+.form-group label { display:block; font-size:13px; font-weight:500; color:var(--text-secondary); margin-bottom:6px; }
+.form-group input { width:100%; padding:12px 16px; background:var(--bg-primary); border:1px solid var(--border-color); border-radius:var(--radius); color:var(--text-primary); font-size:14px; font-family:inherit; transition:border-color 0.2s; }
+.form-group input:focus { outline:none; border-color:var(--accent-primary); }
+.btn { width:100%; padding:12px; border:none; border-radius:var(--radius); font-size:15px; font-weight:600; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:8px; }
+.btn-primary { background:var(--gradient); color:white; box-shadow:0 4px 12px rgba(99,102,241,0.3); }
+.btn-primary:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(99,102,241,0.4); }
+.btn:disabled { opacity:0.5; cursor:not-allowed; transform:none !important; }
+.spinner { width:16px; height:16px; border:2px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.8s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.error-msg { background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); border-radius:var(--radius); padding:12px; font-size:13px; color:#fca5a5; margin-top:16px; display:none; }
+.error-msg.show { display:block; }
+.hint { margin-top:20px; font-size:12px; color:var(--text-muted); }
+.hint code { background:var(--bg-tertiary); padding:2px 6px; border-radius:4px; font-family:monospace; }
+.toast-container { position:fixed; top:24px; right:24px; z-index:1000; display:flex; flex-direction:column; gap:10px; }
+.toast { padding:14px 20px; border-radius:var(--radius); font-size:14px; font-weight:500; display:flex; align-items:center; gap:10px; animation:slideIn 0.3s ease; max-width:400px; box-shadow:var(--shadow-lg); }
+.toast.success { background:var(--accent-success); color:white; }
+.toast.error { background:var(--accent-danger); color:white; }
+@keyframes slideIn { from { transform:translateX(100%); opacity:0; } to { transform:translateX(0); opacity:1; } }
+@media(max-width:480px){ .login-card { padding:28px 20px; } }
+</style>
+</head>
+<body>
+<div class="login-container">
+<div class="login-card">
+<div class="logo">C</div>
+<h1>Admin Login</h1>
+<p>Enter your admin token to access the dashboard</p>
+<div class="form-group">
+<label>Admin Token</label>
+<input type="password" id="tokenInput" placeholder="Enter your X-Admin-Token..." value="test-token-12345">
+</div>
+<button class="btn btn-primary" id="loginBtn" onclick="login()">
+<span id="btnText">🔑 Access Dashboard</span>
+</button>
+<div class="error-msg" id="errorMsg"></div>
+<div class="hint">
+Default token for testing: <code>test-token-12345</code><br>
+Token is stored in your browser and never sent to our servers.
+</div>
+</div>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+<script>
+const ADMIN_KEY='admin_token';
+document.getElementById('tokenInput').addEventListener('keydown',e=>{ if(e.key==='Enter') login(); });
+function login(){
+const btn=document.getElementById('loginBtn'); const txt=document.getElementById('btnText'); const err=document.getElementById('errorMsg');
+const token=document.getElementById('tokenInput').value.trim();
+if(!token){ err.textContent='Please enter a token'; err.classList.add('show'); return; }
+err.classList.remove('show'); txt.innerHTML='<div class="spinner"></div> Verifying...'; btn.disabled=true;
+// Simulate API check — in production, call /api/auth/verify
+setTimeout(()=>{
+localStorage.setItem(ADMIN_KEY,token);
+showToast('Login successful! Redirecting...','success');
+setTimeout(()=>{ location.href='../admin.html'; },800);
+},600);
+}
+function showToast(m,t='info'){
+const c=document.getElementById('toastContainer'); const d=document.createElement('div'); d.className='toast '+t;
+const i={success:'✅',error:'❌',info:'ℹ️'}; d.innerHTML=(i[t]||'ℹ️')+' '+m; c.appendChild(d); setTimeout(()=>d.remove(),5000);
+}
+</script>
+</body>
+</html>

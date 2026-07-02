@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerOS — Email Template Preview</title>
+<style>
+:root { --bg-primary:#0f172a; --bg-secondary:#1e293b; --bg-tertiary:#334155; --text-primary:#f8fafc; --text-secondary:#94a3b8; --text-muted:#64748b; --accent-primary:#6366f1; --accent-success:#22c55e; --accent-warning:#f59e0b; --border-color:#334155; --radius:10px; --shadow:0 4px 6px -1px rgba(0,0,0,0.3); }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg-primary); color:var(--text-primary); min-height:100vh; }
+.top-bar { display:flex; align-items:center; justify-content:space-between; padding:16px 28px; background:var(--bg-secondary); border-bottom:1px solid var(--border-color); position:sticky; top:0; z-index:50; }
+.page-title { font-size:20px; font-weight:700; }
+.btn { padding:8px 16px; border:none; border-radius:var(--radius); font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s; }
+.btn-primary { background:linear-gradient(135deg,#6366f1,#8b5cf6); color:white; }
+.btn-secondary { background:var(--bg-tertiary); color:var(--text-primary); border:1px solid var(--border-color); }
+.content-area { padding:28px; max-width:1200px; margin:0 auto; }
+.template-tabs { display:flex; gap:8px; margin-bottom:24px; }
+.template-tab { padding:10px 20px; background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); color:var(--text-secondary); font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s; font-family:inherit; }
+.template-tab.active { background:linear-gradient(135deg,#6366f1,#8b5cf6); color:white; border-color:transparent; }
+.template-panel { display:none; }
+.template-panel.active { display:block; }
+.email-frame { background:white; border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); }
+.email-header { background:linear-gradient(135deg,#6366f1,#8b5cf6); padding:32px 40px; text-align:center; color:white; }
+.email-header h1 { font-size:24px; font-weight:700; margin-bottom:4px; }
+.email-header p { font-size:14px; opacity:0.9; }
+.email-body { padding:40px; color:#1e293b; font-size:15px; line-height:1.7; }
+.email-body h2 { font-size:20px; color:#0f172a; margin-bottom:12px; }
+.email-body p { margin-bottom:16px; }
+.email-body .cta { display:inline-block; padding:14px 28px; background:linear-gradient(135deg,#6366f1,#8b5cf6); color:white; text-decoration:none; border-radius:8px; font-weight:600; font-size:15px; margin:16px 0; }
+.email-body .cta:hover { transform:translateY(-1px); box-shadow:0 4px 12px rgba(99,102,241,0.3); }
+.email-footer { padding:24px 40px; background:#f8fafc; border-top:1px solid #e2e8f0; text-align:center; color:#64748b; font-size:12px; }
+.email-footer a { color:#6366f1; text-decoration:none; }
+.code-block { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:20px; margin-top:24px; overflow-x:auto; }
+.code-block pre { font-family:'Fira Code',monospace; font-size:12px; color:var(--text-secondary); line-height:1.6; white-space:pre-wrap; word-break:break-word; }
+.code-block .copy-btn { float:right; padding:4px 12px; background:var(--bg-tertiary); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary); font-size:11px; cursor:pointer; }
+.code-block .copy-btn:hover { background:var(--accent-primary); border-color:var(--accent-primary); }
+.toast-container { position:fixed; top:24px; right:24px; z-index:1000; display:flex; flex-direction:column; gap:10px; }
+.toast { padding:14px 20px; border-radius:var(--radius); font-size:14px; font-weight:500; display:flex; align-items:center; gap:10px; animation:slideIn 0.3s ease; max-width:400px; box-shadow:0 10px 25px -5px rgba(0,0,0,0.4); }
+.toast.success { background:var(--accent-success); color:white; }
+@keyframes slideIn { from { transform:translateX(100%); opacity:0; } to { transform:translateX(0); opacity:1; } }
+</style>
+</head>
+<body>
+<div class="top-bar">
+<div class="page-title">📧 Email Template Preview</div>
+<div>
+<a href="admin.html" class="btn btn-secondary">← Back to Admin</a>
+</div>
+</div>
+<div class="content-area">
+<div class="template-tabs">
+<button class="template-tab active" onclick="switchTab('wave1')">Wave 1 — 2 Hours</button>
+<button class="template-tab" onclick="switchTab('wave2')">Wave 2 — 24 Hours</button>
+<button class="template-tab" onclick="switchTab('abandoned')">Abandoned Cart</button>
+</div>
+
+<div id="wave1" class="template-panel active">
+<div class="email-frame">
+<div class="email-header">
+<h1>CareerOS</h1>
+<p>Your career journey is waiting</p>
+</div>
+<div class="email-body">
+<h2>Hi there! 👋</h2>
+<p>You were just seconds away from unlocking your full career potential with <strong>CareerOS Pro</strong>.</p>
+<p>We noticed you started your upgrade but didn't complete it. No worries — it happens!</p>
+<p>Here's what you were about to get:</p>
+<ul style="margin:16px 0; padding-left:24px;">
+<li>🤖 <strong>Unlimited AI job matching</strong> — find your perfect role</li>
+<li>📝 <strong>Resume scoring & optimization</strong> — beat the ATS</li>
+<li>🎯 <strong>Auto-apply to 50 jobs/month</strong> — save hours daily</li>
+<li>💬 <strong>Priority support</strong> — we're here when you need us</li>
+</ul>
+<p style="text-align:center;">
+<a href="https://www.imusinfosystems.com/checkout?plan=pro" class="cta">Complete Your Upgrade →</a>
+</p>
+<p style="font-size:13px; color:#64748b; text-align:center;">This offer is reserved for you for the next 24 hours.</p>
+</div>
+<div class="email-footer">
+<p>Need help? Reply to this email or <a href="https://www.imusinfosystems.com/support">contact support</a>.</p>
+<p>© 2026 Imus Info Systems. <a href="https://www.imusinfosystems.com/unsubscribe">Unsubscribe</a></p>
+</div>
+</div>
+<div class="code-block">
+<button class="copy-btn" onclick="copyCode('wave1-code')">Copy HTML</button>
+<pre id="wave1-code">&lt;!-- Wave 1 Recovery Email — 2 hours after abandoned checkout --&gt;
+&lt;div style="max-width:600px;margin:0 auto;font-family:Segoe UI,sans-serif;"&gt;
+  &lt;div style="background:linear-gradient(135deg,#6366f1,#8b5cf6);padding:32px 40px;text-align:center;color:white;"&gt;
+    &lt;h1&gt;CareerOS&lt;/h1&gt;&lt;p&gt;Your career journey is waiting&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div style="padding:40px;color:#1e293b;font-size:15px;line-height:1.7;"&gt;
+    &lt;h2&gt;Hi there! 👋&lt;/h2&gt;
+    &lt;p&gt;You were just seconds away from unlocking your full career potential with &lt;strong&gt;CareerOS Pro&lt;/strong&gt;.&lt;/p&gt;
+    &lt;p&gt;Here's what you were about to get:&lt;/p&gt;
+    &lt;ul&gt;&lt;li&gt;🤖 Unlimited AI job matching&lt;/li&gt;&lt;li&gt;📝 Resume scoring & optimization&lt;/li&gt;&lt;li&gt;🎯 Auto-apply to 50 jobs/month&lt;/li&gt;&lt;li&gt;💬 Priority support&lt;/li&gt;&lt;/ul&gt;
+    &lt;p style="text-align:center;"&gt;&lt;a href="https://www.imusinfosystems.com/checkout?plan=pro" style="display:inline-block;padding:14px 28px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;text-decoration:none;border-radius:8px;font-weight:600;"&gt;Complete Your Upgrade →&lt;/a&gt;&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre>
+</div>
+</div>
+
+<div id="wave2" class="template-panel">
+<div class="email-frame">
+<div class="email-header">
+<h1>CareerOS</h1>
+<p>Last chance — your spot is reserved</p>
+</div>
+<div class="email-body">
+<h2>We saved your spot! 🎁</h2>
+<p>It's been 24 hours since you started your CareerOS Pro upgrade. We held your spot and kept your early pricing locked in.</p>
+<p><strong>But this is the last reminder.</strong></p>
+<p>After today, your reserved pricing of <strong>₹1,499/mo</strong> may change.</p>
+<div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:20px; margin:20px 0;">
+<p style="margin:0; font-weight:600; color:#166534;">🎁 Special bonus if you upgrade now:</p>
+<p style="margin:8px 0 0; color:#166534;">Get 3 months free + a 1-on-1 career coaching session worth ₹5,000</p>
+</div>
+<p style="text-align:center;">
+<a href="https://www.imusinfosystems.com/checkout?plan=pro&bonus=coaching" class="cta">Claim Your Spot →</a>
+</p>
+<p style="font-size:13px; color:#64748b; text-align:center;">Offer expires in 24 hours. No extensions.</p>
+</div>
+<div class="email-footer">
+<p>Questions? <a href="https://www.imusinfosystems.com/support">Talk to us</a> — we reply within 2 hours.</p>
+<p>© 2026 Imus Info Systems</p>
+</div>
+</div>
+<div class="code-block">
+<button class="copy-btn" onclick="copyCode('wave2-code')">Copy HTML</button>
+<pre id="wave2-code">&lt;!-- Wave 2 Recovery Email — 24 hours after abandoned checkout --&gt;
+&lt;div style="max-width:600px;margin:0 auto;font-family:Segoe UI,sans-serif;"&gt;
+  &lt;div style="background:linear-gradient(135deg,#6366f1,#8b5cf6);padding:32px 40px;text-align:center;color:white;"&gt;
+    &lt;h1&gt;CareerOS&lt;/h1&gt;&lt;p&gt;Last chance — your spot is reserved&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div style="padding:40px;color:#1e293b;font-size:15px;line-height:1.7;"&gt;
+    &lt;h2&gt;We saved your spot! 🎁&lt;/h2&gt;
+    &lt;p&gt;It's been 24 hours since you started your CareerOS Pro upgrade.&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;But this is the last reminder.&lt;/strong&gt;&lt;/p&gt;
+    &lt;div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:20px;"&gt;
+      &lt;p style="margin:0;font-weight:600;color:#166534;"&gt;🎁 Special bonus:&lt;/p&gt;
+      &lt;p style="margin:8px 0 0;color:#166534;"&gt;Get 3 months free + 1-on-1 career coaching (₹5,000 value)&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;p style="text-align:center;"&gt;&lt;a href="https://www.imusinfosystems.com/checkout?plan=pro&bonus=coaching" style="display:inline-block;padding:14px 28px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;text-decoration:none;border-radius:8px;font-weight:600;"&gt;Claim Your Spot →&lt;/a&gt;&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre>
+</div>
+</div>
+
+<div id="abandoned" class="template-panel">
+<div class="email-frame">
+<div class="email-header">
+<h1>CareerOS</h1>
+<p>Don't let your career wait</p>
+</div>
+<div class="email-body">
+<h2>Still thinking it over? 🤔</h2>
+<p>We get it — committing to a career tool is a big decision. So here's a <strong>risk-free way</strong> to try CareerOS Pro:</p>
+<div style="background:#fef3c7; border:1px solid #fde68a; border-radius:8px; padding:20px; margin:20px 0;">
+<p style="margin:0; font-weight:700; color:#92400e;">💰 7-Day Full Money-Back Guarantee</p>
+<p style="margin:8px 0 0; color:#92400e;">Try Pro for a full week. Not impressed? We'll refund every rupee — no questions, no hassle.</p>
+</div>
+<p>Here's what our users are saying:</p>
+<blockquote style="border-left:3px solid #6366f1; padding-left:16px; margin:16px 0; color:#334155; font-style:italic;">
+"CareerOS helped me land 3 interview calls in the first week. Worth every rupee." — Rahul S., Bangalore
+</blockquote>
+<p style="text-align:center;">
+<a href="https://www.imusinfosystems.com/checkout?plan=pro" class="cta">Start Your Risk-Free Trial →</a>
+</p>
+</div>
+<div class="email-footer">
+<p>© 2026 Imus Info Systems. <a href="https://www.imusinfosystems.com/unsubscribe">Unsubscribe</a></p>
+</div>
+</div>
+<div class="code-block">
+<button class="copy-btn" onclick="copyCode('abandoned-code')">Copy HTML</button>
+<pre id="abandoned-code">&lt;!-- Abandoned Cart Email — General recovery --&gt;
+&lt;div style="max-width:600px;margin:0 auto;font-family:Segoe UI,sans-serif;"&gt;
+  &lt;div style="background:linear-gradient(135deg,#6366f1,#8b5cf6);padding:32px 40px;text-align:center;color:white;"&gt;
+    &lt;h1&gt;CareerOS&lt;/h1&gt;&lt;p&gt;Don't let your career wait&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div style="padding:40px;color:#1e293b;font-size:15px;line-height:1.7;"&gt;
+    &lt;h2&gt;Still thinking it over? 🤔&lt;/h2&gt;
+    &lt;div style="background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:20px;"&gt;
+      &lt;p style="margin:0;font-weight:700;color:#92400e;"&gt;💰 7-Day Full Money-Back Guarantee&lt;/p&gt;
+      &lt;p style="margin:8px 0 0;color:#92400e;"&gt;Try Pro for a full week. Not impressed? Full refund — no questions.&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;p style="text-align:center;"&gt;&lt;a href="https://www.imusinfosystems.com/checkout?plan=pro" style="display:inline-block;padding:14px 28px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;text-decoration:none;border-radius:8px;font-weight:600;"&gt;Start Your Risk-Free Trial →&lt;/a&gt;&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre>
+</div>
+</div>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+<script>
+function switchTab(id){
+document.querySelectorAll('.template-tab').forEach(t=>t.classList.remove('active'));
+document.querySelectorAll('.template-panel').forEach(p=>p.classList.remove('active'));
+event.target.classList.add('active');
+document.getElementById(id).classList.add('active');
+}
+function copyCode(id){
+const el=document.getElementById(id); navigator.clipboard.writeText(el.textContent).then(()=>showToast('HTML copied!','success'));
+}
+function showToast(m,t='info'){
+const c=document.getElementById('toastContainer'); const d=document.createElement('div'); d.className='toast '+t;
+const i={success:'✅',error:'❌',warning:'⚠️',info:'ℹ️'}; d.innerHTML=(i[t]||'ℹ️')+' '+m; c.appendChild(d); setTimeout(()=>d.remove(),5000);
+}
+</script>
+</body>
+</html>

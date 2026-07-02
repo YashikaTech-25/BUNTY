@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerOS — Settings</title>
+<style>
+:root { --bg-primary:#0f172a; --bg-secondary:#1e293b; --bg-tertiary:#334155; --text-primary:#f8fafc; --text-secondary:#94a3b8; --text-muted:#64748b; --accent-primary:#6366f1; --accent-success:#22c55e; --accent-danger:#ef4444; --border-color:#334155; --radius:12px; --shadow:0 4px 6px -1px rgba(0,0,0,0.3); --shadow-lg:0 10px 25px -5px rgba(0,0,0,0.4); --gradient:linear-gradient(135deg,#6366f1,#8b5cf6); }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg-primary); color:var(--text-primary); min-height:100vh; }
+.nav-bar { display:flex; align-items:center; justify-content:space-between; padding:16px 28px; background:var(--bg-secondary); border-bottom:1px solid var(--border-color); position:sticky; top:0; z-index:100; }
+.nav-logo { display:flex; align-items:center; gap:10px; font-size:20px; font-weight:800; color:var(--text-primary); text-decoration:none; }
+.nav-logo .logo-icon { width:36px; height:36px; background:var(--gradient); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; color:white; }
+.content-area { padding:28px; max-width:800px; margin:0 auto; }
+.settings-card { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:28px; margin-bottom:20px; box-shadow:var(--shadow); }
+.settings-card h2 { font-size:18px; font-weight:700; margin-bottom:20px; display:flex; align-items:center; gap:10px; }
+.settings-card h2 .icon { font-size:22px; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+.form-group { margin-bottom:16px; }
+.form-group label { display:block; font-size:13px; font-weight:500; color:var(--text-secondary); margin-bottom:6px; }
+.form-group input, .form-group select {
+width:100%; padding:12px 16px; background:var(--bg-primary); border:1px solid var(--border-color); border-radius:var(--radius); color:var(--text-primary); font-size:14px; font-family:inherit; }
+.form-group input:focus, .form-group select:focus { outline:none; border-color:var(--accent-primary); }
+.form-group input:disabled { opacity:0.5; }
+.toggle-row { display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid rgba(51,65,85,0.4); }
+.toggle-row:last-child { border-bottom:none; }
+.toggle-info h4 { font-size:14px; font-weight:600; margin-bottom:2px; }
+.toggle-info p { font-size:12px; color:var(--text-muted); }
+.toggle { width:44px; height:24px; background:var(--bg-tertiary); border-radius:12px; position:relative; cursor:pointer; transition:background 0.2s; flex-shrink:0; }
+.toggle.active { background:var(--accent-primary); }
+.toggle::after { content:''; position:absolute; top:2px; left:2px; width:20px; height:20px; background:white; border-radius:50%; transition:transform 0.2s; }
+.toggle.active::after { transform:translateX(20px); }
+.btn { padding:12px 24px; border:none; border-radius:var(--radius); font-size:14px; font-weight:600; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:8px; }
+.btn-primary { background:var(--gradient); color:white; box-shadow:0 4px 12px rgba(99,102,241,0.3); }
+.btn-primary:hover { transform:translateY(-1px); }
+.btn-danger { background:var(--accent-danger); color:white; }
+.btn-secondary { background:var(--bg-tertiary); color:var(--text-primary); border:1px solid var(--border-color); }
+.btn-row { display:flex; gap:12px; margin-top:20px; }
+.plan-badge { display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600; }
+.plan-badge.pro { background:rgba(99,102,241,0.15); color:#a5b4fc; }
+.plan-badge.elite { background:rgba(245,158,11,0.15); color:#fcd34d; }
+.plan-badge.free { background:rgba(100,116,139,0.15); color:#94a3b8; }
+.danger-zone { border:1px solid rgba(239,68,68,0.3); background:rgba(239,68,68,0.05); }
+.danger-zone h2 { color:var(--accent-danger); }
+.toast-container { position:fixed; top:24px; right:24px; z-index:1000; display:flex; flex-direction:column; gap:10px; }
+.toast { padding:14px 20px; border-radius:var(--radius); font-size:14px; font-weight:500; display:flex; align-items:center; gap:10px; animation:slideIn 0.3s ease; max-width:400px; box-shadow:var(--shadow-lg); }
+.toast.success { background:var(--accent-success); color:white; }
+.toast.error { background:var(--accent-danger); color:white; }
+.toast.info { background:var(--accent-primary); color:white; }
+@keyframes slideIn { from { transform:translateX(100%); opacity:0; } to { transform:translateX(0); opacity:1; } }
+@media(max-width:600px){ .form-row { grid-template-columns:1fr; } .toggle-row { flex-direction:column; align-items:flex-start; gap:8px; } }
+</style>
+</head>
+<body>
+<nav class="nav-bar">
+<a href="index.html" class="nav-logo">
+<div class="logo-icon">C</div>
+CareerOS
+</a>
+</nav>
+<div class="content-area">
+<div class="settings-card">
+<h2><span class="icon">👤</span> Profile</h2>
+<div class="form-row">
+<div class="form-group">
+<label>Full Name</label>
+<input type="text" id="profileName" value="Demo User">
+</div>
+<div class="form-group">
+<label>Email</label>
+<input type="email" id="profileEmail" value="demo@example.com" disabled>
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label>Phone</label>
+<input type="tel" id="profilePhone" value="+91 98765 43210">
+</div>
+<div class="form-group">
+<label>Location</label>
+<input type="text" id="profileLocation" value="Bangalore, India">
+</div>
+</div>
+<div class="btn-row">
+<button class="btn btn-primary" onclick="saveProfile()">💾 Save Changes</button>
+</div>
+</div>
+<div class="settings-card">
+<h2><span class="icon">💳</span> Subscription</h2>
+<div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+<span class="plan-badge pro" id="planBadge">Pro Plan</span>
+<span style="font-size:13px; color:var(--text-muted);">Renews on <strong id="renewalDate">Aug 3, 2026</strong></span>
+</div>
+<div class="form-group">
+<label>Current Plan</label>
+<select id="planSelect" onchange="updatePlanPreview()">
+<option value="free">Free — ₹0/mo</option>
+<option value="pro" selected>Pro — ₹1,499/mo</option>
+<option value="elite">Elite — ₹2,499/mo</option>
+</select>
+</div>
+<div class="btn-row">
+<button class="btn btn-secondary" onclick="showToast('Payment history coming soon','info')">📄 View History</button>
+<button class="btn btn-primary" onclick="changePlan()">🔄 Change Plan</button>
+</div>
+</div>
+<div class="settings-card">
+<h2><span class="icon">🔔</span> Notifications</h2>
+<div class="toggle-row">
+<div class="toggle-info">
+<h4>Email Notifications</h4>
+<p>Job matches, interview reminders, weekly reports</p>
+</div>
+<div class="toggle active" id="toggleEmail" onclick="toggleSwitch(this)"></div>
+</div>
+<div class="toggle-row">
+<div class="toggle-info">
+<h4>SMS Alerts</h4>
+<p>Urgent: interview scheduled, deadline reminders</p>
+</div>
+<div class="toggle active" id="toggleSMS" onclick="toggleSwitch(this)"></div>
+</div>
+<div class="toggle-row">
+<div class="toggle-info">
+<h4>WhatsApp Updates</h4>
+<p>Referral bonuses, new job matches</p>
+</div>
+<div class="toggle" id="toggleWhatsApp" onclick="toggleSwitch(this)"></div>
+</div>
+<div class="toggle-row">
+<div class="toggle-info">
+<h4>Marketing Emails</h4>
+<p>Tips, new features, promotions</p>
+</div>
+<div class="toggle" id="toggleMarketing" onclick="toggleSwitch(this)"></div>
+</div>
+<div class="btn-row">
+<button class="btn btn-primary" onclick="saveNotifications()">💾 Save Preferences</button>
+</div>
+</div>
+<div class="settings-card danger-zone">
+<h2><span class="icon">⚠️</span> Danger Zone</h2>
+<div class="toggle-row" style="border-bottom:none;">
+<div class="toggle-info">
+<h4>Delete Account</h4>
+<p>Permanently delete your account and all data. This cannot be undone.</p>
+</div>
+<button class="btn btn-danger" onclick="deleteAccount()">🗑️ Delete Account</button>
+</div>
+</div>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+<script>
+function loadProfile(){
+const name=localStorage.getItem('user_name')||'Demo User';
+const email=localStorage.getItem('user_email')||'demo@example.com';
+const phone=localStorage.getItem('user_phone')||'+91 98765 43210';
+document.getElementById('profileName').value=name;
+document.getElementById('profileEmail').value=email;
+document.getElementById('profilePhone').value=phone;
+}
+function saveProfile(){
+localStorage.setItem('user_name',document.getElementById('profileName').value);
+localStorage.setItem('user_phone',document.getElementById('profilePhone').value);
+localStorage.setItem('user_location',document.getElementById('profileLocation').value);
+showToast('Profile saved successfully','success');
+}
+function updatePlanPreview(){
+const plan=document.getElementById('planSelect').value;
+const badge=document.getElementById('planBadge');
+badge.className='plan-badge '+plan;
+badge.textContent=plan==='free'?'Free Plan':plan==='pro'?'Pro Plan':'Elite Plan';
+}
+function changePlan(){
+const plan=document.getElementById('planSelect').value;
+localStorage.setItem('user_plan',plan);
+showToast('Plan updated to '+(plan==='free'?'Free':plan==='pro'?'Pro':'Elite'),'success');
+}
+function toggleSwitch(el){ el.classList.toggle('active'); }
+function saveNotifications(){
+const prefs={
+email:document.getElementById('toggleEmail').classList.contains('active'),
+sms:document.getElementById('toggleSMS').classList.contains('active'),
+whatsapp:document.getElementById('toggleWhatsApp').classList.contains('active'),
+marketing:document.getElementById('toggleMarketing').classList.contains('active')
+};
+localStorage.setItem('notification_prefs',JSON.stringify(prefs));
+showToast('Notification preferences saved','success');
+}
+function deleteAccount(){
+if(!confirm('Are you sure? This will permanently delete your account and all data. This cannot be undone.')) return;
+localStorage.clear();
+showToast('Account deleted. Redirecting...','error');
+setTimeout(()=>{ location.href='index.html'; },2000);
+}
+function showToast(m,t='info'){
+const c=document.getElementById('toastContainer'); const d=document.createElement('div'); d.className='toast '+t;
+const i={success:'✅',error:'❌',warning:'⚠️',info:'ℹ️'}; d.innerHTML=(i[t]||'ℹ️')+' '+m; c.appendChild(d); setTimeout(()=>d.remove(),5000);
+}
+loadProfile();
+</script>
+</body>
+</html>
