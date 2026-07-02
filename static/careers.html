@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerOS — Careers at Imus</title>
+<meta name="description" content="Join the team building the future of job searching. Open roles in engineering, design, growth, and more at Imus Info Systems.">
+<style>
+:root { --bg-primary:#0f172a; --bg-secondary:#1e293b; --bg-tertiary:#334155; --text-primary:#f8fafc; --text-secondary:#94a3b8; --text-muted:#64748b; --accent-primary:#6366f1; --accent-success:#22c55e; --border-color:#334155; --radius:12px; --shadow-lg:0 10px 25px -5px rgba(0,0,0,0.4); --gradient:linear-gradient(135deg,#6366f1,#8b5cf6); }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg-primary); color:var(--text-primary); min-height:100vh; line-height:1.6; }
+.nav-bar { display:flex; align-items:center; justify-content:space-between; padding:16px 28px; background:var(--bg-secondary); border-bottom:1px solid var(--border-color); position:sticky; top:0; z-index:100; }
+.nav-logo { display:flex; align-items:center; gap:10px; font-size:20px; font-weight:800; color:var(--text-primary); text-decoration:none; }
+.nav-logo .logo-icon { width:36px; height:36px; background:var(--gradient); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; color:white; }
+.nav-links { display:flex; gap:6px; }
+.nav-links a { padding:8px 16px; border-radius:var(--radius); color:var(--text-secondary); text-decoration:none; font-size:14px; font-weight:500; transition:all 0.2s; cursor:pointer; border:none; background:none; font-family:inherit; }
+.nav-links a:hover { color:var(--text-primary); background:var(--bg-tertiary); }
+.content-area { padding:28px; max-width:900px; margin:0 auto; }
+.page-header { text-align:center; margin-bottom:48px; padding:48px 0; }
+.page-header .rocket { font-size:64px; margin-bottom:16px; }
+.page-header h1 { font-size:36px; font-weight:800; margin-bottom:12px; }
+.page-header p { font-size:16px; color:var(--text-secondary); max-width:600px; margin:0 auto; }
+.perks-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-bottom:32px; }
+.perk-card { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:20px; text-align:center; }
+.perk-card .icon { font-size:28px; margin-bottom:8px; }
+.perk-card h3 { font-size:14px; font-weight:700; margin-bottom:4px; }
+.perk-card p { font-size:12px; color:var(--text-muted); }
+.job-listing { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:24px; margin-bottom:16px; transition:all 0.2s; }
+.job-listing:hover { border-color:var(--accent-primary); transform:translateY(-2px); }
+.job-listing .header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.job-listing .header h3 { font-size:18px; font-weight:700; }
+.job-listing .header .badge { padding:6px 14px; background:rgba(99,102,241,0.15); border:1px solid rgba(99,102,241,0.3); border-radius:100px; font-size:12px; font-weight:600; color:var(--accent-primary); }
+.job-listing .meta { display:flex; gap:16px; margin-bottom:12px; font-size:13px; color:var(--text-muted); }
+.job-listing .meta span { display:flex; align-items:center; gap:6px; }
+.job-listing p { font-size:14px; color:var(--text-secondary); margin-bottom:16px; line-height:1.5; }
+.job-listing .tags { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px; }
+.job-listing .tag { padding:4px 10px; background:var(--bg-primary); border:1px solid var(--border-color); border-radius:100px; font-size:11px; color:var(--text-muted); }
+.btn { padding:8px 16px; border:none; border-radius:var(--radius); font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:6px; text-decoration:none; }
+.btn-primary { background:var(--gradient); color:white; }
+.btn-secondary { background:var(--bg-tertiary); color:var(--text-primary); border:1px solid var(--border-color); }
+.values-section { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:28px; margin-bottom:24px; }
+.values-section h2 { font-size:20px; font-weight:700; margin-bottom:16px; }
+.values-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; }
+.value-card { padding:16px; background:var(--bg-primary); border-radius:var(--radius); }
+.value-card h3 { font-size:14px; font-weight:700; margin-bottom:6px; color:var(--accent-primary); }
+.value-card p { font-size:12px; color:var(--text-secondary); line-height:1.5; }
+.cta-section { text-align:center; padding:48px 28px; background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); margin-bottom:32px; }
+.cta-section h2 { font-size:24px; font-weight:700; margin-bottom:12px; }
+.cta-section p { font-size:14px; color:var(--text-secondary); margin-bottom:20px; }
+@media(max-width:768px){ .content-area { padding:16px; } .page-header { padding:32px 16px; } .job-listing .header { flex-direction:column; align-items:flex-start; gap:8px; } }
+</style>
+</head>
+<body>
+<nav class="nav-bar">
+<a href="index.html" class="nav-logo"><div class="logo-icon">C</div>CareerOS</a>
+<div class="nav-links">
+<a href="index.html">Home</a>
+<a href="about.html">About</a>
+<a href="careers.html" style="color:var(--text-primary); background:var(--bg-tertiary);">Careers</a>
+</div>
+</nav>
+<div class="content-area">
+<div class="page-header">
+<div class="rocket">🚀</div>
+<h1>Careers at Imus</h1>
+<p>Build the future of job searching. We're a small, ambitious team changing how professionals find their dream careers.</p>
+</div>
+<div class="perks-grid">
+<div class="perk-card"><div class="icon">💰</div><h3>Competitive Pay</h3><p>₹15-50 LPA based on role</p></div>
+<div class="perk-card"><div class="icon">🏠</div><h3>Remote First</h3><p>Work from anywhere in India</p></div>
+<div class="perk-card"><div class="icon">📈</div><h3>ESOPs</h3><p>Ownership in what you build</p></div>
+<div class="perk-card"><div class="icon">🏥</div><h3>Health Insurance</h3><p>Family coverage included</p></div>
+<div class="perk-card"><div class="icon">🎓</div><h3>Learning Budget</h3><p>₹50,000/year for courses</p></div>
+<div class="perk-card"><div class="icon">🏖️</div><h3>Unlimited PTO</h3><p>Take time when you need it</p></div>
+</div>
+<div class="values-section">
+<h2>Our Values</h2>
+<div class="values-grid">
+<div class="value-card"><h3>🚀 Move Fast</h3><p>Ship daily. Perfect is the enemy of done.</p></div>
+<div class="value-card"><h3>🧠 User Obsessed</h3><p>Every decision starts with the user.</p></div>
+<div class="value-card"><h3>🔍 Transparent</h3><p>Open salaries, open roadmap, open feedback.</p></div>
+<div class="value-card"><h3>🌍 Impact</h3><p>We measure success by jobs landed, not vanity metrics.</p></div>
+</div>
+</div>
+<h2 style="font-size:20px; font-weight:700; margin-bottom:20px;">Open Roles</h2>
+<div class="job-listing">
+<div class="header"><h3>Senior Full-Stack Engineer</h3><span class="badge">Full-time</span></div>
+<div class="meta"><span>📍 Remote</span><span>💰 ₹25-40 LPA</span><span>📅 Posted 2 days ago</span></div>
+<p>Build scalable backend systems and beautiful frontend experiences. You'll own features end-to-end.</p>
+<div class="tags"><span class="tag">FastAPI</span><span class="tag">React</span><span class="tag">PostgreSQL</span><span class="tag">AWS</span></div>
+<button class="btn btn-primary" onclick="alert('Apply: Senior Full-Stack Engineer')">📝 Apply</button>
+</div>
+<div class="job-listing">
+<div class="header"><h3>AI/ML Engineer</h3><span class="badge">Full-time</span></div>
+<div class="meta"><span>📍 Remote</span><span>💰 ₹20-35 LPA</span><span>📅 Posted 1 week ago</span></div>
+<p>Build and deploy NLP models for resume parsing, job matching, and interview scoring. Experience with transformers required.</p>
+<div class="tags"><span class="tag">Python</span><span class="tag">PyTorch</span><span class="tag">HuggingFace</span><span class="tag">LLMs</span></div>
+<button class="btn btn-primary" onclick="alert('Apply: AI/ML Engineer')">📝 Apply</button>
+</div>
+<div class="job-listing">
+<div class="header"><h3>Growth Marketer</h3><span class="badge">Full-time</span></div>
+<div class="meta"><span>📍 Remote</span><span>💰 ₹12-20 LPA</span><span>📅 Posted 3 days ago</span></div>
+<p>Own user acquisition, retention, and referral growth. Data-driven, experiment-heavy role.</p>
+<div class="tags"><span class="tag">SEO</span><span class="tag">Paid Ads</span><span class="tag">Analytics</span><span class="tag">Content</span></div>
+<button class="btn btn-primary" onclick="alert('Apply: Growth Marketer')">📝 Apply</button>
+</div>
+<div class="job-listing">
+<div class="header"><h3>Product Designer</h3><span class="badge">Full-time</span></div>
+<div class="meta"><span>📍 Remote</span><span>💰 ₹15-25 LPA</span><span>📅 Posted 5 days ago</span></div>
+<p>Design intuitive experiences for job seekers. Strong portfolio of SaaS products required.</p>
+<div class="tags"><span class="tag">Figma</span><span class="tag">UI/UX</span><span class="tag">Design Systems</span></div>
+<button class="btn btn-primary" onclick="alert('Apply: Product Designer')">📝 Apply</button>
+</div>
+<div class="job-listing">
+<div class="header"><h3>Customer Success Manager</h3><span class="badge">Full-time</span></div>
+<div class="meta"><span>📍 Remote</span><span>💰 ₹8-15 LPA</span><span>📅 Posted 1 day ago</span></div>
+<p>Help users get the most out of CareerOS. Onboard, support, and retain our growing user base.</p>
+<div class="tags"><span class="tag">Communication</span><span class="tag">CRM</span><span class="tag">Hindi/English</span></div>
+<button class="btn btn-primary" onclick="alert('Apply: Customer Success Manager')">📝 Apply</button>
+</div>
+<div class="cta-section">
+<h2>Don't See Your Role?</h2>
+<p>We're always looking for exceptional talent. Send us your resume and we'll reach out when something fits.</p>
+<button class="btn btn-primary" onclick="alert('Send resume to careers@imusinfosystems.com')">📧 Send Resume</button>
+</div>
+</div>
+</body>
+</html>
