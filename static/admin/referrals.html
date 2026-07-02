@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerOS Admin — Referral Management</title>
+<style>
+:root { --bg-primary:#0f172a; --bg-secondary:#1e293b; --bg-tertiary:#334155; --bg-card:rgba(30,41,59,0.85); --text-primary:#f8fafc; --text-secondary:#94a3b8; --text-muted:#64748b; --accent-primary:#6366f1; --accent-secondary:#8b5cf6; --accent-success:#22c55e; --accent-warning:#f59e0b; --accent-danger:#ef4444; --border-color:#334155; --radius:10px; --shadow:0 4px 6px -1px rgba(0,0,0,0.3); --shadow-lg:0 10px 25px -5px rgba(0,0,0,0.4); --gradient:linear-gradient(135deg,#6366f1,#8b5cf6); }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg-primary); color:var(--text-primary); min-height:100vh; display:flex; }
+.sidebar { width:260px; background:var(--bg-secondary); border-right:1px solid var(--border-color); display:flex; flex-direction:column; position:fixed; left:0; top:0; bottom:0; z-index:100; transition:transform 0.3s ease; }
+.sidebar-header { padding:24px 20px; border-bottom:1px solid var(--border-color); display:flex; align-items:center; gap:12px; }
+.sidebar-header .logo-icon { width:36px; height:36px; background:var(--gradient); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:bold; color:white; }
+.sidebar-header h1 { font-size:18px; font-weight:700; letter-spacing:-0.5px; }
+.sidebar-header span { font-size:12px; color:var(--accent-primary); font-weight:600; margin-left:4px; }
+.nav-list { padding:16px 12px; list-style:none; flex:1; overflow-y:auto; }
+.nav-list li { margin-bottom:4px; }
+.nav-list a { display:flex; align-items:center; gap:12px; padding:12px 16px; border-radius:var(--radius); color:var(--text-secondary); text-decoration:none; font-size:14px; font-weight:500; transition:all 0.2s ease; cursor:pointer; }
+.nav-list a:hover { background:var(--bg-tertiary); color:var(--text-primary); }
+.nav-list a.active { background:var(--gradient); color:white; box-shadow:var(--shadow); }
+.sidebar-footer { padding:16px; border-top:1px solid var(--border-color); }
+.logout-btn { width:100%; padding:10px; background:transparent; border:1px solid var(--border-color); border-radius:var(--radius); color:var(--text-secondary); font-size:14px; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:8px; }
+.logout-btn:hover { background:var(--accent-danger); color:white; border-color:var(--accent-danger); }
+.main-content { margin-left:260px; flex:1; display:flex; flex-direction:column; min-height:100vh; }
+.top-bar { display:flex; align-items:center; justify-content:space-between; padding:16px 28px; background:var(--bg-secondary); border-bottom:1px solid var(--border-color); position:sticky; top:0; z-index:50; }
+.menu-toggle { display:none; background:none; border:none; color:var(--text-primary); font-size:24px; cursor:pointer; }
+.page-title { font-size:20px; font-weight:700; }
+.content-area { padding:28px; flex:1; }
+.kpi-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px,1fr)); gap:16px; margin-bottom:28px; }
+.kpi-card { background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius); padding:20px; display:flex; align-items:center; gap:14px; transition:transform 0.2s, box-shadow 0.2s; }
+.kpi-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-lg); }
+.kpi-icon { width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; }
+.kpi-icon.blue { background:rgba(99,102,241,0.15); }
+.kpi-icon.green { background:rgba(34,197,94,0.15); }
+.kpi-icon.purple { background:rgba(139,92,246,0.15); }
+.kpi-icon.gold { background:rgba(245,158,11,0.15); }
+.kpi-info h3 { font-size:24px; font-weight:700; margin-bottom:2px; }
+.kpi-info p { font-size:12px; color:var(--text-muted); font-weight:500; }
+.section { background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius); padding:24px; margin-bottom:24px; box-shadow:var(--shadow); }
+.section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
+.section-title { font-size:18px; font-weight:700; display:flex; align-items:center; gap:10px; }
+.filter-bar { display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap; }
+.filter-bar input, .filter-bar select { padding:8px 12px; background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); color:var(--text-primary); font-size:13px; font-family:inherit; }
+.table-container { overflow-x:auto; border-radius:var(--radius); border:1px solid var(--border-color); }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+ thead { background:var(--bg-secondary); position:sticky; top:0; }
+ th { padding:12px 16px; text-align:left; font-weight:600; color:var(--text-secondary); font-size:12px; text-transform:uppercase; letter-spacing:0.5px; border-bottom:1px solid var(--border-color); }
+ td { padding:14px 16px; border-bottom:1px solid var(--border-color); color:var(--text-primary); vertical-align:top; }
+ tbody tr { transition:background 0.15s; }
+ tbody tr:nth-child(even) { background:rgba(30,41,59,0.4); }
+ tbody tr:hover { background:rgba(99,102,241,0.08); }
+ .status-badge { padding:2px 10px; border-radius:20px; font-size:11px; font-weight:600; }
+ .status-pending { background:rgba(245,158,11,0.15); color:var(--accent-warning); }
+ .status-converted { background:rgba(34,197,94,0.15); color:var(--accent-success); }
+ .btn { padding:8px 16px; border:none; border-radius:var(--radius); font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:6px; }
+ .btn-primary { background:var(--gradient); color:white; }
+ .btn-success { background:var(--accent-success); color:white; }
+ .btn-secondary { background:var(--bg-tertiary); color:var(--text-primary); border:1px solid var(--border-color); }
+ .toast-container { position:fixed; top:24px; right:24px; z-index:1000; display:flex; flex-direction:column; gap:10px; }
+ .toast { padding:14px 20px; border-radius:var(--radius); font-size:14px; font-weight:500; display:flex; align-items:center; gap:10px; animation:slideIn 0.3s ease; max-width:400px; box-shadow:var(--shadow-lg); }
+ .toast.success { background:var(--accent-success); color:white; }
+ .toast.error { background:var(--accent-danger); color:white; }
+ .toast.info { background:var(--accent-primary); color:white; }
+ @keyframes slideIn { from { transform:translateX(100%); opacity:0; } to { transform:translateX(0); opacity:1; } }
+ .sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:99; }
+ .sidebar-overlay.active { display:block; }
+ @media(max-width:768px){ .sidebar { transform:translateX(-100%); } .sidebar.open { transform:translateX(0); } .main-content { margin-left:0; } .menu-toggle { display:block; } .content-area { padding:16px; } }
+ </style>
+ </head>
+ <body>
+ <div class="sidebar-overlay" id="sidebarOverlay"></div>
+ <aside class="sidebar" id="sidebar">
+ <div class="sidebar-header">
+ <div class="logo-icon">C</div>
+ <h1>CareerOS <span>Admin</span></h1>
+ </div>
+ <ul class="nav-list">
+ <li><a href="admin.html">📅 <span>Social Calendar</span></a></li>
+ <li><a href="analytics.html">📊 <span>Analytics</span></a></li>
+ <li><a href="leads.html">🔥 <span>Hot Leads</span></a></li>
+ <li><a href="admin/referrals.html" class="active">🎁 <span>Referrals</span></a></li>
+ </ul>
+ <div class="sidebar-footer">
+ <button class="logout-btn" onclick="logout()">🚪 <span>Logout</span></button>
+ </div>
+ </aside>
+ <div class="main-content">
+ <header class="top-bar">
+ <div class="top-bar-left">
+ <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+ <div class="page-title">Referral Management</div>
+ </div>
+ </header>
+ <main class="content-area">
+ <div class="kpi-grid">
+ <div class="kpi-card">
+ <div class="kpi-icon blue">🔗</div>
+ <div class="kpi-info">
+ <h3 id="kpiLinks">0</h3>
+ <p>Referral Links Generated</p>
+ </div>
+ </div>
+ <div class="kpi-card">
+ <div class="kpi-icon green">👥</div>
+ <div class="kpi-info">
+ <h3 id="kpiSignups">0</h3>
+ <p>Total Signups</p>
+ </div>
+ </div>
+ <div class="kpi-card">
+ <div class="kpi-icon purple">💰</div>
+ <div class="kpi-info">
+ <h3 id="kpiXP">0</h3>
+ <p>Total XP Awarded</p>
+ </div>
+ </div>
+ <div class="kpi-card">
+ <div class="kpi-icon gold">📈</div>
+ <div class="kpi-info">
+ <h3 id="kpiConversion">0%</h3>
+ <p>Conversion Rate</p>
+ </div>
+ </div>
+ </div>
+ <div class="section">
+ <div class="section-header">
+ <div class="section-title">🎁 All Referrals</div>
+ <button class="btn btn-primary" onclick="exportReferrals()">📤 Export CSV</button>
+ </div>
+ <div class="filter-bar">
+ <input type="text" id="searchInput" placeholder="🔍 Search by name, email, or referrer..." oninput="filterReferrals()">
+ <select id="statusFilter" onchange="filterReferrals()">
+ <option value="all">All Status</option>
+ <option value="pending">Pending</option>
+ <option value="converted">Converted</option>
+ </select>
+ </div>
+ <div class="table-container">
+ <table>
+ <thead>
+ <tr>
+ <th>Referrer</th>
+ <th>Referred User</th>
+ <th>Email</th>
+ <th>Status</th>
+ <th>Date</th>
+ <th>XP Earned</th>
+ <th>Actions</th>
+ </tr>
+ </thead>
+ <tbody id="referralTable"></tbody>
+ </table>
+ </div>
+ </div>
+ </main>
+ </div>
+ <div class="toast-container" id="toastContainer"></div>
+ <script>
+ const MOCK_REFERRALS=[
+ {id:1,referrer:"Amit Kumar",referrer_email:"amit@example.com",referred:"Priya Sharma",referred_email:"priya@example.com",status:"converted",date:"2026-07-01",xp:100},
+ {id:2,referrer:"Amit Kumar",referrer_email:"amit@example.com",referred:"Rahul Singh",referred_email:"rahul@example.com",status:"converted",date:"2026-06-28",xp:100},
+ {id:3,referrer:"Sneha Patel",referrer_email:"sneha@example.com",referred:"Vikram Rao",referred_email:"vikram@example.com",status:"pending",date:"2026-07-02",xp:0},
+ {id:4,referrer:"Sneha Patel",referrer_email:"sneha@example.com",referred:"Meera Iyer",referred_email:"meera@example.com",status:"converted",date:"2026-06-25",xp:100},
+ {id:5,referrer:"Karan Singh",referrer_email:"karan@example.com",referred:"Anjali Gupta",referred_email:"anjali@example.com",status:"pending",date:"2026-07-03",xp:0},
+ {id:6,referrer:"Karan Singh",referrer_email:"karan@example.com",referred:"Rohit Mehta",referred_email:"rohit@example.com",status:"converted",date:"2026-06-30",xp:100},
+ {id:7,referrer:"Priya Sharma",referrer_email:"priya@example.com",referred:"Neha Kapoor",referred_email:"neha@example.com",status:"pending",date:"2026-07-01",xp:0},
+ {id:8,referrer:"Rahul Singh",referrer_email:"rahul@example.com",referred:"Deepak Verma",referred_email:"deepak@example.com",status:"converted",date:"2026-06-20",xp:100}
+ ];
+ function renderReferrals(data){
+ const tbody=document.getElementById('referralTable');
+ tbody.innerHTML=data.map(r=>`
+ <tr>
+ <td><strong>${r.referrer}</strong><br><span style="font-size:11px;color:var(--text-muted)">${r.referrer_email}</span></td>
+ <td><strong>${r.referred}</strong></td>
+ <td>${r.referred_email}</td>
+ <td><span class="status-badge ${r.status==='converted'?'status-converted':'status-pending'}">${r.status==='converted'?'Converted':'Pending'}</span></td>
+ <td>${r.date}</td>
+ <td>${r.xp>0?'+':''}${r.xp} XP</td>
+ <td>
+ <button class="btn btn-secondary" onclick="showToast('View details for ${r.referred}','info')">👁 View</button>
+ ${r.status==='pending'?'<button class="btn btn-success" onclick="convertReferral('+r.id+')">✓ Convert</button>':''}
+ </td>
+ </tr>
+ `).join('');
+ updateKPIs(data);
+ }
+ function updateKPIs(data){
+ const links=new Set(data.map(r=>r.referrer_email)).size;
+ const signups=data.filter(r=>r.status==='converted').length;
+ const xp=data.reduce((sum,r)=>sum+r.xp,0);
+ const rate=data.length>0?Math.round((signups/data.length)*100):0;
+ animateValue('kpiLinks',0,links,800);
+ animateValue('kpiSignups',0,signups,800);
+ animateValue('kpiXP',0,xp,800);
+ document.getElementById('kpiConversion').textContent=rate+'%';
+ }
+ function animateValue(id,start,end,duration){
+ const el=document.getElementById(id);
+ const startTime=performance.now();
+ function update(t){
+ const p=Math.min((t-startTime)/duration,1);
+ const ease=1-Math.pow(1-p,3);
+ el.textContent=Math.round(start+(end-start)*ease);
+ if(p<1) requestAnimationFrame(update);
+ }
+ requestAnimationFrame(update);
+ }
+ function filterReferrals(){
+ const search=document.getElementById('searchInput').value.toLowerCase();
+ const status=document.getElementById('statusFilter').value;
+ const filtered=MOCK_REFERRALS.filter(r=>{
+ if(search&&!r.referrer.toLowerCase().includes(search)&&!r.referred.toLowerCase().includes(search)&&!r.referred_email.toLowerCase().includes(search)) return false;
+ if(status!=='all'&&r.status!==status) return false;
+ return true;
+ });
+ renderReferrals(filtered);
+ }
+ function convertReferral(id){
+ const r=MOCK_REFERRALS.find(x=>x.id===id);
+ if(r){ r.status='converted'; r.xp=100; showToast(`${r.referred} marked as converted! +100 XP`,'success'); renderReferrals(MOCK_REFERRALS); }
+ }
+ function exportReferrals(){
+ const csv='Referrer,Referrer Email,Referred,Referred Email,Status,Date,XP\n'+MOCK_REFERRALS.map(r=>`${r.referrer},${r.referrer_email},${r.referred},${r.referred_email},${r.status},${r.date},${r.xp}`).join('\n');
+ const blob=new Blob([csv],{type:'text/csv'});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement('a'); a.href=url; a.download='referrals.csv'; a.click();
+ URL.revokeObjectURL(url);
+ showToast('Referrals exported to CSV','success');
+ }
+ function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebarOverlay').classList.toggle('active'); }
+ document.getElementById('sidebarOverlay').addEventListener('click',toggleSidebar);
+ function logout(){ localStorage.clear(); location.href='admin/login.html'; }
+ function showToast(m,t='info'){
+ const c=document.getElementById('toastContainer'); const d=document.createElement('div'); d.className='toast '+t;
+ const i={success:'✅',error:'❌',info:'ℹ️'}; d.innerHTML=(i[t]||'ℹ️')+' '+m; c.appendChild(d); setTimeout(()=>d.remove(),5000);
+ }
+ renderReferrals(MOCK_REFERRALS);
+ </script>
+ </body>
+ </html>
