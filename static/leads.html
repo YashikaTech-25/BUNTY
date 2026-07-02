@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerOS Admin — Hot Leads</title>
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --bg-card: rgba(30, 41, 59, 0.85);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-primary: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --accent-success: #22c55e;
+            --accent-warning: #f59e0b;
+            --accent-danger: #ef4444;
+            --border-color: #334155;
+            --radius: 10px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
+            --shadow-lg: 0 10px 25px -5px rgba(0,0,0,0.4);
+            --gradient: linear-gradient(135deg, #6366f1, #8b5cf6);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar { width: 260px; background: var(--bg-secondary); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; position: fixed; left: 0; top: 0; bottom: 0; z-index: 100; transition: transform 0.3s ease; }
+        .sidebar-header { padding: 24px 20px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 12px; }
+        .sidebar-header .logo-icon { width: 36px; height: 36px; background: var(--gradient); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; color: white; }
+        .sidebar-header h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; }
+        .sidebar-header span { font-size: 12px; color: var(--accent-primary); font-weight: 600; margin-left: 4px; }
+        .nav-list { padding: 16px 12px; list-style: none; flex: 1; overflow-y: auto; }
+        .nav-list li { margin-bottom: 4px; }
+        .nav-list a { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: var(--radius); color: var(--text-secondary); text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.2s ease; cursor: pointer; }
+        .nav-list a:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+        .nav-list a.active { background: var(--gradient); color: white; box-shadow: var(--shadow); }
+        .sidebar-footer { padding: 16px; border-top: 1px solid var(--border-color); }
+        .logout-btn { width: 100%; padding: 10px; background: transparent; border: 1px solid var(--border-color); border-radius: var(--radius); color: var(--text-secondary); font-size: 14px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .logout-btn:hover { background: var(--accent-danger); color: white; border-color: var(--accent-danger); }
+
+        .main-content { margin-left: 260px; flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+
+        .top-bar { display: flex; align-items: center; justify-content: space-between; padding: 16px 28px; background: var(--bg-secondary); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 50; }
+        .menu-toggle { display: none; background: none; border: none; color: var(--text-primary); font-size: 24px; cursor: pointer; }
+        .page-title { font-size: 20px; font-weight: 700; }
+        .status-badge { display: flex; align-items: center; gap: 6px; padding: 4px 12px; background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--accent-success); }
+        .status-dot { width: 6px; height: 6px; background: var(--accent-success); border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .top-bar-right { display: flex; align-items: center; gap: 12px; }
+        .btn { padding: 8px 16px; border: none; border-radius: var(--radius); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-primary { background: var(--gradient); color: white; }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+        .btn-secondary { background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-color); }
+        .btn-success { background: var(--accent-success); color: white; }
+        .btn-warning { background: var(--accent-warning); color: #0f172a; }
+
+        .content-area { padding: 28px; flex: 1; }
+
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 28px; }
+        .kpi-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 20px; transition: transform 0.2s, box-shadow 0.2s; position: relative; overflow: hidden; }
+        .kpi-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+        .kpi-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+        .kpi-card.hot::before { background: linear-gradient(135deg, #ef4444, #f87171); }
+        .kpi-card.warm::before { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+        .kpi-card.cold::before { background: linear-gradient(135deg, #3b82f6, #60a5fa); }
+        .kpi-card.total::before { background: var(--gradient); }
+        .kpi-label { font-size: 12px; color: var(--text-muted); font-weight: 500; margin-bottom: 6px; }
+        .kpi-value { font-size: 28px; font-weight: 800; letter-spacing: -1px; }
+
+        .filter-bar { display: flex; gap: 12px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; }
+        .filter-bar input, .filter-bar select {
+            background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius);
+            padding: 8px 12px; color: var(--text-primary); font-size: 13px; font-family: inherit;
+        }
+        .filter-bar input:focus, .filter-bar select:focus { outline: none; border-color: var(--accent-primary); }
+        .filter-bar input { width: 240px; }
+
+        .leads-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+
+        .lead-card {
+            background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius);
+            padding: 20px; transition: all 0.2s; position: relative; cursor: pointer;
+        }
+        .lead-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: var(--accent-primary); }
+        .lead-card.hot { border-left: 3px solid var(--accent-danger); }
+        .lead-card.warm { border-left: 3px solid var(--accent-warning); }
+        .lead-card.cold { border-left: 3px solid var(--accent-info); }
+
+        .lead-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+        .lead-name { font-size: 16px; font-weight: 700; }
+        .lead-score {
+            padding: 2px 10px; border-radius: 20px; font-size: 12px; font-weight: 700;
+        }
+        .lead-score.hot { background: rgba(239, 68, 68, 0.15); color: #fca5a5; }
+        .lead-score.warm { background: rgba(245, 158, 11, 0.15); color: #fcd34d; }
+        .lead-score.cold { background: rgba(59, 130, 246, 0.15); color: #93c5fd; }
+
+        .lead-meta { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+        .lead-meta span { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
+
+        .lead-signals { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+        .signal { padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 500; }
+        .signal.strong { background: rgba(34, 197, 94, 0.15); color: #86efac; }
+        .signal.medium { background: rgba(245, 158, 11, 0.15); color: #fcd34d; }
+
+        .lead-actions { display: flex; gap: 8px; }
+        .lead-actions .btn { flex: 1; justify-content: center; padding: 8px; font-size: 12px; }
+
+        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 1000; display: flex; flex-direction: column; gap: 10px; }
+        .toast { padding: 14px 20px; border-radius: var(--radius); font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 10px; animation: slideIn 0.3s ease; max-width: 400px; box-shadow: var(--shadow-lg); }
+        .toast.success { background: var(--accent-success); color: white; }
+        .toast.error { background: var(--accent-danger); color: white; }
+        .toast.warning { background: var(--accent-warning); color: #0f172a; }
+        .toast.info { background: var(--accent-primary); color: white; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99; }
+        .sidebar-overlay.active { display: block; }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .menu-toggle { display: block; }
+            .content-area { padding: 16px; }
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+            .filter-bar input { width: 100%; }
+        }
+        @media (max-width: 480px) {
+            .kpi-grid { grid-template-columns: 1fr 1fr; }
+            .leads-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-icon">C</div>
+            <h1>CareerOS <span>Admin</span></h1>
+        </div>
+        <ul class="nav-list">
+            <li><a href="admin.html">📅 <span>Social Calendar</span></a></li>
+            <li><a href="analytics.html">📊 <span>Analytics</span></a></li>
+            <li><a href="leads.html" class="active">🔥 <span>Hot Leads</span></a></li>
+            <li><a href="#" onclick="showToast('Referrals coming soon', 'info')">🎁 <span>Referrals</span></a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <button class="logout-btn" onclick="logout()">🚪 <span>Logout</span></button>
+        </div>
+    </aside>
+
+    <div class="main-content">
+        <header class="top-bar">
+            <div class="top-bar-left">
+                <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+                <div class="page-title">Hot Leads</div>
+                <div class="status-badge"><span class="status-dot"></span><span>Live</span></div>
+            </div>
+            <div class="top-bar-right">
+                <button class="btn btn-primary" onclick="fetchLeads()">🔄 Refresh</button>
+                <button class="btn btn-secondary" onclick="exportLeads()">📤 Export</button>
+            </div>
+        </header>
+
+        <main class="content-area">
+            <div class="kpi-grid">
+                <div class="kpi-card hot">
+                    <div class="kpi-label">🔥 Hot Leads</div>
+                    <div class="kpi-value" id="kpiHot">0</div>
+                </div>
+                <div class="kpi-card warm">
+                    <div class="kpi-label">🌡️ Warm Leads</div>
+                    <div class="kpi-value" id="kpiWarm">0</div>
+                </div>
+                <div class="kpi-card cold">
+                    <div class="kpi-label">❄️ Cold Leads</div>
+                    <div class="kpi-value" id="kpiCold">0</div>
+                </div>
+                <div class="kpi-card total">
+                    <div class="kpi-label">📊 Total Leads</div>
+                    <div class="kpi-value" id="kpiTotal">0</div>
+                </div>
+            </div>
+
+            <div class="filter-bar">
+                <input type="text" id="searchInput" placeholder="🔍 Search by name, email, or company..." oninput="filterLeads()">
+                <select id="scoreFilter" onchange="filterLeads()">
+                    <option value="all">All Scores</option>
+                    <option value="hot">Hot (70+)</option>
+                    <option value="warm">Warm (40-69)</option>
+                    <option value="cold">Cold (< 40)</option>
+                </select>
+                <select id="sortBy" onchange="filterLeads()">
+                    <option value="score">Sort by Score</option>
+                    <option value="date">Sort by Date</option>
+                    <option value="name">Sort by Name</option>
+                </select>
+            </div>
+
+            <div class="leads-grid" id="leadsGrid"></div>
+        </main>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        const API_BASE = 'https://www.imusinfosystems.com';
+        const TOKEN_KEY = 'admin_token';
+
+        const MOCK_LEADS = [
+            { id: 1, name: "Rahul Sharma", email: "rahul.sharma@techcorp.com", phone: "+91 98765 43210", company: "TechCorp India", score: 87, status: "hot", last_activity: "2026-07-03 09:15", signals: ["Viewed pricing 3x", "Started checkout", "Phone verified"], source: "Direct" },
+            { id: 2, name: "Priya Menon", email: "priya.m@startup.in", phone: "+91 99876 54321", company: "Startup.in", score: 82, status: "hot", last_activity: "2026-07-03 08:42", signals: ["Used referral code", "Completed onboarding", "High engagement"], source: "Referral" },
+            { id: 3, name: "Amit Kumar", email: "amit.k@consult.com", phone: "+91 98765 12345", company: "ConsultCo", score: 76, status: "hot", last_activity: "2026-07-02 18:30", signals: ["Downloaded resume template", "Viewed Elite plan", "Email opened 5x"], source: "Email" },
+            { id: 4, name: "Sneha Patel", email: "sneha.p@design.io", phone: "+91 98765 67890", company: "Design.io", score: 65, status: "warm", last_activity: "2026-07-02 14:20", signals: ["Signed up", "Viewed Pro plan", "Low engagement"], source: "Social" },
+            { id: 5, name: "Vikram Rao", email: "vikram.r@finance.com", phone: "+91 99887 77665", company: "FinanceHub", score: 58, status: "warm", last_activity: "2026-07-01 11:00", signals: ["Visited pricing page", "No checkout"], source: "Search" },
+            { id: 6, name: "Anjali Gupta", email: "anjali.g@edu.org", phone: "+91 98765 98765", company: "EduOrg", score: 45, status: "warm", last_activity: "2026-06-30 16:45", signals: ["Viewed Free plan only", "No email verification"], source: "Direct" },
+            { id: 7, name: "Karan Singh", email: "karan.s@retail.in", phone: "+91 98765 11111", company: "RetailIn", score: 32, status: "cold", last_activity: "2026-06-28 10:30", signals: ["Single page visit", "Bounced immediately"], source: "Ads" },
+            { id: 8, name: "Meera Iyer", email: "meera.i@health.co", phone: "+91 99876 22222", company: "HealthCo", score: 28, status: "cold", last_activity: "2026-06-27 09:00", signals: ["No engagement signals"], source: "Search" },
+        ];
+
+        let allLeads = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchLeads();
+        });
+
+        async function fetchLeads() {
+            const token = localStorage.getItem(TOKEN_KEY) || 'test-token-12345';
+            try {
+                const res = await fetch(`${API_BASE}/api/operations/leads/hot`, {
+                    headers: { 'X-Admin-Token': token }
+                });
+                const data = await res.json();
+                if (data && data.leads) {
+                    allLeads = data.leads;
+                    showToast(`${data.leads.length} leads loaded`, 'success');
+                } else {
+                    allLeads = MOCK_LEADS;
+                    showToast('API returned empty — using mock data', 'warning');
+                }
+            } catch (e) {
+                allLeads = MOCK_LEADS;
+                showToast('API error — using mock data', 'warning');
+            }
+            updateKPIs();
+            filterLeads();
+        }
+
+        function updateKPIs() {
+            const hot = allLeads.filter(l => l.score >= 70).length;
+            const warm = allLeads.filter(l => l.score >= 40 && l.score < 70).length;
+            const cold = allLeads.filter(l => l.score < 40).length;
+            animateValue('kpiHot', 0, hot, 800);
+            animateValue('kpiWarm', 0, warm, 800);
+            animateValue('kpiCold', 0, cold, 800);
+            animateValue('kpiTotal', 0, allLeads.length, 800);
+        }
+
+        function animateValue(id, start, end, duration) {
+            const el = document.getElementById(id);
+            const startTime = performance.now();
+            function update(t) {
+                const p = Math.min((t - startTime) / duration, 1);
+                const ease = 1 - Math.pow(1 - p, 3);
+                el.textContent = Math.round(start + (end - start) * ease);
+                if (p < 1) requestAnimationFrame(update);
+            }
+            requestAnimationFrame(update);
+        }
+
+        function filterLeads() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const scoreFilter = document.getElementById('scoreFilter').value;
+            const sortBy = document.getElementById('sortBy').value;
+
+            let filtered = allLeads.filter(l => {
+                if (search && !l.name.toLowerCase().includes(search) && !l.email.toLowerCase().includes(search) && !l.company.toLowerCase().includes(search)) return false;
+                if (scoreFilter === 'hot' && l.score < 70) return false;
+                if (scoreFilter === 'warm' && (l.score < 40 || l.score >= 70)) return false;
+                if (scoreFilter === 'cold' && l.score >= 40) return false;
+                return true;
+            });
+
+            filtered.sort((a, b) => {
+                if (sortBy === 'score') return b.score - a.score;
+                if (sortBy === 'date') return new Date(b.last_activity) - new Date(a.last_activity);
+                if (sortBy === 'name') return a.name.localeCompare(b.name);
+                return 0;
+            });
+
+            renderLeads(filtered);
+        }
+
+        function renderLeads(leads) {
+            const grid = document.getElementById('leadsGrid');
+            if (leads.length === 0) {
+                grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text-muted)">No leads match your filters</div>';
+                return;
+            }
+            grid.innerHTML = leads.map(l => `
+                <div class="lead-card ${l.status}">
+                    <div class="lead-header">
+                        <div class="lead-name">${escapeHtml(l.name)}</div>
+                        <div class="lead-score ${l.status}">${l.score}</div>
+                    </div>
+                    <div class="lead-meta">
+                        <span>📧 ${escapeHtml(l.email)}</span>
+                        <span>📱 ${escapeHtml(l.phone)}</span>
+                        <span>🏢 ${escapeHtml(l.company)}</span>
+                        <span>📅 ${formatDate(l.last_activity)}</span>
+                        <span>📍 ${escapeHtml(l.source)}</span>
+                    </div>
+                    <div class="lead-signals">
+                        ${l.signals.map(s => `<span class="signal ${l.score >= 70 ? 'strong' : 'medium'}">${escapeHtml(s)}</span>`).join('')}
+                    </div>
+                    <div class="lead-actions">
+                        <button class="btn btn-success" onclick="contactLead(${l.id}, 'whatsapp')">📱 WhatsApp</button>
+                        <button class="btn btn-primary" onclick="contactLead(${l.id}, 'email')">✉️ Email</button>
+                        <button class="btn btn-warning" onclick="contactLead(${l.id}, 'call')">📞 Call</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function contactLead(id, channel) {
+            const lead = allLeads.find(l => l.id === id);
+            if (!lead) return;
+            const actions = { whatsapp: `Opening WhatsApp for ${lead.name}...`, email: `Composing email to ${lead.name}...`, call: `Preparing call to ${lead.phone}...` };
+            showToast(actions[channel], 'info');
+        }
+
+        function exportLeads() {
+            const csv = 'Name,Email,Phone,Company,Score,Status,Source,Last Activity\n' +
+                allLeads.map(l => `${l.name},${l.email},${l.phone},${l.company},${l.score},${l.status},${l.source},${l.last_activity}`).join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'hot_leads.csv'; a.click();
+            URL.revokeObjectURL(url);
+            showToast('Leads exported to CSV', 'success');
+        }
+
+        function formatDate(dt) {
+            if (!dt) return '--';
+            const d = new Date(dt);
+            return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+        }
+
+        function escapeHtml(t) {
+            if (!t) return '';
+            const d = document.createElement('div'); d.textContent = t; return d.innerHTML;
+        }
+
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebarOverlay').classList.toggle('active'); }
+        document.getElementById('sidebarOverlay').addEventListener('click', toggleSidebar);
+        function logout() { localStorage.clear(); location.reload(); }
+        function showToast(m, type = 'info') {
+            const c = document.getElementById('toastContainer');
+            const t = document.createElement('div'); t.className = `toast ${type}`;
+            const i = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
+            t.innerHTML = `${i[type] || 'ℹ️'} ${m}`; c.appendChild(t); setTimeout(() => t.remove(), 5000);
+        }
+    </script>
+</body>
+</html>
