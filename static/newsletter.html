@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerOS — Weekly Newsletter</title>
+<meta name="description" content="Get weekly job market insights, resume tips, interview strategies, and career advice delivered to your inbox. No spam, unsubscribe anytime.">
+<style>
+:root { --bg-primary:#0f172a; --bg-secondary:#1e293b; --bg-tertiary:#334155; --text-primary:#f8fafc; --text-secondary:#94a3b8; --text-muted:#64748b; --accent-primary:#6366f1; --accent-success:#22c55e; --border-color:#334155; --radius:12px; --shadow-lg:0 10px 25px -5px rgba(0,0,0,0.4); --gradient:linear-gradient(135deg,#6366f1,#8b5cf6); }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg-primary); color:var(--text-primary); min-height:100vh; line-height:1.6; }
+.nav-bar { display:flex; align-items:center; justify-content:space-between; padding:16px 28px; background:var(--bg-secondary); border-bottom:1px solid var(--border-color); position:sticky; top:0; z-index:100; }
+.nav-logo { display:flex; align-items:center; gap:10px; font-size:20px; font-weight:800; color:var(--text-primary); text-decoration:none; }
+.nav-logo .logo-icon { width:36px; height:36px; background:var(--gradient); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; color:white; }
+.nav-links { display:flex; gap:6px; }
+.nav-links a { padding:8px 16px; border-radius:var(--radius); color:var(--text-secondary); text-decoration:none; font-size:14px; font-weight:500; transition:all 0.2s; cursor:pointer; border:none; background:none; font-family:inherit; }
+.nav-links a:hover { color:var(--text-primary); background:var(--bg-tertiary); }
+.content-area { padding:28px; max-width:800px; margin:0 auto; }
+.page-header { text-align:center; margin-bottom:48px; padding:48px 0; }
+.page-header .mail { font-size:64px; margin-bottom:16px; }
+.page-header h1 { font-size:36px; font-weight:800; margin-bottom:12px; }
+.page-header p { font-size:16px; color:var(--text-secondary); max-width:600px; margin:0 auto; }
+.signup-card { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:28px; margin-bottom:24px; text-align:center; }
+.signup-card h2 { font-size:20px; font-weight:700; margin-bottom:8px; }
+.signup-card p { font-size:14px; color:var(--text-secondary); margin-bottom:20px; }
+.form-group { display:flex; gap:12px; margin-bottom:16px; }
+.form-group input { flex:1; padding:12px 16px; background:var(--bg-primary); border:1px solid var(--border-color); border-radius:var(--radius); color:var(--text-primary); font-size:14px; }
+.form-group input:focus { outline:none; border-color:var(--accent-primary); }
+.btn { padding:12px 24px; border:none; border-radius:var(--radius); font-size:14px; font-weight:600; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:8px; }
+.btn-primary { background:var(--gradient); color:white; }
+.btn-secondary { background:var(--bg-tertiary); color:var(--text-primary); border:1px solid var(--border-color); }
+.privacy-note { font-size:12px; color:var(--text-muted); margin-top:12px; }
+.privacy-note a { color:var(--accent-primary); text-decoration:none; }
+.past-issues { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:28px; margin-bottom:24px; }
+.past-issues h2 { font-size:20px; font-weight:700; margin-bottom:16px; }
+.issue-item { display:flex; align-items:center; gap:16px; padding:14px; background:var(--bg-primary); border-radius:var(--radius); margin-bottom:10px; transition:all 0.2s; }
+.issue-item:hover { border:1px solid var(--border-color); }
+.issue-item .date { font-size:12px; color:var(--text-muted); width:80px; flex-shrink:0; }
+.issue-item h3 { font-size:14px; font-weight:600; flex:1; }
+.issue-item .read { color:var(--accent-primary); font-size:13px; font-weight:600; cursor:pointer; text-decoration:none; }
+.benefits-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-bottom:32px; }
+.benefit-card { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:20px; text-align:center; }
+.benefit-card .icon { font-size:28px; margin-bottom:8px; }
+.benefit-card h3 { font-size:14px; font-weight:700; margin-bottom:4px; }
+.benefit-card p { font-size:12px; color:var(--text-muted); }
+.testimonial { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:24px; margin-bottom:16px; }
+.testimonial p { font-size:14px; color:var(--text-secondary); font-style:italic; margin-bottom:12px; }
+.testimonial .author { font-size:13px; font-weight:600; }
+.testimonial .author span { font-weight:400; color:var(--text-muted); }
+.toast-container { position:fixed; top:24px; right:24px; z-index:1000; display:flex; flex-direction:column; gap:10px; }
+.toast { padding:14px 20px; border-radius:var(--radius); font-size:14px; font-weight:500; display:flex; align-items:center; gap:10px; animation:slideIn 0.3s ease; max-width:400px; box-shadow:var(--shadow-lg); }
+.toast.success { background:var(--accent-success); color:white; }
+@keyframes slideIn { from { transform:translateX(100%); opacity:0; } to { transform:translateX(0); opacity:1; } }
+@media(max-width:768px){ .content-area { padding:16px; } .page-header { padding:32px 16px; } .form-group { flex-direction:column; } }
+</style>
+</head>
+<body>
+<nav class="nav-bar">
+<a href="index.html" class="nav-logo"><div class="logo-icon">C</div>CareerOS</a>
+<div class="nav-links">
+<a href="index.html">Home</a>
+<a href="newsletter.html" style="color:var(--text-primary); background:var(--bg-tertiary);">Newsletter</a>
+</div>
+</nav>
+<div class="content-area">
+<div class="page-header">
+<div class="mail">📬</div>
+<h1>CareerOS Weekly</h1>
+<p>Get the best job market insights, resume tips, and interview strategies delivered to your inbox every Tuesday.</p>
+</div>
+<div class="benefits-grid">
+<div class="benefit-card"><div class="icon">📊</div><h3>Market Insights</h3><p>Who's hiring, salary trends, hot skills</p></div>
+<div class="benefit-card"><div class="icon">📝</div><h3>Resume Tips</h3><p>Weekly templates and ATS tricks</p></div>
+<div class="benefit-card"><div class="icon">🎯</div><h3>Interview Prep</h3><p>Questions, frameworks, and answers</p></div>
+<div class="benefit-card"><div class="icon">🤝</div><h3>Networking</h3><p>Events, communities, and connections</p></div>
+</div>
+<div class="signup-card">
+<h2>Join 5,000+ Subscribers</h2>
+<p>No spam. Unsubscribe anytime. We respect your inbox.</p>
+<div class="form-group">
+<input type="email" id="emailInput" placeholder="Enter your email address">
+<button class="btn btn-primary" onclick="subscribe()">🚀 Subscribe</button>
+</div>
+<div class="privacy-note">By subscribing, you agree to our <a href="privacy.html">Privacy Policy</a>. We never share your email.</div>
+</div>
+<div class="past-issues">
+<h2>📰 Past Issues</h2>
+<div class="issue-item"><span class="date">Jul 1, 2026</span><h3>The 5 Skills Every Tech Hire Wants in 2026</h3><a href="#" class="read" onclick="alert('Read issue: The 5 Skills Every Tech Hire Wants in 2026'); return false;">Read →</a></div>
+<div class="issue-item"><span class="date">Jun 24, 2026</span><h3>How to Negotiate a 30% Salary Bump</h3><a href="#" class="read" onclick="alert('Read issue: How to Negotiate a 30% Salary Bump'); return false;">Read →</a></div>
+<div class="issue-item"><span class="date">Jun 17, 2026</span><h3>Resume Red Flags: 8 Mistakes Killing Your Applications</h3><a href="#" class="read" onclick="alert('Read issue: Resume Red Flags'); return false;">Read →</a></div>
+<div class="issue-item"><span class="date">Jun 10, 2026</span><h3>Remote Work in 2026: Companies Still Hiring Globally</h3><a href="#" class="read" onclick="alert('Read issue: Remote Work in 2026'); return false;">Read →</a></div>
+</div>
+<div class="testimonial">
+<p>"The CareerOS newsletter is the only email I actually read every week. Last month's tip on resume formatting helped me land 3 interviews in one week."</p>
+<div class="author">— Aisha Khan <span>• UX Designer at Zerodha</span></div>
+</div>
+<div class="testimonial">
+<p>"I subscribed for the market insights but stayed for the interview prep. The STAR framework breakdown was a game-changer for my Google interview."</p>
+<div class="author">— Vikram Patel <span>• Software Engineer at Google</span></div>
+</div>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+<script>
+function subscribe() {
+const email = document.getElementById('emailInput').value;
+if (!email || !email.includes('@')) { showToast('Please enter a valid email','error'); return; }
+showToast('Welcome! Check your inbox for confirmation.','success');
+document.getElementById('emailInput').value = '';
+}
+function showToast(m, t = 'info') {
+const c = document.getElementById('toastContainer');
+const d = document.createElement('div'); d.className = 'toast ' + t;
+const i = { success: '✅', error: '❌', info: 'ℹ️' };
+d.innerHTML = (i[t] || 'ℹ️') + ' ' + m; c.appendChild(d); setTimeout(() => d.remove(), 5000);
+}
+</script>
+</body>
+</html>
