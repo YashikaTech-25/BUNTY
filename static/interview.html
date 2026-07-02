@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerOS — Interview Prep</title>
+<style>
+:root { --bg-primary:#0f172a; --bg-secondary:#1e293b; --bg-tertiary:#334155; --text-primary:#f8fafc; --text-secondary:#94a3b8; --text-muted:#64748b; --accent-primary:#6366f1; --accent-success:#22c55e; --accent-warning:#f59e0b; --border-color:#334155; --radius:12px; --shadow:0 4px 6px -1px rgba(0,0,0,0.3); --shadow-lg:0 10px 25px -5px rgba(0,0,0,0.4); --gradient:linear-gradient(135deg,#6366f1,#8b5cf6); }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg-primary); color:var(--text-primary); min-height:100vh; }
+.nav-bar { display:flex; align-items:center; justify-content:space-between; padding:16px 28px; background:var(--bg-secondary); border-bottom:1px solid var(--border-color); position:sticky; top:0; z-index:100; }
+.nav-logo { display:flex; align-items:center; gap:10px; font-size:20px; font-weight:800; color:var(--text-primary); text-decoration:none; }
+.nav-logo .logo-icon { width:36px; height:36px; background:var(--gradient); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; color:white; }
+.nav-links { display:flex; gap:6px; }
+.nav-links a { padding:8px 16px; border-radius:var(--radius); color:var(--text-secondary); text-decoration:none; font-size:14px; font-weight:500; transition:all 0.2s; cursor:pointer; border:none; background:none; font-family:inherit; }
+.nav-links a:hover { color:var(--text-primary); background:var(--bg-tertiary); }
+.nav-links a.active { color:white; background:var(--gradient); }
+.content-area { padding:28px; max-width:900px; margin:0 auto; }
+.category-tabs { display:flex; gap:8px; margin-bottom:24px; flex-wrap:wrap; }
+.category-tab { padding:10px 18px; background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); color:var(--text-secondary); font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s; font-family:inherit; }
+.category-tab:hover { color:var(--text-primary); }
+.category-tab.active { background:var(--gradient); color:white; border-color:transparent; }
+.question-card { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:24px; margin-bottom:16px; transition:all 0.2s; }
+.question-card:hover { border-color:var(--accent-primary); }
+.question-card .q-number { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; background:var(--gradient); border-radius:50%; font-size:12px; font-weight:700; color:white; margin-bottom:12px; }
+.question-card h3 { font-size:16px; font-weight:700; margin-bottom:12px; }
+.question-card .answer { display:none; padding:16px; background:var(--bg-primary); border-radius:var(--radius); margin-top:12px; font-size:14px; color:var(--text-secondary); line-height:1.6; }
+.question-card .answer.show { display:block; }
+.question-card .answer strong { color:var(--text-primary); }
+.question-card .btn { margin-top:12px; padding:8px 16px; background:var(--bg-tertiary); border:1px solid var(--border-color); border-radius:var(--radius); color:var(--text-primary); font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s; }
+.question-card .btn:hover { background:var(--accent-primary); border-color:var(--accent-primary); }
+.timer-box { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:20px; text-align:center; margin-bottom:24px; }
+.timer-box .time { font-size:48px; font-weight:800; font-family:monospace; letter-spacing:2px; }
+.timer-box .label { font-size:13px; color:var(--text-muted); margin-top:4px; }
+.timer-box .controls { display:flex; gap:12px; justify-content:center; margin-top:16px; }
+.btn { padding:10px 20px; border:none; border-radius:var(--radius); font-size:14px; font-weight:600; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:8px; }
+.btn-primary { background:var(--gradient); color:white; }
+.btn-secondary { background:var(--bg-tertiary); color:var(--text-primary); border:1px solid var(--border-color); }
+.btn-success { background:var(--accent-success); color:white; }
+.practice-mode { display:none; }
+.practice-mode.active { display:block; }
+.toast-container { position:fixed; top:24px; right:24px; z-index:1000; display:flex; flex-direction:column; gap:10px; }
+.toast { padding:14px 20px; border-radius:var(--radius); font-size:14px; font-weight:500; display:flex; align-items:center; gap:10px; animation:slideIn 0.3s ease; max-width:400px; box-shadow:var(--shadow-lg); }
+.toast.success { background:var(--accent-success); color:white; }
+.toast.info { background:var(--accent-primary); color:white; }
+@keyframes slideIn { from { transform:translateX(100%); opacity:0; } to { transform:translateX(0); opacity:1; } }
+@media(max-width:768px){ .nav-links { display:none; } .content-area { padding:16px; } }
+</style>
+</head>
+<body>
+<nav class="nav-bar">
+<a href="index.html" class="nav-logo"><div class="logo-icon">C</div>CareerOS</a>
+<div class="nav-links">
+<a href="jobs.html">Jobs</a>
+<a href="resume.html">Resume</a>
+<a href="interview.html" class="active">Interview</a>
+<a href="applications.html">Applications</a>
+<a href="settings.html">Settings</a>
+</div>
+</nav>
+<div class="content-area">
+<div class="timer-box" id="timerBox">
+<div class="time" id="timerDisplay">02:00</div>
+<div class="label">Practice Timer — Answer in 2 minutes</div>
+<div class="controls">
+<button class="btn btn-primary" onclick="startTimer()">▶ Start</button>
+<button class="btn btn-secondary" onclick="resetTimer()">↺ Reset</button>
+</div>
+</div>
+<div class="category-tabs">
+<button class="category-tab active" onclick="switchCategory('behavioral')">Behavioral</button>
+<button class="category-tab" onclick="switchCategory('technical')">Technical</button>
+<button class="category-tab" onclick="switchCategory('system')">System Design</button>
+<button class="category-tab" onclick="switchCategory('salary')">Salary Negotiation</button>
+</div>
+<div id="behavioral" class="practice-mode active">
+<div class="question-card">
+<div class="q-number">1</div>
+<h3>Tell me about a time you faced a conflict with a teammate.</h3>
+<button class="btn" onclick="toggleAnswer(this)">💡 Show Answer</button>
+<div class="answer">
+<strong>STAR Framework:</strong><br><br>
+<strong>Situation:</strong> In my previous role, my teammate and I disagreed on the tech stack for a new microservice.<br><br>
+<strong>Task:</strong> I needed to resolve this without derailing the project timeline.<br><br>
+<strong>Action:</strong> I scheduled a 1:1, listened to their concerns, then proposed a proof-of-concept where we tested both approaches for 2 days. We measured performance, maintainability, and team familiarity.<br><br>
+<strong>Result:</strong> We chose their suggestion (Go over Python) because it performed 40% better for our use case. The service went live 2 weeks early and became a template for future projects.
+</div>
+</div>
+<div class="question-card">
+<div class="q-number">2</div>
+<h3>Describe a time you failed and what you learned.</h3>
+<button class="btn" onclick="toggleAnswer(this)">💡 Show Answer</button>
+<div class="answer">
+<strong>Key points:</strong> Be honest, show ownership, emphasize learning, and connect to how you'd avoid it now.<br><br>
+<em>Example:</em> "I once shipped a feature without proper load testing. It crashed during peak hours. I learned to always run load tests in staging, and now I advocate for chaos engineering in every sprint."
+</div>
+</div>
+<div class="question-card">
+<div class="q-number">3</div>
+<h3>Why do you want to leave your current job?</h3>
+<button class="btn" onclick="toggleAnswer(this)">💡 Show Answer</button>
+<div class="answer">
+<strong>Never:</strong> Complain about your boss, company, or colleagues.<br><br>
+<strong>Do:</strong> Focus on growth, new challenges, and alignment with the new role.<br><br>
+<em>Example:</em> "I've learned a lot in my current role, but I'm ready for a senior position where I can own architecture decisions and mentor a team. This role offers exactly that."
+</div>
+</div>
+</div>
+<div id="technical" class="practice-mode">
+<div class="question-card">
+<div class="q-number">1</div>
+<h3>Explain how a HashMap works internally.</h3>
+<button class="btn" onclick="toggleAnswer(this)">💡 Show Answer</button>
+<div class="answer">
+A HashMap uses an array of buckets. When you put a key-value pair, it:<br>
+1. Computes hashCode() of the key<br>
+2. Applies hash() to spread bits (reduce collisions)<br>
+3. Computes index = (n-1) & hash<br>
+4. Stores in the bucket. If collision, uses linked list (or tree if >8 entries)<br><br>
+<strong>Time Complexity:</strong> O(1) average for get/put, O(n) worst case (all collide)<br>
+<strong>Load factor:</strong> 0.75 default — resize when 75% full
+</div>
+</div>
+<div class="question-card">
+<div class="q-number">2</div>
+<h3>What's the difference between REST and GraphQL?</h3>
+<button class="btn" onclick="toggleAnswer(this)">💡 Show Answer</button>
+<div class="answer">
+<strong>REST:</strong> Multiple endpoints, fixed response structure, over-fetching/under-fetching common, stateless, cache-friendly.<br><br>
+<strong>GraphQL:</strong> Single endpoint, client specifies exact fields needed, no over-fetching, strong typing via schema, harder to cache at HTTP level.<br><br>
+<strong>When to use:</strong> REST for simple CRUD, GraphQL for complex data relationships or mobile apps with varying data needs.
+</div>
+</div>
+</div>
+<div id="system" class="practice-mode">
+<div class="question-card">
+<div class="q-number">1</div>
+<h3>Design a URL shortener like Bitly.</h3>
+<button class="btn" onclick="toggleAnswer(this)">💡 Show Answer</button>
+<div class="answer">
+<strong>Requirements:</strong> Shorten URLs, redirect, custom aliases, analytics, 1M+ requests/day.<br><br>
+<strong>API:</strong> POST /shorten {url, custom_alias?} → {short_url}<br>
+GET /{short_code} → 302 redirect<br><br>
+<strong>Database:</strong> URL mapping table (short_code → original_url, created_at, clicks). Use base62 encoding for short codes. 7 chars = 62^7 ≈ 3.5 trillion unique URLs.<br><br>
+<strong>Cache:</strong> Redis for hot URLs (80% of traffic is 20% of URLs).<br><br>
+<strong>Analytics:</strong> Kafka → Click stream → aggregate hourly.
+</div>
+</div>
+<div class="question-card">
+<div class="q-number">2</div>
+<h3>Design a rate limiter.</h3>
+<button class="btn" onclick="toggleAnswer(this)">💡 Show Answer</button>
+<div class="answer">
+<strong>Algorithms:</strong><br>
+• Token Bucket — tokens refill at constant rate, burst allowed<br>
+• Leaky Bucket — requests processed at fixed rate, queue for bursts<br>
+• Sliding Window — most accurate, counts requests in last N seconds<br><br>
+<strong>Implementation:</strong> Redis with INCR and EXPIRE. Key = user_id:endpoint, TTL = window size.<br><br>
+<strong>Headers:</strong> X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset
+</div>
+</div>
+</div>
+<div id="salary" class="practice-mode">
+<div class="question-card">
+<div class="q-number">1</div>
+<h3>What are your salary expectations?</h3>
+<button class="btn" onclick="toggleAnswer(this)">💡 Show Answer</button>
+<div class="answer">
+<strong>Never give a number first.</strong> Deflect with research-backed ranges.<br><br>
+<em>Good answer:</em> "Based on my research for this role in Bangalore, the market range is ₹20-30L. Given my 5 years of experience and the impact I drove at my last company (40% revenue growth), I'm targeting the upper end of that range. I'm open to discussing the full package including equity and benefits."<br><br>
+<strong>Research sources:</strong> Levels.fyi, Glassdoor, LinkedIn Salary, peers in the industry.
+</div>
+</div>
+<div class="question-card">
+<div class="q-number">2</div>
+<h3>They offer ₹18L, you want ₹25L. How do you negotiate?</h3>
+<button class="btn" onclick="toggleAnswer(this)">💡 Show Answer</button>
+<div class="answer">
+<strong>Step 1:</strong> Express gratitude. "Thank you, I'm excited about the role."<br><br>
+<strong>Step 2:</strong> Anchor with data. "Based on market data and my experience, I was expecting closer to ₹25L. Is there flexibility?"<br><br>
+<strong>Step 3:</strong> If they say no, negotiate non-salary: signing bonus, remote days, equity, learning budget, faster review cycle.<br><br>
+<strong>Step 4:</strong> If you have another offer, mention it tactfully. "I have another offer at ₹24L, but I prefer this team. Can we match?"
+</div>
+</div>
+</div>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+<script>
+let timerInterval; let seconds=120; let running=false;
+function startTimer(){ if(running) return; running=true; timerInterval=setInterval(()=>{ seconds--; updateTimerDisplay(); if(seconds<=0){ clearInterval(timerInterval); running=false; showToast('Time\'s up! Practice your answer.','info'); } },1000); }
+function resetTimer(){ clearInterval(timerInterval); running=false; seconds=120; updateTimerDisplay(); }
+function updateTimerDisplay(){ const m=Math.floor(seconds/60); const s=seconds%60; document.getElementById('timerDisplay').textContent=`${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; }
+function switchCategory(cat){ document.querySelectorAll('.category-tab').forEach(t=>t.classList.remove('active')); document.querySelectorAll('.practice-mode').forEach(m=>m.classList.remove('active')); event.target.classList.add('active'); document.getElementById(cat).classList.add('active'); }
+function toggleAnswer(btn){ const ans=btn.parentElement.querySelector('.answer'); ans.classList.toggle('show'); btn.textContent=ans.classList.contains('show')?'🙈 Hide Answer':'💡 Show Answer'; }
+function showToast(m,t='info'){ const c=document.getElementById('toastContainer'); const d=document.createElement('div'); d.className='toast '+t; const i={success:'✅',error:'❌',info:'ℹ️'}; d.innerHTML=(i[t]||'ℹ️')+' '+m; c.appendChild(d); setTimeout(()=>d.remove(),5000); }
+</script>
+</body>
+</html>

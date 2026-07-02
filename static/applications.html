@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerOS — Application Tracker</title>
+<style>
+:root { --bg-primary:#0f172a; --bg-secondary:#1e293b; --bg-tertiary:#334155; --text-primary:#f8fafc; --text-secondary:#94a3b8; --text-muted:#64748b; --accent-primary:#6366f1; --accent-success:#22c55e; --accent-warning:#f59e0b; --accent-danger:#ef4444; --border-color:#334155; --radius:12px; --shadow:0 4px 6px -1px rgba(0,0,0,0.3); --shadow-lg:0 10px 25px -5px rgba(0,0,0,0.4); --gradient:linear-gradient(135deg,#6366f1,#8b5cf6); }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg-primary); color:var(--text-primary); min-height:100vh; }
+.nav-bar { display:flex; align-items:center; justify-content:space-between; padding:16px 28px; background:var(--bg-secondary); border-bottom:1px solid var(--border-color); position:sticky; top:0; z-index:100; }
+.nav-logo { display:flex; align-items:center; gap:10px; font-size:20px; font-weight:800; color:var(--text-primary); text-decoration:none; }
+.nav-logo .logo-icon { width:36px; height:36px; background:var(--gradient); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; color:white; }
+.nav-links { display:flex; gap:6px; }
+.nav-links a { padding:8px 16px; border-radius:var(--radius); color:var(--text-secondary); text-decoration:none; font-size:14px; font-weight:500; transition:all 0.2s; cursor:pointer; border:none; background:none; font-family:inherit; }
+.nav-links a:hover { color:var(--text-primary); background:var(--bg-tertiary); }
+.nav-links a.active { color:white; background:var(--gradient); }
+.content-area { padding:28px; max-width:1200px; margin:0 auto; }
+.kpi-row { display:grid; grid-template-columns:repeat(5,1fr); gap:16px; margin-bottom:28px; }
+.kpi-card { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:20px; text-align:center; transition:all 0.2s; }
+.kpi-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-lg); }
+.kpi-card .value { font-size:28px; font-weight:800; margin-bottom:4px; }
+.kpi-card .label { font-size:12px; color:var(--text-muted); }
+.kpi-card.applied .value { color:var(--accent-primary); }
+.kpi-card.screening .value { color:var(--accent-warning); }
+.kpi-card.interview .value { color:#3b82f6; }
+.kpi-card.offer .value { color:var(--accent-success); }
+.kpi-card.rejected .value { color:var(--accent-danger); }
+.pipeline { display:flex; gap:8px; margin-bottom:24px; overflow-x:auto; padding-bottom:8px; }
+.pipeline-column { min-width:240px; flex:1; background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:16px; }
+.pipeline-column h3 { font-size:14px; font-weight:700; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; }
+.pipeline-column h3 .count { font-size:12px; color:var(--text-muted); font-weight:500; }
+.pipeline-card { background:var(--bg-primary); border:1px solid var(--border-color); border-radius:var(--radius); padding:14px; margin-bottom:8px; cursor:pointer; transition:all 0.2s; }
+.pipeline-card:hover { border-color:var(--accent-primary); }
+.pipeline-card h4 { font-size:14px; font-weight:600; margin-bottom:4px; }
+.pipeline-card .company { font-size:12px; color:var(--text-muted); margin-bottom:8px; }
+.pipeline-card .meta { display:flex; gap:8px; font-size:11px; color:var(--text-muted); }
+.pipeline-card .status-badge { padding:2px 8px; border-radius:12px; font-size:10px; font-weight:600; }
+.pipeline-card .status-badge.applied { background:rgba(99,102,241,0.15); color:#a5b4fc; }
+.pipeline-card .status-badge.interview { background:rgba(59,130,246,0.15); color:#93c5fd; }
+.pipeline-card .status-badge.offer { background:rgba(34,197,94,0.15); color:#86efac; }
+.pipeline-card .status-badge.rejected { background:rgba(239,68,68,0.15); color:#fca5a5; }
+.add-btn { width:100%; padding:10px; background:transparent; border:1px dashed var(--border-color); border-radius:var(--radius); color:var(--text-muted); font-size:13px; cursor:pointer; transition:all 0.2s; }
+.add-btn:hover { border-color:var(--accent-primary); color:var(--accent-primary); }
+.toast-container { position:fixed; top:24px; right:24px; z-index:1000; display:flex; flex-direction:column; gap:10px; }
+.toast { padding:14px 20px; border-radius:var(--radius); font-size:14px; font-weight:500; display:flex; align-items:center; gap:10px; animation:slideIn 0.3s ease; max-width:400px; box-shadow:var(--shadow-lg); }
+.toast.success { background:var(--accent-success); color:white; }
+.toast.info { background:var(--accent-primary); color:white; }
+@keyframes slideIn { from { transform:translateX(100%); opacity:0; } to { transform:translateX(0); opacity:1; } }
+@media(max-width:768px){ .nav-links { display:none; } .content-area { padding:16px; } .kpi-row { grid-template-columns:repeat(3,1fr); } .pipeline { flex-direction:column; } .pipeline-column { min-width:100%; } }
+@media(max-width:480px){ .kpi-row { grid-template-columns:repeat(2,1fr); } }
+</style>
+</head>
+<body>
+<nav class="nav-bar">
+<a href="index.html" class="nav-logo"><div class="logo-icon">C</div>CareerOS</a>
+<div class="nav-links">
+<a href="jobs.html">Jobs</a>
+<a href="resume.html">Resume</a>
+<a href="interview.html">Interview</a>
+<a href="applications.html" class="active">Applications</a>
+<a href="settings.html">Settings</a>
+</div>
+</nav>
+<div class="content-area">
+<div class="kpi-row">
+<div class="kpi-card applied"><div class="value" id="kpiApplied">0</div><div class="label">Applied</div></div>
+<div class="kpi-card screening"><div class="value" id="kpiScreening">0</div><div class="label">Screening</div></div>
+<div class="kpi-card interview"><div class="value" id="kpiInterview">0</div><div class="label">Interview</div></div>
+<div class="kpi-card offer"><div class="value" id="kpiOffer">0</div><div class="label">Offers</div></div>
+<div class="kpi-card rejected"><div class="value" id="kpiRejected">0</div><div class="label">Rejected</div></div>
+</div>
+<div class="pipeline" id="pipeline"></div>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+<script>
+const MOCK_APPLICATIONS=[
+{id:1,title:"Senior Software Engineer",company:"Google India",status:"interview",stage:"Technical Round 2",date:"2026-07-01",location:"Bangalore"},
+{id:2,title:"Data Scientist",company:"Flipkart",status:"applied",stage:"Application Submitted",date:"2026-07-02",location:"Bangalore"},
+{id:3,title:"Product Manager",company:"Swiggy",status:"screening",stage:"HR Screening",date:"2026-06-28",location:"Hyderabad"},
+{id:4,title:"UX Designer",company:"Zomato",status:"offer",stage:"Offer Received",date:"2026-06-25",location:"Remote"},
+{id:5,title:"Backend Engineer",company:"Razorpay",status:"interview",stage:"System Design Round",date:"2026-06-30",location:"Bangalore"},
+{id:6,title:"ML Engineer",company:"Ola",status:"rejected",stage:"Rejected after Round 1",date:"2026-06-20",location:"Bangalore"},
+{id:7,title:"Frontend Developer",company:"Paytm",status:"applied",stage:"Application Submitted",date:"2026-07-03",location:"Delhi"},
+{id:8,title:"DevOps Engineer",company:"PhonePe",status:"screening",stage:"Recruiter Call",date:"2026-07-02",location:"Bangalore"},
+{id:9,title:"Business Analyst",company:"Deloitte",status:"interview",stage:"Case Study Round",date:"2026-06-29",location:"Mumbai"},
+{id:10,title:"iOS Developer",company:"CRED",status:"offer",stage:"Negotiating Offer",date:"2026-06-22",location:"Bangalore"}
+];
+function renderPipeline(){
+const apps=JSON.parse(localStorage.getItem('applications')||'[]');
+const all=[...MOCK_APPLICATIONS,...apps];
+const stages={applied:[],screening:[],interview:[],offer:[],rejected:[]};
+all.forEach(a=>{ if(stages[a.status]) stages[a.status].push(a); });
+const counts={applied:stages.applied.length,screening:stages.screening.length,interview:stages.interview.length,offer:stages.offer.length,rejected:stages.rejected.length};
+['Applied','Screening','Interview','Offer','Rejected'].forEach((s,i)=>{
+const id='kpi'+s; const el=document.getElementById('kpi'+s);
+if(el) el.textContent=Object.values(counts)[i];
+});
+const titles={applied:'📤 Applied',screening:'🔍 Screening',interview:'🎤 Interview',offer:'🎉 Offer',rejected:'❌ Rejected'};
+const pipeline=document.getElementById('pipeline');
+pipeline.innerHTML=Object.entries(stages).map(([stage,items])=>`
+<div class="pipeline-column">
+<h3>${titles[stage]}<span class="count">${items.length}</span></h3>
+${items.map(item=>`
+<div class="pipeline-card" onclick="showAppDetails(${item.id})">
+<h4>${item.title}</h4>
+<div class="company">${item.company}</div>
+<div class="meta">
+<span class="status-badge ${item.status}">${item.stage}</span>
+<span>${item.date}</span>
+<span>${item.location}</span>
+</div>
+</div>
+`).join('')}
+<button class="add-btn" onclick="showToast('Add application form coming soon','info')">+ Add Application</button>
+</div>
+`).join('');
+}
+function showAppDetails(id){
+const all=[...MOCK_APPLICATIONS,...JSON.parse(localStorage.getItem('applications')||'[]')];
+const app=all.find(a=>a.id===id); if(!app) return;
+showToast(`${app.title} at ${app.company} — ${app.stage}`,'info');
+}
+function showToast(m,t='info'){
+const c=document.getElementById('toastContainer'); const d=document.createElement('div'); d.className='toast '+t;
+const i={success:'✅',error:'❌',info:'ℹ️'}; d.innerHTML=(i[t]||'ℹ️')+' '+m; c.appendChild(d); setTimeout(()=>d.remove(),5000);
+}
+renderPipeline();
+</script>
+</body>
+</html>

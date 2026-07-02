@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerOS — Resume Scoring</title>
+<style>
+:root { --bg-primary:#0f172a; --bg-secondary:#1e293b; --bg-tertiary:#334155; --text-primary:#f8fafc; --text-secondary:#94a3b8; --text-muted:#64748b; --accent-primary:#6366f1; --accent-success:#22c55e; --accent-warning:#f59e0b; --accent-danger:#ef4444; --border-color:#334155; --radius:12px; --shadow:0 4px 6px -1px rgba(0,0,0,0.3); --shadow-lg:0 10px 25px -5px rgba(0,0,0,0.4); --gradient:linear-gradient(135deg,#6366f1,#8b5cf6); }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg-primary); color:var(--text-primary); min-height:100vh; }
+.nav-bar { display:flex; align-items:center; justify-content:space-between; padding:16px 28px; background:var(--bg-secondary); border-bottom:1px solid var(--border-color); position:sticky; top:0; z-index:100; }
+.nav-logo { display:flex; align-items:center; gap:10px; font-size:20px; font-weight:800; color:var(--text-primary); text-decoration:none; }
+.nav-logo .logo-icon { width:36px; height:36px; background:var(--gradient); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; color:white; }
+.nav-links { display:flex; gap:6px; }
+.nav-links a { padding:8px 16px; border-radius:var(--radius); color:var(--text-secondary); text-decoration:none; font-size:14px; font-weight:500; transition:all 0.2s; cursor:pointer; border:none; background:none; font-family:inherit; }
+.nav-links a:hover { color:var(--text-primary); background:var(--bg-tertiary); }
+.nav-links a.active { color:white; background:var(--gradient); }
+.content-area { padding:28px; max-width:900px; margin:0 auto; }
+.upload-zone { border:2px dashed var(--border-color); border-radius:var(--radius); padding:60px 40px; text-align:center; transition:all 0.2s; cursor:pointer; margin-bottom:24px; }
+.upload-zone:hover { border-color:var(--accent-primary); background:rgba(99,102,241,0.05); }
+.upload-zone.dragover { border-color:var(--accent-primary); background:rgba(99,102,241,0.1); }
+.upload-zone .icon { font-size:48px; margin-bottom:16px; }
+.upload-zone h3 { font-size:18px; font-weight:700; margin-bottom:8px; }
+.upload-zone p { font-size:14px; color:var(--text-muted); }
+.score-display { display:none; text-align:center; padding:40px; }
+.score-display.active { display:block; }
+.score-circle { width:160px; height:160px; border-radius:50%; background:var(--bg-secondary); border:8px solid var(--border-color); display:flex; align-items:center; justify-content:center; margin:0 auto 24px; position:relative; }
+.score-circle .score { font-size:48px; font-weight:800; }
+.score-circle .label { position:absolute; bottom:20px; font-size:12px; color:var(--text-muted); }
+.score-breakdown { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin-bottom:24px; }
+.score-item { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:16px; text-align:left; }
+.score-item .name { font-size:13px; color:var(--text-secondary); margin-bottom:4px; }
+.score-item .value { font-size:20px; font-weight:700; }
+.score-item .bar { height:6px; background:var(--bg-tertiary); border-radius:3px; margin-top:8px; overflow:hidden; }
+.score-item .bar-fill { height:100%; border-radius:3px; transition:width 1s ease; }
+.suggestions { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:24px; }
+.suggestions h3 { font-size:16px; font-weight:700; margin-bottom:16px; }
+.suggestion-item { display:flex; gap:12px; padding:12px; background:var(--bg-primary); border:1px solid var(--border-color); border-radius:var(--radius); margin-bottom:8px; }
+.suggestion-item .priority { width:4px; border-radius:2px; flex-shrink:0; }
+.suggestion-item .priority.high { background:var(--accent-danger); }
+.suggestion-item .priority.medium { background:var(--accent-warning); }
+.suggestion-item .priority.low { background:var(--accent-success); }
+.suggestion-item .text { font-size:13px; color:var(--text-secondary); }
+.btn { padding:12px 24px; border:none; border-radius:var(--radius); font-size:14px; font-weight:600; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:8px; }
+.btn-primary { background:var(--gradient); color:white; }
+.btn-secondary { background:var(--bg-tertiary); color:var(--text-primary); border:1px solid var(--border-color); }
+.toast-container { position:fixed; top:24px; right:24px; z-index:1000; display:flex; flex-direction:column; gap:10px; }
+.toast { padding:14px 20px; border-radius:var(--radius); font-size:14px; font-weight:500; display:flex; align-items:center; gap:10px; animation:slideIn 0.3s ease; max-width:400px; box-shadow:var(--shadow-lg); }
+.toast.success { background:var(--accent-success); color:white; }
+.toast.info { background:var(--accent-primary); color:white; }
+@keyframes slideIn { from { transform:translateX(100%); opacity:0; } to { transform:translateX(0); opacity:1; } }
+@media(max-width:768px){ .nav-links { display:none; } .content-area { padding:16px; } .score-breakdown { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<nav class="nav-bar">
+<a href="index.html" class="nav-logo"><div class="logo-icon">C</div>CareerOS</a>
+<div class="nav-links">
+<a href="jobs.html">Jobs</a>
+<a href="resume.html" class="active">Resume</a>
+<a href="interview.html">Interview</a>
+<a href="applications.html">Applications</a>
+<a href="settings.html">Settings</a>
+</div>
+</nav>
+<div class="content-area">
+<div class="upload-zone" id="uploadZone" ondragover="event.preventDefault();this.classList.add('dragover');" ondragleave="this.classList.remove('dragover');" ondrop="handleDrop(event)" onclick="document.getElementById('fileInput').click()">
+<div class="icon">📄</div>
+<h3>Upload Your Resume</h3>
+<p>PDF or DOCX up to 5MB. Our AI will analyze and score it instantly.</p>
+</div>
+<input type="file" id="fileInput" accept=".pdf,.docx" style="display:none" onchange="handleFile(this)">
+<div class="score-display" id="scoreDisplay">
+<div class="score-circle" id="scoreCircle"><div class="score" id="scoreValue">--</div><div class="label">/ 100</div></div>
+<h2 id="scoreTitle">Analyzing...</h2>
+<p id="scoreDesc" style="color:var(--text-secondary); margin-bottom:24px;">Our AI is reviewing your resume across 6 key dimensions.</p>
+<div class="score-breakdown" id="scoreBreakdown"></div>
+<div class="suggestions" id="suggestions"></div>
+<div style="margin-top:24px;">
+<button class="btn btn-primary" onclick="resetUpload()">🔄 Upload Another</button>
+<button class="btn btn-secondary" onclick="location.href='jobs.html'">🔍 Find Matching Jobs</button>
+</div>
+</div>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+<script>
+const SCORE_DATA={
+overall:78,
+breakdown:[
+{name:'ATS Compatibility',score:82,color:'var(--accent-success)'},
+{name:'Keyword Density',score:71,color:'var(--accent-warning)'},
+{name:'Format & Structure',score:88,color:'var(--accent-success)'},
+{name:'Achievements',score:65,color:'var(--accent-warning)'},
+{name:'Skills Match',score:90,color:'var(--accent-success)'},
+{name:'Length & Clarity',score:75,color:'var(--accent-warning)'}
+],
+suggestions:[
+{priority:'high',text:'Add quantifiable achievements (e.g., "Increased revenue by 35%" instead of "Improved revenue")'},
+{priority:'high',text:'Your resume is missing keywords: Kubernetes, Microservices, CI/CD — add these for better matching'},
+{priority:'medium',text:'Consider shortening your summary to 2-3 lines. Recruiters scan for 6 seconds on average.'},
+{priority:'medium',text:'Add a LinkedIn profile link. 87% of recruiters check LinkedIn before contacting candidates.'},
+{priority:'low',text:'Your format is clean, but consider using a modern template for better visual appeal.'}
+]
+};
+function handleDrop(e){ e.preventDefault(); e.stopPropagation(); document.getElementById('uploadZone').classList.remove('dragover'); if(e.dataTransfer.files.length) processFile(e.dataTransfer.files[0]); }
+function handleFile(input){ if(input.files.length) processFile(input.files[0]); }
+function processFile(file){
+showToast('Uploading '+file.name+'...','info');
+setTimeout(()=>{ showScore(); },1200);
+}
+function showScore(){
+document.getElementById('uploadZone').style.display='none';
+document.getElementById('scoreDisplay').classList.add('active');
+const s=SCORE_DATA.overall;
+document.getElementById('scoreValue').textContent=s;
+const circle=document.getElementById('scoreCircle');
+const hue=s>=80?142:s>=60?39:0;
+circle.style.borderColor=`hsl(${hue},70%,50%)`;
+circle.querySelector('.score').style.color=`hsl(${hue},70%,60%)`;
+document.getElementById('scoreTitle').textContent=s>=80?'Great resume! 🎉':s>=60?'Good start, room to improve':'Needs work, but fixable';
+document.getElementById('scoreBreakdown').innerHTML=SCORE_DATA.breakdown.map(b=>`
+<div class="score-item"><div class="name">${b.name}</div><div class="value" style="color:${b.color}">${b.score}/100</div><div class="bar"><div class="bar-fill" style="width:${b.score}%;background:${b.color}"></div></div></div>
+`).join('');
+document.getElementById('suggestions').innerHTML=`<h3>🎯 AI Suggestions</h3>`+SCORE_DATA.suggestions.map(s=>`
+<div class="suggestion-item"><div class="priority ${s.priority}"></div><div class="text">${s.text}</div></div>
+`).join('');
+}
+function resetUpload(){ document.getElementById('uploadZone').style.display='block'; document.getElementById('scoreDisplay').classList.remove('active'); }
+function showToast(m,t='info'){
+const c=document.getElementById('toastContainer'); const d=document.createElement('div'); d.className='toast '+t;
+const i={success:'✅',error:'❌',info:'ℹ️'}; d.innerHTML=(i[t]||'ℹ️')+' '+m; c.appendChild(d); setTimeout(()=>d.remove(),5000);
+}
+</script>
+</body>
+</html>

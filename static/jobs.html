@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerOS — Job Search</title>
+<style>
+:root { --bg-primary:#0f172a; --bg-secondary:#1e293b; --bg-tertiary:#334155; --text-primary:#f8fafc; --text-secondary:#94a3b8; --text-muted:#64748b; --accent-primary:#6366f1; --accent-success:#22c55e; --accent-warning:#f59e0b; --border-color:#334155; --radius:12px; --shadow:0 4px 6px -1px rgba(0,0,0,0.3); --shadow-lg:0 10px 25px -5px rgba(0,0,0,0.4); --gradient:linear-gradient(135deg,#6366f1,#8b5cf6); }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg-primary); color:var(--text-primary); min-height:100vh; }
+.nav-bar { display:flex; align-items:center; justify-content:space-between; padding:16px 28px; background:var(--bg-secondary); border-bottom:1px solid var(--border-color); position:sticky; top:0; z-index:100; }
+.nav-logo { display:flex; align-items:center; gap:10px; font-size:20px; font-weight:800; color:var(--text-primary); text-decoration:none; }
+.nav-logo .logo-icon { width:36px; height:36px; background:var(--gradient); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; color:white; }
+.nav-links { display:flex; gap:6px; }
+.nav-links a { padding:8px 16px; border-radius:var(--radius); color:var(--text-secondary); text-decoration:none; font-size:14px; font-weight:500; transition:all 0.2s; cursor:pointer; border:none; background:none; font-family:inherit; }
+.nav-links a:hover { color:var(--text-primary); background:var(--bg-tertiary); }
+.nav-links a.active { color:white; background:var(--gradient); }
+.content-area { padding:28px; max-width:1200px; margin:0 auto; }
+.search-bar { display:flex; gap:12px; margin-bottom:24px; flex-wrap:wrap; }
+.search-bar input { flex:1; min-width:200px; padding:12px 16px; background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); color:var(--text-primary); font-size:14px; }
+.search-bar input:focus { outline:none; border-color:var(--accent-primary); }
+.search-bar select { padding:12px 16px; background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); color:var(--text-primary); font-size:14px; font-family:inherit; }
+.job-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(340px,1fr)); gap:16px; }
+.job-card { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:24px; transition:all 0.2s; cursor:pointer; position:relative; }
+.job-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-lg); border-color:var(--accent-primary); }
+.job-card .match { position:absolute; top:16px; right:16px; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:700; }
+.job-card .match.high { background:rgba(34,197,94,0.15); color:#86efac; }
+.job-card .match.medium { background:rgba(245,158,11,0.15); color:#fcd34d; }
+.job-card .match.low { background:rgba(100,116,139,0.15); color:#94a3b8; }
+.job-card h3 { font-size:16px; font-weight:700; margin-bottom:4px; padding-right:80px; }
+.job-card .company { font-size:13px; color:var(--text-secondary); margin-bottom:12px; }
+.job-meta { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
+.job-meta span { font-size:12px; color:var(--text-muted); display:flex; align-items:center; gap:4px; }
+.job-tags { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px; }
+.job-tags .tag { padding:2px 10px; background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.2); border-radius:12px; font-size:11px; color:#a5b4fc; }
+.job-actions { display:flex; gap:8px; }
+.btn { flex:1; padding:10px; border:none; border-radius:var(--radius); font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:6px; }
+.btn-primary { background:var(--gradient); color:white; }
+.btn-primary:hover { transform:translateY(-1px); }
+.btn-secondary { background:var(--bg-tertiary); color:var(--text-primary); border:1px solid var(--border-color); }
+.btn-success { background:var(--accent-success); color:white; }
+.saved-jobs { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:20px; margin-bottom:24px; }
+.saved-jobs h3 { font-size:16px; font-weight:700; margin-bottom:12px; }
+.saved-jobs-list { display:flex; gap:8px; flex-wrap:wrap; }
+.saved-jobs .saved-chip { padding:6px 14px; background:var(--bg-primary); border:1px solid var(--border-color); border-radius:20px; font-size:12px; display:flex; align-items:center; gap:6px; }
+.saved-jobs .saved-chip .remove { cursor:pointer; color:var(--text-muted); }
+.saved-jobs .saved-chip .remove:hover { color:var(--accent-danger); }
+.toast-container { position:fixed; top:24px; right:24px; z-index:1000; display:flex; flex-direction:column; gap:10px; }
+.toast { padding:14px 20px; border-radius:var(--radius); font-size:14px; font-weight:500; display:flex; align-items:center; gap:10px; animation:slideIn 0.3s ease; max-width:400px; box-shadow:var(--shadow-lg); }
+.toast.success { background:var(--accent-success); color:white; }
+.toast.info { background:var(--accent-primary); color:white; }
+@keyframes slideIn { from { transform:translateX(100%); opacity:0; } to { transform:translateX(0); opacity:1; } }
+@media(max-width:768px){ .nav-links { display:none; } .content-area { padding:16px; } .search-bar { flex-direction:column; } .search-bar input, .search-bar select { width:100%; } }
+</style>
+</head>
+<body>
+<nav class="nav-bar">
+<a href="index.html" class="nav-logo"><div class="logo-icon">C</div>CareerOS</a>
+<div class="nav-links">
+<a href="jobs.html" class="active">Jobs</a>
+<a href="resume.html">Resume</a>
+<a href="interview.html">Interview</a>
+<a href="applications.html">Applications</a>
+<a href="settings.html">Settings</a>
+</div>
+</nav>
+<div class="content-area">
+<div class="saved-jobs" id="savedJobsPanel" style="display:none;">
+<h3>⭐ Saved Jobs</h3>
+<div class="saved-jobs-list" id="savedJobsList"></div>
+</div>
+<div class="search-bar">
+<input type="text" id="searchInput" placeholder="🔍 Search jobs, companies, skills..." oninput="filterJobs()">
+<select id="locationFilter" onchange="filterJobs()">
+<option value="">All Locations</option>
+<option value="Bangalore">Bangalore</option>
+<option value="Hyderabad">Hyderabad</option>
+<option value="Mumbai">Mumbai</option>
+<option value="Delhi">Delhi</option>
+<option value="Remote">Remote</option>
+</select>
+<select id="typeFilter" onchange="filterJobs()">
+<option value="">All Types</option>
+<option value="Full-time">Full-time</option>
+<option value="Contract">Contract</option>
+<option value="Internship">Internship</option>
+</select>
+<select id="salaryFilter" onchange="filterJobs()">
+<option value="">Any Salary</option>
+<option value="0-10">₹0-10L</option>
+<option value="10-20">₹10-20L</option>
+<option value="20-40">₹20-40L</option>
+<option value="40+">₹40L+</option>
+</select>
+</div>
+<div class="job-grid" id="jobGrid"></div>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+<script>
+const JOBS=[
+{id:1,title:"Senior Software Engineer",company:"Google India",location:"Bangalore",type:"Full-time",salary:2800000,match:95,skills:["Python","Kubernetes","GCP"],posted:"2 days ago"},
+{id:2,title:"Data Scientist",company:"Flipkart",location:"Bangalore",type:"Full-time",salary:2200000,match:88,skills:["Python","SQL","ML"],posted:"1 day ago"},
+{id:3,title:"Product Manager",company:"Swiggy",location:"Hyderabad",type:"Full-time",salary:2500000,match:82,skills:["Product Strategy","Data Analysis","Agile"],posted:"3 days ago"},
+{id:4,title:"UX Designer",company:"Zomato",location:"Remote",type:"Full-time",salary:1800000,match:76,skills:["Figma","User Research","Prototyping"],posted:"5 days ago"},
+{id:5,title:"Backend Engineer",company:"Razorpay",location:"Bangalore",type:"Full-time",salary:2000000,match:91,skills:["Go","PostgreSQL","Redis"],posted:"1 day ago"},
+{id:6,title:"ML Engineer",company:"Ola",location:"Bangalore",type:"Full-time",salary:2600000,match:85,skills:["PyTorch","TensorFlow","Python"],posted:"4 days ago"},
+{id:7,title:"Frontend Developer",company:"Paytm",location:"Delhi",type:"Full-time",salary:1600000,match:78,skills:["React","TypeScript","Tailwind"],posted:"2 days ago"},
+{id:8,title:"DevOps Engineer",company:"PhonePe",location:"Bangalore",type:"Full-time",salary:2100000,match:89,skills:["AWS","Docker","Terraform"],posted:"3 days ago"},
+{id:9,title:"Business Analyst",company:"Deloitte",location:"Mumbai",type:"Full-time",salary:1200000,match:72,skills:["Excel","SQL","Power BI"],posted:"6 days ago"},
+{id:10,title:"iOS Developer",company:" CRED",location:"Bangalore",type:"Full-time",salary:1900000,match:80,skills:["Swift","UIKit","CoreData"],posted:"1 day ago"},
+{id:11,title:"Data Engineer",company:"Meesho",location:"Bangalore",type:"Full-time",salary:1700000,match:84,skills:["Spark","Airflow","Python"],posted:"5 days ago"},
+{id:12,title:"Security Engineer",company:"PhonePe",location:"Bangalore",type:"Full-time",salary:2400000,match:87,skills:["Penetration Testing","SIEM","Python"],posted:"2 days ago"}
+];
+let savedJobs=JSON.parse(localStorage.getItem('saved_jobs')||'[]');
+function renderJobs(jobs){
+const grid=document.getElementById('jobGrid');
+if(jobs.length===0){ grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text-muted)">No jobs match your filters</div>'; return; }
+grid.innerHTML=jobs.map(j=>{
+const matchClass=j.match>=85?'high':j.match>=60?'medium':'low';
+const saved=savedJobs.includes(j.id);
+const salaryText='₹'+(j.salary/100000).toFixed(1)+'L';
+return `<div class="job-card" data-id="${j.id}">
+<div class="match ${matchClass}">${j.match}% Match</div>
+<h3>${j.title}</h3>
+<div class="company">${j.company} — ${j.location}</div>
+<div class="job-meta">
+<span>💼 ${j.type}</span>
+<span>💰 ${salaryText}</span>
+<span>📅 ${j.posted}</span>
+</div>
+<div class="job-tags">${j.skills.map(s=>`<span class="tag">${s}</span>`).join('')}</div>
+<div class="job-actions">
+<button class="btn btn-primary" onclick="applyJob(${j.id})">🚀 Quick Apply</button>
+<button class="btn ${saved?'btn-success':'btn-secondary'}" onclick="toggleSave(${j.id})">${saved?'✓ Saved':'⭐ Save'}</button>
+</div>
+</div>`;
+}).join('');
+}
+function filterJobs(){
+const search=document.getElementById('searchInput').value.toLowerCase();
+const loc=document.getElementById('locationFilter').value;
+const type=document.getElementById('typeFilter').value;
+const salary=document.getElementById('salaryFilter').value;
+const filtered=JOBS.filter(j=>{
+if(search&&!j.title.toLowerCase().includes(search)&&!j.company.toLowerCase().includes(search)&&!j.skills.some(s=>s.toLowerCase().includes(search))) return false;
+if(loc&&j.location!==loc) return false;
+if(type&&j.type!==type) return false;
+if(salary){
+const s=j.salary/100000;
+if(salary==='0-10'&&s>10) return false;
+if(salary==='10-20'&&(s<10||s>20)) return false;
+if(salary==='20-40'&&(s<20||s>40)) return false;
+if(salary==='40+'&&s<40) return false;
+}
+return true;
+});
+renderJobs(filtered);
+}
+function applyJob(id){
+const j=JOBS.find(x=>x.id===id);
+showToast(`Applied to ${j.title} at ${j.company}!`,'success');
+const apps=JSON.parse(localStorage.getItem('applications')||'[]');
+apps.push({id:id,title:j.title,company:j.company,status:'Applied',date:new Date().toISOString().split('T')[0]});
+localStorage.setItem('applications',JSON.stringify(apps));
+}
+function toggleSave(id){
+if(savedJobs.includes(id)){ savedJobs=savedJobs.filter(x=>x!==id); showToast('Job removed from saved','info'); }
+else{ savedJobs.push(id); showToast('Job saved!','success'); }
+localStorage.setItem('saved_jobs',JSON.stringify(savedJobs));
+renderSavedJobs(); filterJobs();
+}
+function renderSavedJobs(){
+const panel=document.getElementById('savedJobsPanel');
+const list=document.getElementById('savedJobsList');
+if(savedJobs.length===0){ panel.style.display='none'; return; }
+panel.style.display='block';
+list.innerHTML=savedJobs.map(id=>{
+const j=JOBS.find(x=>x.id===id); if(!j) return '';
+return `<div class="saved-chip">${j.title}<span class="remove" onclick="toggleSave(${id})">×</span></div>`;
+}).join('');
+}
+function showToast(m,t='info'){
+const c=document.getElementById('toastContainer'); const d=document.createElement('div'); d.className='toast '+t;
+const i={success:'✅',error:'❌',info:'ℹ️'}; d.innerHTML=(i[t]||'ℹ️')+' '+m; c.appendChild(d); setTimeout(()=>d.remove(),5000);
+}
+renderJobs(JOBS); renderSavedJobs();
+</script>
+</body>
+</html>
