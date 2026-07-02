@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerOS — API Keys</title>
+<style>
+:root { --bg-primary:#0f172a; --bg-secondary:#1e293b; --bg-tertiary:#334155; --text-primary:#f8fafc; --text-secondary:#94a3b8; --text-muted:#64748b; --accent-primary:#6366f1; --accent-success:#22c55e; --accent-danger:#ef4444; --border-color:#334155; --radius:12px; --shadow-lg:0 10px 25px -5px rgba(0,0,0,0.4); --gradient:linear-gradient(135deg,#6366f1,#8b5cf6); }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg-primary); color:var(--text-primary); min-height:100vh; }
+.nav-bar { display:flex; align-items:center; justify-content:space-between; padding:16px 28px; background:var(--bg-secondary); border-bottom:1px solid var(--border-color); position:sticky; top:0; z-index:100; }
+.nav-logo { display:flex; align-items:center; gap:10px; font-size:20px; font-weight:800; color:var(--text-primary); text-decoration:none; }
+.nav-logo .logo-icon { width:36px; height:36px; background:var(--gradient); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; color:white; }
+.nav-links { display:flex; gap:6px; }
+.nav-links a { padding:8px 16px; border-radius:var(--radius); color:var(--text-secondary); text-decoration:none; font-size:14px; font-weight:500; transition:all 0.2s; cursor:pointer; border:none; background:none; font-family:inherit; }
+.nav-links a:hover { color:var(--text-primary); background:var(--bg-tertiary); }
+.nav-links a.active { color:white; background:var(--gradient); }
+.content-area { padding:28px; max-width:800px; margin:0 auto; }
+.page-header { margin-bottom:32px; }
+.page-header h1 { font-size:28px; font-weight:800; margin-bottom:8px; }
+.page-header p { font-size:15px; color:var(--text-secondary); }
+.api-key-card { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:24px; margin-bottom:20px; }
+.api-key-card h2 { font-size:18px; font-weight:700; margin-bottom:16px; }
+.key-display { display:flex; align-items:center; gap:12px; padding:14px; background:var(--bg-primary); border:1px solid var(--border-color); border-radius:var(--radius); margin-bottom:16px; }
+.key-display .key-value { font-family:'Fira Code',monospace; font-size:14px; color:var(--text-secondary); flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.key-display .key-value.hidden { color:var(--text-muted); font-style:italic; }
+.btn { padding:8px 16px; border:none; border-radius:var(--radius); font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:6px; }
+.btn-primary { background:var(--gradient); color:white; }
+.btn-secondary { background:var(--bg-tertiary); color:var(--text-primary); border:1px solid var(--border-color); }
+.btn-danger { background:var(--accent-danger); color:white; }
+.usage-table { width:100%; border-collapse:collapse; margin-top:12px; }
+.usage-table th, .usage-table td { padding:14px; text-align:left; font-size:14px; border-bottom:1px solid var(--border-color); }
+.usage-table th { color:var(--text-muted); font-weight:600; font-size:12px; text-transform:uppercase; }
+.usage-table td { color:var(--text-secondary); }
+.usage-table .status { display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; padding:4px 10px; border-radius:100px; }
+.usage-table .status.active { background:rgba(34,197,94,0.15); color:var(--accent-success); }
+.usage-table .status.revoked { background:rgba(239,68,68,0.15); color:var(--accent-danger); }
+.code-block { background:var(--bg-primary); border:1px solid var(--border-color); border-radius:var(--radius); padding:16px; font-family:'Fira Code',monospace; font-size:13px; color:var(--text-secondary); overflow-x:auto; margin-bottom:16px; }
+.webhook-card { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:24px; margin-bottom:20px; }
+.webhook-card h2 { font-size:18px; font-weight:700; margin-bottom:16px; }
+.form-group { margin-bottom:16px; }
+.form-group label { display:block; font-size:13px; font-weight:500; color:var(--text-secondary); margin-bottom:6px; }
+.form-group input { width:100%; padding:10px 14px; background:var(--bg-primary); border:1px solid var(--border-color); border-radius:var(--radius); color:var(--text-primary); font-size:13px; }
+.form-group input:focus { outline:none; border-color:var(--accent-primary); }
+.toast-container { position:fixed; top:24px; right:24px; z-index:1000; display:flex; flex-direction:column; gap:10px; }
+.toast { padding:14px 20px; border-radius:var(--radius); font-size:14px; font-weight:500; display:flex; align-items:center; gap:10px; animation:slideIn 0.3s ease; max-width:400px; box-shadow:var(--shadow-lg); }
+.toast.success { background:var(--accent-success); color:white; }
+.toast.info { background:var(--accent-primary); color:white; }
+@keyframes slideIn { from { transform:translateX(100%); opacity:0; } to { transform:translateX(0); opacity:1; } }
+@media(max-width:768px){ .content-area { padding:16px; } .key-display { flex-direction:column; align-items:flex-start; } }
+</style>
+</head>
+<body>
+<nav class="nav-bar">
+<a href="index.html" class="nav-logo"><div class="logo-icon">C</div>CareerOS</a>
+<div class="nav-links">
+<a href="index.html">Home</a>
+<a href="api-docs.html">API Docs</a>
+<a href="api-keys.html" class="active">API Keys</a>
+</div>
+</nav>
+<div class="content-area">
+<div class="page-header">
+<h1>🔑 API Keys</h1>
+<p>Manage your API keys for programmatic access to CareerOS.</p>
+</div>
+<div class="api-key-card">
+<h2>Production Key</h2>
+<div class="key-display">
+<span class="key-value hidden" id="prodKey">••••••••••••••••••••••••••••••••</span>
+<button class="btn btn-secondary" onclick="toggleKey('prodKey')">👁️ Show</button>
+<button class="btn btn-secondary" onclick="copyKey('prodKey')">📋 Copy</button>
+<button class="btn btn-danger" onclick="revokeKey('prodKey')">🗑️ Revoke</button>
+</div>
+<p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">Created: Jun 15, 2026 • Last used: 2 hours ago</p>
+<h3 style="font-size:14px; font-weight:600; margin-bottom:12px;">Usage This Month</h3>
+<table class="usage-table">
+<thead><tr><th>Endpoint</th><th>Requests</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>/social/schedule/draft</td><td>1,234</td><td><span class="status active">● Active</span></td></tr>
+<tr><td>/leads/hot</td><td>892</td><td><span class="status active">● Active</span></td></tr>
+<tr><td>/referrals/stats</td><td>456</td><td><span class="status active">● Active</span></td></tr>
+</tbody>
+</table>
+</div>
+<div class="api-key-card">
+<h2>Quick Start</h2>
+<div class="code-block">curl -X GET https://www.imusinfosystems.com/api/operations/social/schedule/status \
+  -H "Authorization: Bearer YOUR_API_KEY"</div>
+<p style="font-size:13px; color:var(--text-muted);">Replace <code style="background:var(--bg-primary); padding:2px 6px; border-radius:4px;">YOUR_API_KEY</code> with your actual key above.</p>
+</div>
+<div class="webhook-card">
+<h2>🔔 Webhooks</h2>
+<p style="font-size:14px; color:var(--text-secondary); margin-bottom:16px;">Receive real-time notifications when events occur in your account.</p>
+<div class="form-group">
+<label>Webhook URL</label>
+<input type="text" placeholder="https://your-app.com/webhooks/careeros" value="https://api.myapp.com/webhooks/careeros">
+</div>
+<div class="form-group">
+<label>Events</label>
+<div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;">
+<label style="display:flex; align-items:center; gap:6px; font-size:13px; color:var(--text-secondary); cursor:pointer;"><input type="checkbox" checked> user.signup</label>
+<label style="display:flex; align-items:center; gap:6px; font-size:13px; color:var(--text-secondary); cursor:pointer;"><input type="checkbox" checked> payment.success</label>
+<label style="display:flex; align-items:center; gap:6px; font-size:13px; color:var(--text-secondary); cursor:pointer;"><input type="checkbox"> application.status_change</label>
+<label style="display:flex; align-items:center; gap:6px; font-size:13px; color:var(--text-secondary); cursor:pointer;"><input type="checkbox" checked> referral.converted</label>
+</div>
+</div>
+<button class="btn btn-primary" onclick="showToast('Webhook configuration saved','success')">💾 Save Webhook</button>
+</div>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+<script>
+let keyVisible = false;
+const realKey = 'careeros_prod_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+function toggleKey(id) {
+const el = document.getElementById(id);
+keyVisible = !keyVisible;
+el.textContent = keyVisible ? realKey : '••••••••••••••••••••••••••••••••';
+el.className = keyVisible ? 'key-value' : 'key-value hidden';
+}
+function copyKey(id) {
+navigator.clipboard.writeText(realKey).then(() => showToast('API key copied to clipboard','success'));
+}
+function revokeKey(id) {
+if(confirm('Revoke this API key? All integrations using it will break immediately.')) {
+showToast('API key revoked. Generate a new one below.','info');
+}
+}
+function showToast(m, t = 'info') {
+const c = document.getElementById('toastContainer');
+const d = document.createElement('div'); d.className = 'toast ' + t;
+const i = { success: '✅', info: 'ℹ️' };
+d.innerHTML = (i[t] || 'ℹ️') + ' ' + m; c.appendChild(d); setTimeout(() => d.remove(), 5000);
+}
+</script>
+</body>
+</html>
