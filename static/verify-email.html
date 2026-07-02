@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerOS — Verify Email</title>
+<style>
+:root { --bg-primary:#0f172a; --bg-secondary:#1e293b; --bg-tertiary:#334155; --text-primary:#f8fafc; --text-secondary:#94a3b8; --text-muted:#64748b; --accent-primary:#6366f1; --accent-success:#22c55e; --accent-danger:#ef4444; --border-color:#334155; --radius:12px; --shadow:0 4px 6px -1px rgba(0,0,0,0.3); --shadow-lg:0 10px 25px -5px rgba(0,0,0,0.4); --gradient:linear-gradient(135deg,#6366f1,#8b5cf6); }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg-primary); color:var(--text-primary); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+.verify-container { width:100%; max-width:480px; }
+.verify-card { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:40px; box-shadow:var(--shadow-lg); text-align:center; }
+.logo { width:64px; height:64px; background:var(--gradient); border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:28px; font-weight:800; color:white; margin:0 auto 20px; }
+.verify-card h1 { font-size:24px; font-weight:700; margin-bottom:8px; }
+.verify-card p { font-size:14px; color:var(--text-secondary); margin-bottom:28px; line-height:1.6; }
+.success-icon { font-size:64px; margin-bottom:16px; }
+.success-msg { color:var(--accent-success); font-weight:600; font-size:16px; margin-bottom:8px; }
+.error-msg { color:var(--accent-danger); font-weight:600; font-size:16px; margin-bottom:8px; }
+.code-input { display:flex; gap:8px; justify-content:center; margin-bottom:24px; }
+.code-input input { width:48px; height:56px; background:var(--bg-primary); border:1px solid var(--border-color); border-radius:var(--radius); color:var(--text-primary); font-size:24px; font-weight:700; text-align:center; transition:border-color 0.2s; }
+.code-input input:focus { outline:none; border-color:var(--accent-primary); }
+.btn { width:100%; padding:12px; border:none; border-radius:var(--radius); font-size:15px; font-weight:600; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:8px; }
+.btn-primary { background:var(--gradient); color:white; box-shadow:0 4px 12px rgba(99,102,241,0.3); }
+.btn-primary:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(99,102,241,0.4); }
+.btn:disabled { opacity:0.5; cursor:not-allowed; transform:none !important; }
+.spinner { width:16px; height:16px; border:2px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.8s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.resend { margin-top:20px; font-size:13px; color:var(--text-muted); }
+.resend a { color:var(--accent-primary); text-decoration:none; cursor:pointer; }
+.resend a:hover { text-decoration:underline; }
+@media(max-width:480px){ .verify-card { padding:28px 20px; } .code-input input { width:40px; height:48px; font-size:20px; } }
+</style>
+</head>
+<body>
+<div class="verify-container">
+<div class="verify-card" id="verifyCard">
+<div class="logo">C</div>
+<h1>Verify Your Email</h1>
+<p>Enter the 6-digit code sent to <strong id="emailDisplay">your email</strong></p>
+<div class="code-input" id="codeInput">
+<input type="text" maxlength="1" oninput="moveNext(this,0)" onkeydown="moveBack(event,0)">
+<input type="text" maxlength="1" oninput="moveNext(this,1)" onkeydown="moveBack(event,1)">
+<input type="text" maxlength="1" oninput="moveNext(this,2)" onkeydown="moveBack(event,2)">
+<input type="text" maxlength="1" oninput="moveNext(this,3)" onkeydown="moveBack(event,3)">
+<input type="text" maxlength="1" oninput="moveNext(this,4)" onkeydown="moveBack(event,4)">
+<input type="text" maxlength="1" oninput="moveNext(this,5)" onkeydown="moveBack(event,5)">
+</div>
+<button class="btn btn-primary" id="verifyBtn" onclick="verifyCode()">
+<span id="btnText">Verify Email</span>
+</button>
+<div class="resend">
+Didn't receive it? <a onclick="resendCode()">Resend code</a> <span id="resendTimer"></span>
+</div>
+</div>
+</div>
+<script>
+const email = localStorage.getItem('user_email') || 'demo@example.com';
+document.getElementById('emailDisplay').textContent = email;
+
+function moveNext(el, index) {
+  if (el.value.length === 1) {
+    const next = document.getElementById('codeInput').children[index + 1];
+    if (next) next.focus();
+    checkComplete();
+  }
+}
+
+function moveBack(e, index) {
+  if (e.key === 'Backspace' && !e.target.value) {
+    const prev = document.getElementById('codeInput').children[index - 1];
+    if (prev) prev.focus();
+  }
+}
+
+function checkComplete() {
+  const inputs = document.querySelectorAll('.code-input input');
+  const code = Array.from(inputs).map(i => i.value).join('');
+  if (code.length === 6) {
+    verifyCode();
+  }
+}
+
+function verifyCode() {
+  const inputs = document.querySelectorAll('.code-input input');
+  const code = Array.from(inputs).map(i => i.value).join('');
+  if (code.length !== 6) {
+    showError('Please enter all 6 digits');
+    return;
+  }
+
+  const btn = document.getElementById('verifyBtn');
+  const txt = document.getElementById('btnText');
+  txt.innerHTML = '<div class="spinner"></div> Verifying...';
+  btn.disabled = true;
+
+  setTimeout(() => {
+    showSuccess();
+  }, 1500);
+}
+
+function showSuccess() {
+  const card = document.getElementById('verifyCard');
+  card.innerHTML = `
+    <div class="success-icon">🎉</div>
+    <div class="success-msg">Email Verified!</div>
+    <p style="color:var(--text-secondary); margin-bottom:24px;">Your email has been verified. You can now access all features.</p>
+    <a href="index.html" class="btn btn-primary" style="text-decoration:none;">Go to Dashboard →</a>
+  `;
+  localStorage.setItem('email_verified', 'true');
+}
+
+function showError(msg) {
+  const card = document.getElementById('verifyCard');
+  const existing = card.querySelector('.error-banner');
+  if (existing) existing.remove();
+  const banner = document.createElement('div');
+  banner.className = 'error-banner';
+  banner.style.cssText = 'background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); border-radius:var(--radius); padding:12px; font-size:13px; color:#fca5a5; margin-bottom:16px;';
+  banner.textContent = msg;
+  card.insertBefore(banner, card.children[2]);
+  setTimeout(() => banner.remove(), 5000);
+}
+
+function resendCode() {
+  const timer = document.getElementById('resendTimer');
+  let seconds = 60;
+  timer.textContent = `(60s)`;
+  const interval = setInterval(() => {
+    seconds--;
+    timer.textContent = `(${seconds}s)`;
+    if (seconds <= 0) {
+      clearInterval(interval);
+      timer.textContent = '';
+    }
+  }, 1000);
+  showError('New code sent to ' + email);
+}
+
+// Auto-focus first input on load
+document.querySelector('.code-input input').focus();
+</script>
+</body>
+</html>
