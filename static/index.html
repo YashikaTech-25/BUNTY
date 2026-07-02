@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerOS — AI Career Management</title>
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --bg-card: rgba(30, 41, 59, 0.85);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-primary: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --accent-success: #22c55e;
+            --accent-warning: #f59e0b;
+            --accent-danger: #ef4444;
+            --accent-gold: #f59e0b;
+            --border-color: #334155;
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
+            --shadow-lg: 0 10px 25px -5px rgba(0,0,0,0.4);
+            --gradient: linear-gradient(135deg, #6366f1, #8b5cf6);
+            --gradient-gold: linear-gradient(135deg, #f59e0b, #fbbf24);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ===== Urgency Banner ===== */
+        .urgency-banner {
+            background: linear-gradient(90deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+            border-bottom: 1px solid rgba(99, 102, 241, 0.3);
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .urgency-banner .emoji { font-size: 16px; animation: bounce 1.5s infinite; }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+
+        .urgency-banner .highlight {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        .urgency-banner .slots-left {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #fca5a5;
+            animation: pulse-red 2s infinite;
+        }
+
+        @keyframes pulse-red {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .urgency-banner .close-btn {
+            position: absolute;
+            right: 16px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 18px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .urgency-banner .close-btn:hover { color: var(--text-primary); }
+
+        .urgency-banner.hidden { display: none; }
+
+        /* ===== Navigation ===== */
+        .nav-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 28px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .nav-logo .logo-icon {
+            width: 36px; height: 36px;
+            background: var(--gradient);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            padding: 8px 16px;
+            border-radius: var(--radius);
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-family: inherit;
+        }
+
+        .nav-links a:hover { color: var(--text-primary); background: var(--bg-tertiary); }
+        .nav-links a.active { color: white; background: var(--gradient); }
+
+        .nav-mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* ===== Hero Section ===== */
+        .hero {
+            text-align: center;
+            padding: 60px 20px 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
+
+        .hero h1 .gradient-text {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 560px;
+            margin: 0 auto 32px;
+            line-height: 1.6;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover { background: var(--bg-primary); }
+
+        .btn-gold {
+            background: var(--gradient-gold);
+            color: #0f172a;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+        }
+
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+        .btn-sm { padding: 10px 20px; font-size: 13px; }
+
+        /* ===== Social Proof Section ===== */
+        .social-proof {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding: 0 20px 40px;
+            flex-wrap: wrap;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .proof-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            backdrop-filter: blur(10px);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .proof-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .proof-icon {
+            font-size: 28px;
+            width: 44px;
+            text-align: center;
+        }
+
+        .proof-text .counter {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-primary);
+            line-height: 1;
+        }
+
+        .proof-text .label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* ===== Pricing Section ===== */
+        .pricing-section {
+            padding: 40px 20px 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+        }
+
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .pricing-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 32px 24px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .pricing-card.popular {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 1px var(--accent-primary), var(--shadow-lg);
+        }
+
+        .pricing-card.elite {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 0 1px var(--accent-gold), var(--shadow-lg);
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .pricing-badge.recommended {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .pricing-badge.best-value {
+            background: var(--gradient-gold);
+            color: #0f172a;
+        }
+
+        .pricing-card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .pricing-card .price {
+            font-size: 42px;
+            font-weight: 800;
+            margin: 12px 0;
+            letter-spacing: -1px;
+        }
+
+        .pricing-card .price .currency { font-size: 20px; vertical-align: super; }
+        .pricing-card .price .period { font-size: 14px; color: var(--text-muted); font-weight: 500; }
+
+        .pricing-card .description {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .pricing-card .features {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 24px;
+        }
+
+        .pricing-card .features li {
+            padding: 8px 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+        }
+
+        .pricing-card .features li:last-child { border-bottom: none; }
+
+        .pricing-card .features li .check { color: var(--accent-success); font-weight: 700; }
+        .pricing-card .features li .cross { color: var(--text-muted); }
+
+        /* ===== Feature Comparison Table ===== */
+        .comparison-table {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            overflow: hidden;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .comparison-table thead {
+            background: var(--bg-secondary);
+        }
+
+        .comparison-table th {
+            padding: 16px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table th:first-child { text-align: left; }
+
+        .comparison-table th .plan-name { font-size: 16px; margin-bottom: 2px; }
+        .comparison-table th .plan-price { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+
+        .comparison-table td {
+            padding: 14px 16px;
+            text-align: center;
+            border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+            color: var(--text-secondary);
+        }
+
+        .comparison-table td:first-child {
+            text-align: left;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .comparison-table td .check { color: var(--accent-success); font-size: 18px; }
+        .comparison-table td .cross { color: var(--text-muted); font-size: 18px; }
+        .comparison-table td .partial { color: var(--accent-warning); font-size: 12px; }
+
+        .comparison-table tr:hover { background: rgba(99, 102, 241, 0.04); }
+
+        /* ===== Trust Badges ===== */
+        .trust-badges {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            padding: 24px;
+            flex-wrap: wrap;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .trust-badges .badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .payment-logos {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            padding: 0 20px 40px;
+            flex-wrap: wrap;
+        }
+
+        .payment-logo {
+            padding: 8px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== Referral Dashboard ===== */
+        .referral-dashboard {
+            display: none;
+            padding: 40px 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .referral-dashboard.active { display: block; }
+
+        .referral-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .referral-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 28px;
+            backdrop-filter: blur(10px);
+        }
+
+        .referral-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .referral-card h3 .icon { font-size: 22px; }
+
+        .referral-link-box {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .referral-link-box input {
+            flex: 1;
+            padding: 12px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: monospace;
+        }
+
+        .referral-link-box input:focus { outline: none; border-color: var(--accent-primary); }
+
+        .copy-btn {
+            padding: 12px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .copy-btn:hover { background: var(--accent-primary); border-color: var(--accent-primary); }
+        .copy-btn.copied { background: var(--accent-success); border-color: var(--accent-success); }
+
+        .referral-hint {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .referral-hint strong { color: var(--accent-success); }
+
+        /* Share Templates */
+        .share-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .share-tab {
+            padding: 8px 14px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .share-tab:hover { color: var(--text-primary); }
+        .share-tab.active { background: var(--gradient); color: white; border-color: transparent; }
+
+        .share-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            min-height: 120px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .share-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Referral Stats */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card-sm {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 16px;
+            text-align: center;
+        }
+
+        .stat-card-sm .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--accent-primary);
+            margin-bottom: 4px;
+        }
+
+        .stat-card-sm .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .referral-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .referral-table th, .referral-table td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+        }
+
+        .referral-table th {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .referral-table td { color: var(--text-secondary); }
+
+        .status-badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .status-pending { background: rgba(245, 158, 11, 0.15); color: var(--accent-warning); }
+        .status-signed { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+        .status-converted { background: rgba(34, 197, 94, 0.15); color: var(--accent-success); }
+
+        /* How It Works */
+        .steps {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+        }
+
+        .step .step-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .step .step-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .step .step-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .step-arrow {
+            font-size: 24px;
+            color: var(--accent-primary);
+        }
+
+        /* ===== Checkout Modal ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 40px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            transform: scale(0.95);
+            transition: transform 0.3s;
+        }
+
+        .modal-overlay.active .modal { transform: scale(1); }
+
+        .modal-spinner {
+            width: 48px; height: 48px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .modal-title { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+        .modal-body { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+        .modal-close {
+            margin-top: 20px;
+            padding: 10px 24px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .modal-close:hover { background: var(--accent-primary); border-color: var(--accent-primary); }
+
+        /* ===== Toast ===== */
+        .toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            padding: 14px 20px;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease;
+            max-width: 400px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .toast.success { background: var(--accent-success); color: white; }
+        .toast.error { background: var(--accent-danger); color: white; }
+        .toast.warning { background: var(--accent-warning); color: #0f172a; }
+        .toast.info { background: var(--accent-primary); color: white; }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* ===== Mobile Nav ===== */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0; right: 0;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 8px 0;
+            z-index: 100;
+        }
+
+        .mobile-nav a {
+            flex: 1;
+            text-align: center;
+            padding: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 11px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            border: none;
+            background: none;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .mobile-nav a .icon { font-size: 20px; }
+        .mobile-nav a.active { color: var(--accent-primary); }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 1024px) {
+            .pricing-cards { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto 40px; }
+            .referral-grid { grid-template-columns: 1fr; }
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .steps { flex-direction: column; }
+            .step-arrow { transform: rotate(90deg); }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .nav-mobile-toggle { display: block; }
+            .hero h1 { font-size: 28px; }
+            .hero p { font-size: 15px; }
+            .social-proof { flex-direction: column; align-items: stretch; }
+            .proof-item { justify-content: center; }
+            .comparison-table { overflow-x: auto; }
+            .comparison-table table { min-width: 600px; }
+            .trust-badges { flex-direction: column; gap: 12px; }
+            .mobile-nav { display: flex; }
+            .content-area { padding-bottom: 80px; }
+        }
+
+        @media (max-width: 480px) {
+            .hero { padding: 40px 16px 30px; }
+            .pricing-section { padding: 30px 16px; }
+            .referral-dashboard { padding: 30px 16px; }
+            .referral-card { padding: 20px; }
+            .stats-row { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .stat-card-sm { padding: 12px; }
+            .stat-card-sm .stat-value { font-size: 22px; }
+        }
+
+        /* ===== Hidden Sections ===== */
+        .section-content { display: none; }
+        .section-content.active { display: block; }
+
+        /* ===== Footer ===== */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .footer a { color: var(--accent-primary); text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <!-- Urgency Banner -->
+    <div class="urgency-banner" id="urgencyBanner">
+        <span class="emoji">🚀</span>
+        <span>Early pricing: <span class="highlight">First 100 Pro subscribers get 3 months free</span></span>
+        <span class="slots-left">⏳ 17 slots left</span>
+        <button class="close-btn" onclick="dismissBanner()">×</button>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-bar">
+        <a href="#" class="nav-logo">
+            <div class="logo-icon">C</div>
+            CareerOS
+        </a>
+        <div class="nav-links" id="navLinks">
+            <a href="#" onclick="showSection('pricing')" class="active" data-section="pricing">Pricing</a>
+            <a href="#" onclick="showSection('referral')" data-section="referral" id="navReferral">Referral Center</a>
+        </div>
+        <button class="nav-mobile-toggle" onclick="toggleMobileMenu()">☰</button>
+    </nav>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Checkout Modal -->
+    <div class="modal-overlay" id="checkoutModal">
+        <div class="modal">
+            <div class="modal-spinner"></div>
+            <div class="modal-title" id="checkoutTitle">Processing...</div>
+            <div class="modal-body" id="checkoutBody">Redirecting to Razorpay secure checkout...</div>
+            <button class="modal-close" onclick="closeCheckoutModal()">Close</button>
+        </div>
+    </div>
+
+    <!-- ===== PRICING SECTION ===== -->
+    <div id="pricingSection" class="section-content active">
+        <!-- Hero -->
+        <div class="hero">
+            <h1>Your Career, <span class="gradient-text">Supercharged by AI</span></h1>
+            <p>10 AI departments working 24/7 on your job search — resumes, interviews, applications, and career strategy.</p>
+            <div class="hero-cta">
+                <a href="#pricing" class="btn btn-primary">Get Started Free</a>
+                <a href="#" class="btn btn-secondary" onclick="showToast('Demo video coming soon!', 'info')">Watch Demo</a>
+            </div>
+        </div>
+
+        <!-- Social Proof -->
+        <div class="social-proof" id="socialProof">
+            <div class="proof-item">
+                <div class="proof-icon">👥</div>
+                <div class="proof-text">
+                    <div class="counter" id="counterUsers">0</div>
+                    <div class="label">Professionals using CareerOS</div>
+                </div>
+            </div>
+            <div class="proof-item">
+                <div class="proof-icon">⭐</div>
+                <div class="proof-text">
+                    <div class="counter" id="counterStars">0</div>
+                    <div class="label">Average user rating</div>
+                </div>
+            </div>
+            <div class="proof-item">
+                <div class="proof-icon">📈</div>
+                <div class="proof-text">
+                    <div class="counter" id="counterSuccess">0%</div>
+                    <div class="label">Report better job offers</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pricing Cards -->
+        <div class="pricing-section" id="pricing">
+            <h2 class="section-title">Choose Your Plan</h2>
+            <p class="section-subtitle">Upgrade anytime. Cancel anytime. No questions asked.</p>
+
+            <div class="pricing-cards">
+                <!-- Free Plan -->
+                <div class="pricing-card">
+                    <h3>Free</h3>
+                    <div class="price"><span class="currency">₹</span>0<span class="period">/month</span></div>
+                    <p class="description">Get started with AI-powered career tools</p>
+                    <ul class="features">
+                        <li><span class="check">✓</span> Resume scoring</li>
+                        <li><span class="check">✓</span> Basic job matching (3/month)</li>
+                        <li><span class="check">✓</span> Interview tips library</li>
+                        <li><span class="cross">✗</span> Auto-apply</li>
+                        <li><span class="cross">✗</span> Priority support</li>
+                        <li><span class="cross">✗</span> Career roadmap</li>
+                        <li><span class="cross">✗</span> Salary negotiation guide</li>
+                        <li><span class="cross">✗</span> Recruiter network</li>
+                    </ul>
+                    <button class="btn btn-secondary btn-sm" style="width:100%" onclick="simulateCheckout('free')">Start Free</button>
+                </div>
+
+                <!-- Pro Plan -->
+                <div class="pricing-card popular">
+                    <div class="pricing-badge recommended">Recommended</div>
+                    <h3>Pro</h3>
+                    <div class="price"><span class="currency">₹</span>1,499<span class="period">/month</span></div>
+                    <p class="description">Everything you need for an active job search</p>
+                    <ul class="features">
+                        <li><span class="check">✓</span> Resume scoring</li>
+                        <li><span class="check">✓</span> AI job matching (unlimited)</li>
+                        <li><span class="check">✓</span> Interview prep & mock interviews</li>
+                        <li><span class="check">✓</span> Auto-apply (50 jobs/month)</li>
+                        <li><span class="check">✓</span> Priority support</li>
+                        <li><span class="check">✓</span> Career roadmap</li>
+                        <li><span class="cross">✗</span> Salary negotiation guide</li>
+                        <li><span class="cross">✗</span> Recruiter network</li>
+                    </ul>
+                    <button class="btn btn-primary btn-sm" style="width:100%" onclick="simulateCheckout('pro')">Upgrade to Pro</button>
+                </div>
+
+                <!-- Elite Plan -->
+                <div class="pricing-card elite">
+                    <div class="pricing-badge best-value">Best Value</div>
+                    <h3>Elite</h3>
+                    <div class="price"><span class="currency">₹</span>2,499<span class="period">/month</span></div>
+                    <p class="description">The complete career accelerator</p>
+                    <ul class="features">
+                        <li><span class="check">✓</span> Resume scoring</li>
+                        <li><span class="check">✓</span> AI job matching (unlimited)</li>
+                        <li><span class="check">✓</span> Interview prep & mock interviews</li>
+                        <li><span class="check">✓</span> Auto-apply (unlimited)</li>
+                        <li><span class="check">✓</span> Priority support (24/7)</li>
+                        <li><span class="check">✓</span> Career roadmap</li>
+                        <li><span class="check">✓</span> Salary negotiation guide</li>
+                        <li><span class="check">✓</span> Recruiter network access</li>
+                    </ul>
+                    <button class="btn btn-gold btn-sm" style="width:100%" onclick="simulateCheckout('elite')">Go Elite</button>
+                </div>
+            </div>
+
+            <!-- Feature Comparison Table -->
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>
+                                <div class="plan-name">Free</div>
+                                <div class="plan-price">₹0</div>
+                            </th>
+                            <th>
+                                <div class="plan-name">Pro</div>
+                                <div class="plan-price">₹1,499/mo</div>
+                            </th>
+                            <th>
+                                <div class="plan-name">Elite</div>
+                                <div class="plan-price">₹2,499/mo</div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Resume Scoring</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+                        <tr><td>AI Job Matching</td><td><span class="partial">3/month</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+                        <tr><td>Interview Prep</td><td><span class="partial">Basic</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+                        <tr><td>Auto-Apply</td><td><span class="cross">✗</span></td><td><span class="partial">50/month</span></td><td><span class="check">✓</span></td></tr>
+                        <tr><td>Priority Support</td><td><span class="cross">✗</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span> 24/7</td></tr>
+                        <tr><td>Career Roadmap</td><td><span class="cross">✗</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+                        <tr><td>Salary Negotiation Guide</td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="check">✓</span></td></tr>
+                        <tr><td>Recruiter Network Access</td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="check">✓</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Trust Badges -->
+            <div class="trust-badges">
+                <div class="badge">🔒 SSL Secure</div>
+                <div class="badge">💳 Razorpay Payments</div>
+                <div class="badge">✅ 7-day Money Back</div>
+            </div>
+
+            <div class="payment-logos">
+                <div class="payment-logo">Razorpay</div>
+                <div class="payment-logo">UPI</div>
+                <div class="payment-logo">Visa</div>
+                <div class="payment-logo">Mastercard</div>
+                <div class="payment-logo">Net Banking</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== REFERRAL DASHBOARD ===== -->
+    <div id="referralSection" class="referral-dashboard">
+        <h2 class="section-title">🎁 Referral Center</h2>
+        <p class="section-subtitle">Share CareerOS with friends and earn rewards for every signup</p>
+
+        <div class="referral-grid">
+            <!-- Your Referral Link -->
+            <div class="referral-card">
+                <h3><span class="icon">🔗</span> Your Referral Link</h3>
+                <div class="referral-link-box">
+                    <input type="text" id="referralLinkInput" readonly>
+                    <button class="copy-btn" id="copyLinkBtn" onclick="copyReferralLink()">📋 Copy</button>
+                </div>
+                <p class="referral-hint">Share this link with friends and earn <strong>100 XP per signup</strong>!</p>
+            </div>
+
+            <!-- Share on Social Media -->
+            <div class="referral-card">
+                <h3><span class="icon">📢</span> Share on Social Media</h3>
+                <div class="share-tabs">
+                    <button class="share-tab active" data-platform="whatsapp" onclick="switchShareTab('whatsapp')">WhatsApp</button>
+                    <button class="share-tab" data-platform="email" onclick="switchShareTab('email')">Email</button>
+                    <button class="share-tab" data-platform="linkedin" onclick="switchShareTab('linkedin')">LinkedIn</button>
+                    <button class="share-tab" data-platform="twitter" onclick="switchShareTab('twitter')">X/Twitter</button>
+                </div>
+                <div class="share-content" id="shareContent"></div>
+                <div class="share-actions">
+                    <button class="copy-btn" onclick="copyShareMessage()">📋 Copy Message</button>
+                    <button class="copy-btn" onclick="shareNative()">📤 Share</button>
+                </div>
+            </div>
+
+            <!-- Referral Stats -->
+            <div class="referral-card" style="grid-column: span 2;">
+                <h3><span class="icon">📊</span> Your Referral Stats</h3>
+                <div class="stats-row">
+                    <div class="stat-card-sm">
+                        <div class="stat-value" id="statSent">0</div>
+                        <div class="stat-label">Referrals Sent</div>
+                    </div>
+                    <div class="stat-card-sm">
+                        <div class="stat-value" id="statSignups">0</div>
+                        <div class="stat-label">Signups</div>
+                    </div>
+                    <div class="stat-card-sm">
+                        <div class="stat-value" id="statXP">0</div>
+                        <div class="stat-label">XP Earned</div>
+                    </div>
+                    <div class="stat-card-sm">
+                        <div class="stat-value" id="statCredit">₹0</div>
+                        <div class="stat-label">Credit Value</div>
+                    </div>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="referral-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>XP Earned</th>
+                            </tr>
+                        </thead>
+                        <tbody id="referralTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- How It Works -->
+            <div class="referral-card" style="grid-column: span 2;">
+                <h3><span class="icon">💡</span> How It Works</h3>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-icon">🔗</div>
+                        <div class="step-title">Share Your Link</div>
+                        <div class="step-desc">Copy and share your unique referral link</div>
+                    </div>
+                    <div class="step-arrow">→</div>
+                    <div class="step">
+                        <div class="step-icon">👥</div>
+                        <div class="step-title">Friend Signs Up</div>
+                        <div class="step-desc">They create a free account using your link</div>
+                    </div>
+                    <div class="step-arrow">→</div>
+                    <div class="step">
+                        <div class="step-icon">💰</div>
+                        <div class="step-title">Earn Rewards</div>
+                        <div class="step-desc">Get 100 XP (₹1,000 credit) per signup</div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 20px; padding: 16px; background: rgba(99, 102, 241, 0.1); border-radius: var(--radius); border: 1px solid rgba(99, 102, 241, 0.2);">
+                    <span style="font-weight: 700; color: var(--accent-primary);">Every friend who signs up gets you 100 XP (₹1,000 credit)</span>
+                    <br><span style="font-size: 13px; color: var(--text-muted);">Redeem XP for premium features, career coaching, or cash!</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2026 CareerOS by Imus Info Systems. All rights reserved.</p>
+        <p style="margin-top: 8px;">Questions? <a href="mailto:support@imusinfosystems.com">support@imusinfosystems.com</a></p>
+    </footer>
+
+    <!-- Mobile Bottom Nav -->
+    <nav class="mobile-nav" id="mobileNav">
+        <a href="#" onclick="showSection('pricing')" data-section="pricing" class="active">
+            <span class="icon">💳</span>
+            <span>Pricing</span>
+        </a>
+        <a href="#" onclick="showSection('referral')" data-section="referral">
+            <span class="icon">🎁</span>
+            <span>Referrals</span>
+        </a>
+    </nav>
+
+    <script>
+        // ===== CONFIGURATION =====
+        const API_BASE = 'https://www.imusinfosystems.com';
+        const TOKEN_KEY = 'user_token';
+        const REFERRAL_KEY = 'referral_code';
+        const DEBUG_KEY = 'debug';
+        const BANNER_DISMISSED_KEY = 'banner_dismissed';
+
+        // ===== SHARE TEMPLATES =====
+        const SHARE_TEMPLATES = {
+            whatsapp: "I found this AI career tool that's changing my job search. Try it free! 🚀",
+            email: "Subject: Check out CareerOS!\n\nHi!\n\nI've been using CareerOS and it's amazing for managing my job search. 10 AI departments working for you — resumes, interviews, job matching, and more.\n\nGet started free:",
+            linkedin: "Just started using CareerOS for my job search. It's like having a full career team — resume scoring, AI job matching, interview prep, and auto-apply. If you're job hunting, check it out:",
+            twitter: "Using CareerOS to manage my job search. 10 AI departments working for me — resumes, interviews, job matching, and more. Try it free: 🚀"
+        };
+
+        // ===== MOCK REFERRAL DATA =====
+        const MOCK_REFERRAL_DATA = {
+            referrals_pending: [
+                { name: "Rahul S.", email: "rahul@example.com", date: "2026-07-01", status: "pending" }
+            ],
+            referrals_converted: [
+                { name: "Priya M.", email: "priya@example.com", date: "2026-06-28", status: "converted", bonus_xp: 100 },
+                { name: "Amit K.", email: "amit@example.com", date: "2026-06-25", status: "converted", bonus_xp: 100 },
+                { name: "Sneha R.", email: "sneha@example.com", date: "2026-06-20", status: "signed_up", bonus_xp: 0 }
+            ],
+            total_bonus_xp: 200,
+            total_credit_inr: 2000
+        };
+
+        let currentSharePlatform = 'whatsapp';
+        let isDebug = false;
+
+        // ===== INITIALIZATION =====
+        document.addEventListener('DOMContentLoaded', () => {
+            initDemoUser();
+            checkDebugMode();
+            loadUrgencyBanner();
+            animateSocialProof();
+            initReferralLink();
+            switchShareTab('whatsapp');
+            fetchReferralStats();
+        });
+
+        // ===== DEMO USER =====
+        function initDemoUser() {
+            if (!localStorage.getItem('user_initialized')) {
+                localStorage.setItem('user_logged_in', 'true');
+                localStorage.setItem(TOKEN_KEY, 'demo-token');
+                localStorage.setItem(REFERRAL_KEY, 'DEMO123');
+                localStorage.setItem('user_name', 'Demo User');
+                localStorage.setItem('user_initialized', 'true');
+            }
+        }
+
+        // ===== DEBUG MODE =====
+        function checkDebugMode() {
+            isDebug = localStorage.getItem(DEBUG_KEY) === 'true';
+        }
+
+        function debugLog(...args) {
+            if (isDebug) console.log('[DEBUG]', ...args);
+        }
+
+        // ===== SECTION NAVIGATION =====
+        function showSection(section) {
+            document.querySelectorAll('.section-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.referral-dashboard').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-links a').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.mobile-nav a').forEach(el => el.classList.remove('active'));
+
+            if (section === 'pricing') {
+                document.getElementById('pricingSection').classList.add('active');
+            } else if (section === 'referral') {
+                document.getElementById('referralSection').classList.add('active');
+            }
+
+            document.querySelectorAll(`[data-section="${section}"]`).forEach(el => el.classList.add('active'));
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ===== URGENCY BANNER =====
+        function loadUrgencyBanner() {
+            if (localStorage.getItem(BANNER_DISMISSED_KEY) === 'true') {
+                document.getElementById('urgencyBanner').classList.add('hidden');
+            }
+        }
+
+        function dismissBanner() {
+            document.getElementById('urgencyBanner').classList.add('hidden');
+            localStorage.setItem(BANNER_DISMISSED_KEY, 'true');
+        }
+
+        // ===== SOCIAL PROOF ANIMATION =====
+        function animateSocialProof() {
+            animateCounter('counterUsers', 2000, 1500, '');
+            animateCounter('counterStars', 4.8, 1500, '', 1);
+            animateCounter('counterSuccess', 47, 1500, '%');
+        }
+
+        function animateCounter(elementId, target, duration, suffix = '', decimals = 0) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            const startTime = performance.now();
+
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const ease = 1 - Math.pow(1 - progress, 3);
+                const current = target * ease;
+                el.textContent = decimals > 0 ? current.toFixed(decimals) + suffix : Math.round(current).toLocaleString() + suffix;
+                if (progress < 1) requestAnimationFrame(update);
+            }
+            requestAnimationFrame(update);
+        }
+
+        // ===== CHECKOUT SIMULATION =====
+        function simulateCheckout(plan) {
+            if (plan === 'free') {
+                showToast('Welcome to CareerOS Free! Start exploring your dashboard.', 'success');
+                return;
+            }
+
+            const modal = document.getElementById('checkoutModal');
+            const title = document.getElementById('checkoutTitle');
+            const body = document.getElementById('checkoutBody');
+
+            const planNames = { pro: 'Pro', elite: 'Elite' };
+            const planPrices = { pro: '₹1,499', elite: '₹2,499' };
+
+            title.textContent = `Processing ${planNames[plan]} Plan...`;
+            body.textContent = `Redirecting to Razorpay secure checkout for ${planNames[plan]} (${planPrices[plan]}/mo)...`;
+            modal.classList.add('active');
+
+            // Simulate checkout flow
+            setTimeout(() => {
+                title.textContent = '✅ Almost There!';
+                body.textContent = `Your ${planNames[plan]} plan is ready. Complete payment on Razorpay to activate.`;
+            }, 3000);
+
+            // Simulate abandoned checkout for recovery email testing
+            if (plan === 'pro' || plan === 'elite') {
+                localStorage.setItem('checkout_started', JSON.stringify({
+                    plan: plan,
+                    timestamp: new Date().toISOString(),
+                    email: 'demo@example.com'
+                }));
+            }
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkoutModal').classList.remove('active');
+        }
+
+        // ===== REFERRAL DASHBOARD =====
+        function initReferralLink() {
+            const code = localStorage.getItem(REFERRAL_KEY) || 'DEMO123';
+            const link = `https://www.imusinfosystems.com/?ref=${code}`;
+            document.getElementById('referralLinkInput').value = link;
+        }
+
+        function copyReferralLink() {
+            const input = document.getElementById('referralLinkInput');
+            input.select();
+            navigator.clipboard.writeText(input.value).then(() => {
+                const btn = document.getElementById('copyLinkBtn');
+                btn.textContent = '✅ Copied!';
+                btn.classList.add('copied');
+                showToast('Referral link copied to clipboard!', 'success');
+                setTimeout(() => {
+                    btn.textContent = '📋 Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // ===== SHARE TEMPLATES =====
+        function switchShareTab(platform) {
+            currentSharePlatform = platform;
+            document.querySelectorAll('.share-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.platform === platform);
+            });
+
+            const code = localStorage.getItem(REFERRAL_KEY) || 'DEMO123';
+            const link = `https://www.imusinfosystems.com/?ref=${code}`;
+            const template = SHARE_TEMPLATES[platform];
+            document.getElementById('shareContent').textContent = `${template}\n\n${link}`;
+        }
+
+        function copyShareMessage() {
+            const content = document.getElementById('shareContent').textContent;
+            navigator.clipboard.writeText(content).then(() => {
+                showToast('Message copied to clipboard!', 'success');
+            });
+        }
+
+        function shareNative() {
+            const content = document.getElementById('shareContent').textContent;
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Check out CareerOS!',
+                    text: content
+                }).catch(() => {
+                    copyShareMessage();
+                });
+            } else {
+                copyShareMessage();
+            }
+        }
+
+        // ===== REFERRAL STATS =====
+        async function fetchReferralStats() {
+            const token = localStorage.getItem(TOKEN_KEY) || 'demo-token';
+            const url = `${API_BASE}/api/operations/referral/stats`;
+
+            try {
+                const response = await fetch(url, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                renderReferralStats(data);
+            } catch (error) {
+                debugLog('API error, using mock data:', error);
+                renderReferralStats(MOCK_REFERRAL_DATA);
+            }
+        }
+
+        function renderReferralStats(data) {
+            const pending = data.referrals_pending || [];
+            const converted = data.referrals_converted || [];
+            const all = [...pending, ...converted];
+
+            const sent = all.length;
+            const signups = converted.filter(r => r.status === 'converted' || r.status === 'signed_up').length;
+            const xp = data.total_bonus_xp || 0;
+            const credit = data.total_credit_inr || 0;
+
+            animateCounter('statSent', sent, 800, '');
+            animateCounter('statSignups', signups, 800, '');
+            animateCounter('statXP', xp, 800, '');
+            document.getElementById('statCredit').textContent = `₹${credit.toLocaleString()}`;
+
+            const tbody = document.getElementById('referralTableBody');
+            tbody.innerHTML = '';
+
+            if (all.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text-muted)">No referrals yet. Share your link to get started!</td></tr>';
+                return;
+            }
+
+            all.forEach(ref => {
+                const statusClass = ref.status === 'converted' ? 'status-converted' : ref.status === 'signed_up' ? 'status-signed' : 'status-pending';
+                const statusLabel = ref.status === 'converted' ? 'Converted' : ref.status === 'signed_up' ? 'Signed Up' : 'Pending';
+                const xp = ref.bonus_xp || 0;
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${escapeHtml(ref.name)}</td>
+                        <td>${escapeHtml(ref.email)}</td>
+                        <td><span class="status-badge ${statusClass}">${statusLabel}</span></td>
+                        <td>${formatDate(ref.date)}</td>
+                        <td>${xp > 0 ? '+' + xp : '-'}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        // ===== TOAST SYSTEM =====
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
+            toast.innerHTML = `${icons[type] || 'ℹ️'} ${escapeHtml(message)}`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 5000);
+        }
+
+        // ===== UTILITIES =====
+        function formatDate(dateStr) {
+            if (!dateStr) return '--';
+            const date = new Date(dateStr + 'T00:00:00');
+            return date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function toggleMobileMenu() {
+            showToast('Menu coming in next update!', 'info');
+        }
+
+        // ===== KEYBOARD =====
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeCheckoutModal();
+        });
+    </script>
+</body>
+</html>
