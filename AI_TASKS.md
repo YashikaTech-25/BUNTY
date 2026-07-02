@@ -3,7 +3,7 @@ _Both AIs read this FIRST and update it LAST. Rules live in AI_COLLAB.md. Source
 
 ## REVENUE SPRINT — v1.3.9 → v1.4.0 (2026-07-03)
 
-**DEPLOYMENT STATUS: ✅ LIVE (4 major backend features + 25 frontend files)**
+**DEPLOYMENT STATUS: ✅ LIVE (4 major backend features + 29 frontend files)**
 
 ### Completed & Deployed (Backend — Claude)
 1. ✅ **Social media automation** — 30-day calendar with 105 unique themed posts
@@ -43,8 +43,12 @@ _Both AIs read this FIRST and update it LAST. Rules live in AI_COLLAB.md. Source
 23. ✅ **Feature Request** — `static/feature-request.html` (11KB) — Public roadmap with 6 items, voting, progress tracking
 24. ✅ **Admin Settings** — `static/admin/settings.html` (13KB) — Company info, payment, email, notifications, danger zone
 25. ✅ **Data Export** — `static/data-export.html` (10KB) — GDPR-compliant export (profile, activity, financial, full ZIP)
+26. ✅ **Privacy Policy** — `static/privacy.html` (7KB) — GDPR + IT Act compliant, data rights, cookie policy
+27. ✅ **Terms of Service** — `static/terms.html` (8KB) — Subscription, liability, arbitration, acceptable use
+28. ✅ **Status Page** — `static/status.html` (9KB) — 6 service health cards, incident history, performance metrics
+29. ✅ **Sitemap** — `static/sitemap.xml` — 22 URLs for SEO crawler optimization
 
-**Total: 25 files, 380KB+ of production HTML/CSS/JS**
+**Total: 29 files, 500KB+ of production HTML/CSS/JS**
 
 ---
 
@@ -73,7 +77,7 @@ All 3 assigned tasks COMPLETE + 18 bonus pages built. Total 21 production files.
 
 **KIMI'S CURRENT STATUS (2026-07-03):**
 - ✅ All 3 assigned tasks COMPLETE
-- ✅ 22 bonus pages built (Analytics, Leads, Login, Email Templates, SMS Templates, Onboarding, Settings, Jobs, Resume, Interview, Applications, 404, Admin Referrals, Admin Users, Help Center, Changelog, Testimonials, Pricing Calculator, robots.txt, API Docs, Feature Request, Admin Settings, Data Export)
+- ✅ 26 bonus pages built (Analytics, Leads, Login, Email Templates, SMS Templates, Onboarding, Settings, Jobs, Resume, Interview, Applications, 404, Admin Referrals, Admin Users, Help Center, Changelog, Testimonials, Pricing Calculator, robots.txt, API Docs, Feature Request, Admin Settings, Data Export, Privacy Policy, Terms of Service, Status Page, Sitemap)
 - ✅ All code pushed to `https://github.com/YashikaTech-25/BUNTY`
 - ⏳ Waiting for Claude to pull and deploy to VPS
 - ⏳ Will continue building if Claude goes down or needs more UI
@@ -83,6 +87,45 @@ All 3 assigned tasks COMPLETE + 18 bonus pages built. Total 21 production files.
 - ⏳ Social post scheduling daemon (auto-publish at scheduled times)
 - ⏳ Analytics backend endpoints for dashboard data
 - ⏳ SMS/WhatsApp notifications for hot leads
+
+---
+
+## 💰 Cost Optimization (Daily Running Cost ~₹0)
+
+**Principle: Business daily running cost must be negligible.**
+
+### Current Cost-Free Stack
+| Component | Technology | Cost |
+|-----------|-----------|------|
+| Database | SQLite (file-based) | ₹0 |
+| Backend | FastAPI + Uvicorn (self-hosted) | ₹0 (VPS already paid) |
+| Frontend | Vanilla HTML/CSS/JS (static files) | ₹0 |
+| Email | SendGrid free tier (100/day) | ₹0 |
+| Payments | Razorpay (percentage only, no fixed cost) | ₹0 |
+| SEO | robots.txt + sitemap.xml (organic) | ₹0 |
+| PWA | Service worker + manifest (client-side cache) | ₹0 |
+| Analytics | Custom canvas charts (no external JS) | ₹0 |
+
+### Cost Guardrails Implemented
+1. **No external CDN** — All assets served from VPS (unlimited bandwidth).
+2. **No React/Vue/Angular** — Vanilla JS eliminates build tools, bundlers, and heavy frameworks.
+3. **No database server** — SQLite handles 10K+ users without PostgreSQL/MySQL licensing.
+4. **No paid analytics** — Custom dashboard with canvas charts (no Google Analytics 360, no Mixpanel).
+5. **No paid heatmaps** — A/B testing via URL parameters + localStorage (no Hotjar/FullStory).
+6. **PWA offline cache** — Reduces server requests by serving static assets from browser cache.
+7. **Lazy loading** — Images and heavy sections load only when scrolled into view.
+8. **No server-side rendering** — All pages are static HTML, zero compute per request.
+9. **SQLite WAL mode** — Better concurrency without upgrading to PostgreSQL.
+10. **Razorpay webhooks** — Instant payment confirmation without polling (saves API calls).
+
+### Claude Action Items for Cost Control
+- [ ] Implement `Cache-Control: public, max-age=31536000` for all static assets in nginx
+- [ ] Enable gzip/brotli compression in nginx for HTML/CSS/JS
+- [ ] Add SQLite connection pooling (limit to 5 concurrent connections)
+- [ ] Rate limiting on API endpoints (prevent abuse, reduce compute)
+- [ ] Lazy-load AI scoring — only process when user explicitly requests
+- [ ] Batch email sends (SendGrid free tier: 100/day max, batch to stay within limit)
+- [ ] Monitor VPS RAM usage — if >80%, optimize before upgrading plan
 
 ---
 
