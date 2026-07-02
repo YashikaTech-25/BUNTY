@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerOS Admin — User Management</title>
+<style>
+:root { --bg-primary:#0f172a; --bg-secondary:#1e293b; --bg-tertiary:#334155; --bg-card:rgba(30,41,59,0.85); --text-primary:#f8fafc; --text-secondary:#94a3b8; --text-muted:#64748b; --accent-primary:#6366f1; --accent-success:#22c55e; --accent-warning:#f59e0b; --accent-danger:#ef4444; --border-color:#334155; --radius:10px; --shadow:0 4px 6px -1px rgba(0,0,0,0.3); --shadow-lg:0 10px 25px -5px rgba(0,0,0,0.4); --gradient:linear-gradient(135deg,#6366f1,#8b5cf6); }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg-primary); color:var(--text-primary); min-height:100vh; display:flex; }
+.sidebar { width:260px; background:var(--bg-secondary); border-right:1px solid var(--border-color); display:flex; flex-direction:column; position:fixed; left:0; top:0; bottom:0; z-index:100; transition:transform 0.3s ease; }
+.sidebar-header { padding:24px 20px; border-bottom:1px solid var(--border-color); display:flex; align-items:center; gap:12px; }
+.sidebar-header .logo-icon { width:36px; height:36px; background:var(--gradient); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:bold; color:white; }
+.sidebar-header h1 { font-size:18px; font-weight:700; letter-spacing:-0.5px; }
+.sidebar-header span { font-size:12px; color:var(--accent-primary); font-weight:600; margin-left:4px; }
+.nav-list { padding:16px 12px; list-style:none; flex:1; overflow-y:auto; }
+.nav-list li { margin-bottom:4px; }
+.nav-list a { display:flex; align-items:center; gap:12px; padding:12px 16px; border-radius:var(--radius); color:var(--text-secondary); text-decoration:none; font-size:14px; font-weight:500; transition:all 0.2s ease; cursor:pointer; }
+.nav-list a:hover { background:var(--bg-tertiary); color:var(--text-primary); }
+.nav-list a.active { background:var(--gradient); color:white; box-shadow:var(--shadow); }
+.sidebar-footer { padding:16px; border-top:1px solid var(--border-color); }
+.logout-btn { width:100%; padding:10px; background:transparent; border:1px solid var(--border-color); border-radius:var(--radius); color:var(--text-secondary); font-size:14px; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:8px; }
+.logout-btn:hover { background:var(--accent-danger); color:white; border-color:var(--accent-danger); }
+.main-content { margin-left:260px; flex:1; display:flex; flex-direction:column; min-height:100vh; }
+.top-bar { display:flex; align-items:center; justify-content:space-between; padding:16px 28px; background:var(--bg-secondary); border-bottom:1px solid var(--border-color); position:sticky; top:0; z-index:50; }
+.menu-toggle { display:none; background:none; border:none; color:var(--text-primary); font-size:24px; cursor:pointer; }
+.page-title { font-size:20px; font-weight:700; }
+.content-area { padding:28px; flex:1; }
+.kpi-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px,1fr)); gap:16px; margin-bottom:28px; }
+.kpi-card { background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius); padding:20px; display:flex; align-items:center; gap:14px; transition:transform 0.2s, box-shadow 0.2s; }
+.kpi-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-lg); }
+.kpi-icon { width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; }
+.kpi-icon.blue { background:rgba(99,102,241,0.15); }
+.kpi-icon.green { background:rgba(34,197,94,0.15); }
+.kpi-icon.purple { background:rgba(139,92,246,0.15); }
+.kpi-icon.orange { background:rgba(245,158,11,0.15); }
+.kpi-info h3 { font-size:24px; font-weight:700; margin-bottom:2px; }
+.kpi-info p { font-size:12px; color:var(--text-muted); font-weight:500; }
+.filter-bar { display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap; }
+.filter-bar input, .filter-bar select { padding:8px 12px; background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); color:var(--text-primary); font-size:13px; font-family:inherit; }
+.table-container { overflow-x:auto; border-radius:var(--radius); border:1px solid var(--border-color); }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+ thead { background:var(--bg-secondary); position:sticky; top:0; }
+ th { padding:12px 16px; text-align:left; font-weight:600; color:var(--text-secondary); font-size:12px; text-transform:uppercase; letter-spacing:0.5px; border-bottom:1px solid var(--border-color); }
+ td { padding:14px 16px; border-bottom:1px solid var(--border-color); color:var(--text-primary); vertical-align:top; }
+ tbody tr { transition:background 0.15s; }
+ tbody tr:nth-child(even) { background:rgba(30,41,59,0.4); }
+ tbody tr:hover { background:rgba(99,102,241,0.08); }
+ .plan-badge { padding:2px 10px; border-radius:20px; font-size:11px; font-weight:600; }
+ .plan-badge.free { background:rgba(100,116,139,0.15); color:#94a3b8; }
+ .plan-badge.pro { background:rgba(99,102,241,0.15); color:#a5b4fc; }
+ .plan-badge.elite { background:rgba(245,158,11,0.15); color:#fcd34d; }
+ .status-active { color:var(--accent-success); font-weight:600; }
+ .status-inactive { color:var(--text-muted); }
+ .btn { padding:8px 16px; border:none; border-radius:var(--radius); font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:6px; }
+ .btn-primary { background:var(--gradient); color:white; }
+ .btn-secondary { background:var(--bg-tertiary); color:var(--text-primary); border:1px solid var(--border-color); }
+ .btn-danger { background:var(--accent-danger); color:white; }
+ .btn-sm { padding:6px 12px; font-size:12px; }
+ .toast-container { position:fixed; top:24px; right:24px; z-index:1000; display:flex; flex-direction:column; gap:10px; }
+ .toast { padding:14px 20px; border-radius:var(--radius); font-size:14px; font-weight:500; display:flex; align-items:center; gap:10px; animation:slideIn 0.3s ease; max-width:400px; box-shadow:var(--shadow-lg); }
+ .toast.success { background:var(--accent-success); color:white; }
+ .toast.error { background:var(--accent-danger); color:white; }
+ .toast.info { background:var(--accent-primary); color:white; }
+ @keyframes slideIn { from { transform:translateX(100%); opacity:0; } to { transform:translateX(0); opacity:1; } }
+ .sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:99; }
+ .sidebar-overlay.active { display:block; }
+ @media(max-width:768px){ .sidebar { transform:translateX(-100%); } .sidebar.open { transform:translateX(0); } .main-content { margin-left:0; } .menu-toggle { display:block; } .content-area { padding:16px; } }
+</style>
+</head>
+<body>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<div class="logo-icon">C</div>
+<h1>CareerOS <span>Admin</span></h1>
+</div>
+<ul class="nav-list">
+<li><a href="../admin.html">📅 <span>Social Calendar</span></a></li>
+<li><a href="../analytics.html">📊 <span>Analytics</span></a></li>
+<li><a href="../leads.html">🔥 <span>Hot Leads</span></a></li>
+<li><a href="referrals.html">🎁 <span>Referrals</span></a></li>
+<li><a href="users.html" class="active">👥 <span>Users</span></a></li>
+</ul>
+<div class="sidebar-footer">
+<button class="logout-btn" onclick="logout()">🚪 <span>Logout</span></button>
+</div>
+</aside>
+<div class="main-content">
+<header class="top-bar">
+<div class="top-bar-left">
+<button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+<div class="page-title">User Management</div>
+</div>
+</header>
+<main class="content-area">
+<div class="kpi-grid">
+<div class="kpi-card">
+<div class="kpi-icon blue">👥</div>
+<div class="kpi-info">
+<h3 id="kpiTotal">0</h3>
+<p>Total Users</p>
+</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-icon green">✅</div>
+<div class="kpi-info">
+<h3 id="kpiActive">0</h3>
+<p>Active Users</p>
+</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-icon purple">💎</div>
+<div class="kpi-info">
+<h3 id="kpiPaid">0</h3>
+<p>Paid Subscribers</p>
+</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-icon orange">🆕</div>
+<div class="kpi-info">
+<h3 id="kpiNew">0</h3>
+<p>New This Week</p>
+</div>
+</div>
+</div>
+<div class="filter-bar">
+<input type="text" id="searchInput" placeholder="🔍 Search by name or email..." oninput="filterUsers()">
+<select id="planFilter" onchange="filterUsers()">
+<option value="all">All Plans</option>
+<option value="free">Free</option>
+<option value="pro">Pro</option>
+<option value="elite">Elite</option>
+</select>
+<select id="statusFilter" onchange="filterUsers()">
+<option value="all">All Status</option>
+<option value="active">Active</option>
+<option value="inactive">Inactive</option>
+</select>
+</div>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>User</th>
+<th>Plan</th>
+<th>Status</th>
+<th>Joined</th>
+<th>Last Active</th>
+<th>Referrals</th>
+<th>Actions</th>
+</tr>
+</thead>
+<tbody id="userTable"></tbody>
+</table>
+</div>
+</main>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+<script>
+const MOCK_USERS=[
+{id:1,name:"Rahul Sharma",email:"rahul@example.com",plan:"pro",status:"active",joined:"2026-06-15",last_active:"2026-07-03",referrals:3},
+{id:2,name:"Priya Menon",email:"priya@example.com",plan:"elite",status:"active",joined:"2026-05-20",last_active:"2026-07-02",referrals:5},
+{id:3,name:"Amit Kumar",email:"amit@example.com",plan:"free",status:"active",joined:"2026-07-01",last_active:"2026-07-03",referrals:1},
+{id:4,name:"Sneha Patel",email:"sneha@example.com",plan:"pro",status:"inactive",joined:"2026-04-10",last_active:"2026-06-15",referrals:0},
+{id:5,name:"Vikram Rao",email:"vikram@example.com",plan:"elite",status:"active",joined:"2026-03-05",last_active:"2026-07-01",referrals:8},
+{id:6,name:"Anjali Gupta",email:"anjali@example.com",plan:"free",status:"active",joined:"2026-06-28",last_active:"2026-07-03",referrals:0},
+{id:7,name:"Karan Singh",email:"karan@example.com",plan:"pro",status:"active",joined:"2026-05-12",last_active:"2026-07-02",referrals:2},
+{id:8,name:"Meera Iyer",email:"meera@example.com",plan:"free",status:"inactive",joined:"2026-06-01",last_active:"2026-06-10",referrals:0},
+{id:9,name:"Deepak Verma",email:"deepak@example.com",plan:"elite",status:"active",joined:"2026-02-20",last_active:"2026-07-03",referrals:12},
+{id:10,name:"Neha Kapoor",email:"neha@example.com",plan:"pro",status:"active",joined:"2026-06-18",last_active:"2026-07-02",referrals:1}
+];
+function renderUsers(data){
+const tbody=document.getElementById('userTable');
+tbody.innerHTML=data.map(u=>`
+<tr>
+<td><strong>${u.name}</strong><br><span style="font-size:11px;color:var(--text-muted)">${u.email}</span></td>
+<td><span class="plan-badge ${u.plan}">${u.plan.toUpperCase()}</span></td>
+<td><span class="status-${u.status}">${u.status==='active'?'● Active':'○ Inactive'}</span></td>
+<td>${u.joined}</td>
+<td>${u.last_active}</td>
+<td>${u.referrals}</td>
+<td>
+<button class="btn btn-secondary btn-sm" onclick="viewUser(${u.id})">👁</button>
+<button class="btn btn-sm ${u.status==='active'?'btn-danger':'btn-primary'}" onclick="toggleUserStatus(${u.id})">${u.status==='active'?'🚫':'✓'}</button>
+</td>
+</tr>
+`).join('');
+updateKPIs(data);
+}
+function updateKPIs(data){
+const total=data.length;
+const active=data.filter(u=>u.status==='active').length;
+const paid=data.filter(u=>u.plan==='pro'||u.plan==='elite').length;
+const newUsers=data.filter(u=>{
+const joined=new Date(u.joined);
+const weekAgo=new Date(); weekAgo.setDate(weekAgo.getDate()-7);
+return joined>=weekAgo;
+}).length;
+animateValue('kpiTotal',0,total,800);
+animateValue('kpiActive',0,active,800);
+animateValue('kpiPaid',0,paid,800);
+animateValue('kpiNew',0,newUsers,800);
+}
+function animateValue(id,start,end,duration){
+const el=document.getElementById(id);
+const startTime=performance.now();
+function update(t){
+const p=Math.min((t-startTime)/duration,1);
+const ease=1-Math.pow(1-p,3);
+el.textContent=Math.round(start+(end-start)*ease);
+if(p<1) requestAnimationFrame(update);
+}
+requestAnimationFrame(update);
+}
+function filterUsers(){
+const search=document.getElementById('searchInput').value.toLowerCase();
+const plan=document.getElementById('planFilter').value;
+const status=document.getElementById('statusFilter').value;
+const filtered=MOCK_USERS.filter(u=>{
+if(search&&!u.name.toLowerCase().includes(search)&&!u.email.toLowerCase().includes(search)) return false;
+if(plan!=='all'&&u.plan!==plan) return false;
+if(status!=='all'&&u.status!==status) return false;
+return true;
+});
+renderUsers(filtered);
+}
+function viewUser(id){
+const u=MOCK_USERS.find(x=>x.id===id);
+showToast(`User: ${u.name} | Plan: ${u.plan.toUpperCase()} | Referrals: ${u.referrals}`,'info');
+}
+function toggleUserStatus(id){
+const u=MOCK_USERS.find(x=>x.id===id);
+if(u){
+u.status=u.status==='active'?'inactive':'active';
+showToast(`${u.name} is now ${u.status.toUpperCase()}`,u.status==='active'?'success':'error');
+filterUsers();
+}
+}
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebarOverlay').classList.toggle('active'); }
+document.getElementById('sidebarOverlay').addEventListener('click',toggleSidebar);
+function logout(){ localStorage.clear(); location.href='login.html'; }
+function showToast(m,t='info'){
+const c=document.getElementById('toastContainer'); const d=document.createElement('div'); d.className='toast '+t;
+const i={success:'✅',error:'❌',info:'ℹ️'}; d.innerHTML=(i[t]||'ℹ️')+' '+m; c.appendChild(d); setTimeout(()=>d.remove(),5000);
+}
+renderUsers(MOCK_USERS);
+</script>
+</body>
+</html>
