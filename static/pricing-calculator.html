@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerOS — Pricing Calculator</title>
+<style>
+:root { --bg-primary:#0f172a; --bg-secondary:#1e293b; --bg-tertiary:#334155; --text-primary:#f8fafc; --text-secondary:#94a3b8; --text-muted:#64748b; --accent-primary:#6366f1; --accent-success:#22c55e; --accent-warning:#f59e0b; --border-color:#334155; --radius:12px; --shadow:0 4px 6px -1px rgba(0,0,0,0.3); --shadow-lg:0 10px 25px -5px rgba(0,0,0,0.4); --gradient:linear-gradient(135deg,#6366f1,#8b5cf6); }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg-primary); color:var(--text-primary); min-height:100vh; }
+.nav-bar { display:flex; align-items:center; justify-content:space-between; padding:16px 28px; background:var(--bg-secondary); border-bottom:1px solid var(--border-color); position:sticky; top:0; z-index:100; }
+.nav-logo { display:flex; align-items:center; gap:10px; font-size:20px; font-weight:800; color:var(--text-primary); text-decoration:none; }
+.nav-logo .logo-icon { width:36px; height:36px; background:var(--gradient); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; color:white; }
+.nav-links { display:flex; gap:6px; }
+.nav-links a { padding:8px 16px; border-radius:var(--radius); color:var(--text-secondary); text-decoration:none; font-size:14px; font-weight:500; transition:all 0.2s; cursor:pointer; border:none; background:none; font-family:inherit; }
+.nav-links a:hover { color:var(--text-primary); background:var(--bg-tertiary); }
+.content-area { padding:28px; max-width:800px; margin:0 auto; }
+.page-header { text-align:center; margin-bottom:40px; }
+.page-header h1 { font-size:28px; font-weight:800; margin-bottom:8px; }
+.page-header p { font-size:15px; color:var(--text-secondary); }
+.calculator { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:32px; margin-bottom:24px; }
+.calculator h2 { font-size:18px; font-weight:700; margin-bottom:20px; }
+.input-group { margin-bottom:20px; }
+.input-group label { display:block; font-size:13px; font-weight:500; color:var(--text-secondary); margin-bottom:8px; }
+.input-group input[type="range"] { width:100%; margin-bottom:8px; }
+.input-group .value-display { font-size:20px; font-weight:700; color:var(--accent-primary); }
+.input-group .slider-labels { display:flex; justify-content:space-between; font-size:11px; color:var(--text-muted); margin-top:4px; }
+.result-card { background:var(--bg-primary); border:1px solid var(--border-color); border-radius:var(--radius); padding:24px; text-align:center; }
+.result-card .savings { font-size:48px; font-weight:800; color:var(--accent-success); margin-bottom:8px; }
+.result-card .savings-label { font-size:14px; color:var(--text-secondary); margin-bottom:20px; }
+.result-row { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:20px; }
+.result-item { padding:16px; background:var(--bg-secondary); border-radius:var(--radius); }
+.result-item .value { font-size:24px; font-weight:700; color:var(--accent-primary); }
+.result-item .label { font-size:12px; color:var(--text-muted); margin-top:4px; }
+.recommendation { background:rgba(34,197,94,0.1); border:1px solid rgba(34,197,94,0.3); border-radius:var(--radius); padding:20px; margin-top:20px; }
+.recommendation h3 { font-size:16px; font-weight:700; color:var(--accent-success); margin-bottom:8px; }
+.recommendation p { font-size:14px; color:var(--text-secondary); line-height:1.6; }
+.btn { padding:14px 28px; border:none; border-radius:var(--radius); font-size:15px; font-weight:600; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:8px; text-decoration:none; }
+.btn-primary { background:var(--gradient); color:white; box-shadow:0 4px 15px rgba(99,102,241,0.35); }
+.btn-primary:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(99,102,241,0.45); }
+@media(max-width:768px){ .nav-links { display:none; } .content-area { padding:16px; } .result-row { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<nav class="nav-bar">
+<a href="index.html" class="nav-logo"><div class="logo-icon">C</div>CareerOS</a>
+<div class="nav-links">
+<a href="index.html">Home</a>
+<a href="jobs.html">Jobs</a>
+<a href="help.html">Help</a>
+</div>
+</nav>
+<div class="content-area">
+<div class="page-header">
+<h1>💰 Pricing Calculator</h1>
+<p>See how much CareerOS can save you vs. traditional career coaching.</p>
+</div>
+<div class="calculator">
+<h2>Your Job Search Details</h2>
+<div class="input-group">
+<label>Current Monthly Salary (₹)</label>
+<input type="range" id="currentSalary" min="50000" max="500000" step="10000" value="100000" oninput="calculate()">
+<div class="value-display" id="salaryDisplay">₹1,00,000</div>
+<div class="slider-labels"><span>₹50K</span><span>₹5L</span></div>
+</div>
+<div class="input-group">
+<label>Target Salary Increase (%)</label>
+<input type="range" id="salaryIncrease" min="0" max="100" step="5" value="30" oninput="calculate()">
+<div class="value-display" id="increaseDisplay">30%</div>
+<div class="slider-labels"><span>0%</span><span>100%</span></div>
+</div>
+<div class="input-group">
+<label>Expected Time to Find Job (months)</label>
+<input type="range" id="jobSearchMonths" min="1" max="12" step="1" value="3" oninput="calculate()">
+<div class="value-display" id="monthsDisplay">3 months</div>
+<div class="slider-labels"><span>1</span><span>12</span></div>
+</div>
+<div class="input-group">
+<label>Current Job Search Effort (hours/week)</label>
+<input type="range" id="hoursPerWeek" min="1" max="40" step="1" value="10" oninput="calculate()">
+<div class="value-display" id="hoursDisplay">10 hours/week</div>
+<div class="slider-labels"><span>1</span><span>40</span></div>
+</div>
+</div>
+<div class="result-card">
+<div class="savings" id="totalSavings">₹1,80,000</div>
+<div class="savings-label">Estimated additional annual income with CareerOS</div>
+<div class="result-row">
+<div class="result-item">
+<div class="value" id="newSalary">₹1,30,000</div>
+<div class="label">New Monthly Salary</div>
+</div>
+<div class="result-item">
+<div class="value" id="timeSaved">60 hours</div>
+<div class="label">Time Saved (3 months)</div>
+</div>
+<div class="result-item">
+<div class="value" id="roiValue">120x</div>
+<div class="label">ROI on Pro Plan (1 year)</div>
+</div>
+</div>
+<div class="recommendation" id="recommendation">
+<h3>🎯 Recommended: Pro Plan</h3>
+<p>Based on your profile, the Pro plan at ₹1,499/month will pay for itself in <strong>2 weeks</strong> with your expected salary increase. You'll save 60 hours of manual job searching and land a better role faster.</p>
+</div>
+</div>
+<div style="text-align:center; margin-top:28px;">
+<a href="index.html" class="btn btn-primary">Start Your Free Trial →</a>
+</div>
+</div>
+<script>
+function formatCurrency(n){ return '₹' + n.toLocaleString('en-IN'); }
+function calculate(){
+const currentSalary = parseInt(document.getElementById('currentSalary').value);
+const increase = parseInt(document.getElementById('salaryIncrease').value);
+const months = parseInt(document.getElementById('jobSearchMonths').value);
+const hoursPerWeek = parseInt(document.getElementById('hoursPerWeek').value);
+
+document.getElementById('salaryDisplay').textContent = formatCurrency(currentSalary);
+document.getElementById('increaseDisplay').textContent = increase + '%';
+document.getElementById('monthsDisplay').textContent = months + ' months';
+document.getElementById('hoursDisplay').textContent = hoursPerWeek + ' hours/week';
+
+const newSalary = Math.round(currentSalary * (1 + increase/100));
+const annualIncrease = (newSalary - currentSalary) * 12;
+const timeSaved = hoursPerWeek * 4 * months * 0.7; // 70% time saved with AI
+const proCost = 1499 * 12;
+const roi = Math.round(annualIncrease / proCost);
+
+document.getElementById('totalSavings').textContent = formatCurrency(annualIncrease);
+document.getElementById('newSalary').textContent = formatCurrency(newSalary) + '/mo';
+document.getElementById('timeSaved').textContent = Math.round(timeSaved) + ' hours';
+document.getElementById('roiValue').textContent = roi + 'x';
+
+let plan, reason;
+if (increase >= 50) { plan = 'Elite'; reason = 'With a ' + increase + '% target increase, the Elite plan at ₹2,499/month provides unlimited auto-apply, 24/7 support, and recruiter network access to maximize your offer.'; }
+else if (increase >= 20) { plan = 'Pro'; reason = 'The Pro plan at ₹1,499/month is perfect for your ' + increase + '% target. You\'ll get unlimited job matching, auto-apply, and priority support.'; }
+else { plan = 'Free'; reason = 'Start with the Free plan to explore. Upgrade when you\'re ready to accelerate your search.'; }
+
+document.getElementById('recommendation').innerHTML = '<h3>🎯 Recommended: ' + plan + ' Plan</h3><p>' + reason + '</p>';
+}
+calculate();
+</script>
+</body>
+</html>

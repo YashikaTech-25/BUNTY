@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerOS — What's New</title>
+<style>
+:root { --bg-primary:#0f172a; --bg-secondary:#1e293b; --bg-tertiary:#334155; --text-primary:#f8fafc; --text-secondary:#94a3b8; --text-muted:#64748b; --accent-primary:#6366f1; --accent-success:#22c55e; --accent-warning:#f59e0b; --border-color:#334155; --radius:12px; --shadow:0 4px 6px -1px rgba(0,0,0,0.3); --shadow-lg:0 10px 25px -5px rgba(0,0,0,0.4); --gradient:linear-gradient(135deg,#6366f1,#8b5cf6); }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg-primary); color:var(--text-primary); min-height:100vh; }
+.nav-bar { display:flex; align-items:center; justify-content:space-between; padding:16px 28px; background:var(--bg-secondary); border-bottom:1px solid var(--border-color); position:sticky; top:0; z-index:100; }
+.nav-logo { display:flex; align-items:center; gap:10px; font-size:20px; font-weight:800; color:var(--text-primary); text-decoration:none; }
+.nav-logo .logo-icon { width:36px; height:36px; background:var(--gradient); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; color:white; }
+.nav-links { display:flex; gap:6px; }
+.nav-links a { padding:8px 16px; border-radius:var(--radius); color:var(--text-secondary); text-decoration:none; font-size:14px; font-weight:500; transition:all 0.2s; cursor:pointer; border:none; background:none; font-family:inherit; }
+.nav-links a:hover { color:var(--text-primary); background:var(--bg-tertiary); }
+.content-area { padding:28px; max-width:800px; margin:0 auto; }
+.page-header { text-align:center; margin-bottom:40px; }
+.page-header h1 { font-size:32px; font-weight:800; margin-bottom:8px; }
+.page-header p { font-size:15px; color:var(--text-secondary); }
+.version-badge { display:inline-flex; align-items:center; gap:8px; padding:6px 16px; background:rgba(34,197,94,0.15); border:1px solid rgba(34,197,94,0.3); border-radius:20px; font-size:13px; font-weight:600; color:var(--accent-success); margin-bottom:16px; }
+.release { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:28px; margin-bottom:20px; }
+.release-header { display:flex; align-items:center; gap:12px; margin-bottom:16px; flex-wrap:wrap; }
+.release-header h2 { font-size:20px; font-weight:700; }
+.release-header .date { font-size:13px; color:var(--text-muted); }
+.release-header .badge { padding:2px 10px; border-radius:20px; font-size:11px; font-weight:600; }
+.release-header .badge.major { background:rgba(99,102,241,0.15); color:#a5b4fc; }
+.release-header .badge.minor { background:rgba(100,116,139,0.15); color:#94a3b8; }
+.release ul { list-style:none; }
+.release li { padding:8px 0; font-size:14px; color:var(--text-secondary); display:flex; align-items:flex-start; gap:10px; }
+.release li .icon { font-size:16px; flex-shrink:0; margin-top:1px; }
+.release li .icon.new { color:var(--accent-success); }
+.release li .icon.improve { color:var(--accent-primary); }
+.release li .icon.fix { color:var(--accent-warning); }
+@media(max-width:768px){ .nav-links { display:none; } .content-area { padding:16px; } }
+</style>
+</head>
+<body>
+<nav class="nav-bar">
+<a href="index.html" class="nav-logo"><div class="logo-icon">C</div>CareerOS</a>
+<div class="nav-links">
+<a href="index.html">Home</a>
+<a href="jobs.html">Jobs</a>
+<a href="help.html">Help</a>
+</div>
+</nav>
+<div class="content-area">
+<div class="page-header">
+<div class="version-badge">🚀 Current Version: v1.4.0</div>
+<h1>What's New</h1>
+<p>Track every update, feature, and improvement to CareerOS.</p>
+</div>
+<div class="release">
+<div class="release-header">
+<h2>v1.4.0</h2>
+<span class="date">July 3, 2026</span>
+<span class="badge major">Major Release</span>
+</div>
+<ul>
+<li><span class="icon new">✨</span><strong>Social Media Automation</strong> — 30-day content calendar with AI-generated posts, auto-publish to Postproxy</li>
+<li><span class="icon new">✨</strong>Abandoned Checkout Recovery</strong> — 2-wave email sequence (2hrs + 24hrs) to recover lost sales</li>
+<li><span class="icon new">✨</strong>Referral Program</strong> — Earn 100 XP per friend signup, share on WhatsApp/LinkedIn/X</li>
+<li><span class="icon new">✨</strong>Lead Scoring</strong> — AI-powered lead scoring based on engagement signals</li>
+<li><span class="icon new">✨</strong>Hot Leads Dashboard</strong> — Priority outreach for high-scoring prospects</li>
+<li><span class="icon improve">🔧</strong>Checkout Optimization</strong> — Social proof, urgency banners, feature comparison table</li>
+<li><span class="icon improve">🔧</strong>Analytics Dashboard</strong> — Revenue trends, conversion funnel, campaign performance</li>
+<li><span class="icon improve">🔧</strong>Mobile Responsiveness</strong> — All pages optimized for 375px to 1440px</li>
+</ul>
+</div>
+<div class="release">
+<div class="release-header">
+<h2>v1.3.9</h2>
+<span class="date">June 20, 2026</span>
+<span class="badge minor">Minor Release</span>
+</div>
+<ul>
+<li><span class="icon improve">🔧</span><strong>Resume Scoring</strong> — AI-powered 6-dimension resume analysis</li>
+<li><span class="icon improve">🔧</strong>Job Matching</strong> — AI match scores for every job listing</li>
+<li><span class="icon improve">🔧</strong>Interview Prep</strong> — STAR framework answers with practice timer</li>
+<li><span class="icon fix">🐛</strong>Fixed:</strong> Email verification edge cases, payment retry logic</li>
+</ul>
+</div>
+<div class="release">
+<div class="release-header">
+<h2>v1.3.0</h2>
+<span class="date">June 1, 2026</span>
+<span class="badge minor">Minor Release</span>
+</div>
+<ul>
+<li><span class="icon new">✨</span><strong>Application Tracker</strong> — Kanban pipeline for job applications</li>
+<li><span class="icon new">✨</strong>Settings Page</strong> — Profile, subscription, notification preferences</li>
+<li><span class="icon improve">🔧</strong>Performance:</strong> 40% faster page load times</li>
+</ul>
+</div>
+</div>
+</body>
+</html>

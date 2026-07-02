@@ -1,0 +1,10 @@
+CareerOS — AI Career Management Platform
+
+User-agent: *
+Allow: /
+Allow: /jobs.html
+Allow: /help.html
+Disallow: /admin/
+Disallow: /admin/login.html
+
+Sitemap: https://www.imusinfosystems.com/sitemap.xml

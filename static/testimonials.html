@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerOS — Success Stories</title>
+<style>
+:root { --bg-primary:#0f172a; --bg-secondary:#1e293b; --bg-tertiary:#334155; --text-primary:#f8fafc; --text-secondary:#94a3b8; --text-muted:#64748b; --accent-primary:#6366f1; --accent-success:#22c55e; --border-color:#334155; --radius:12px; --shadow:0 4px 6px -1px rgba(0,0,0,0.3); --shadow-lg:0 10px 25px -5px rgba(0,0,0,0.4); --gradient:linear-gradient(135deg,#6366f1,#8b5cf6); }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg-primary); color:var(--text-primary); min-height:100vh; }
+.nav-bar { display:flex; align-items:center; justify-content:space-between; padding:16px 28px; background:var(--bg-secondary); border-bottom:1px solid var(--border-color); position:sticky; top:0; z-index:100; }
+.nav-logo { display:flex; align-items:center; gap:10px; font-size:20px; font-weight:800; color:var(--text-primary); text-decoration:none; }
+.nav-logo .logo-icon { width:36px; height:36px; background:var(--gradient); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; color:white; }
+.nav-links { display:flex; gap:6px; }
+.nav-links a { padding:8px 16px; border-radius:var(--radius); color:var(--text-secondary); text-decoration:none; font-size:14px; font-weight:500; transition:all 0.2s; cursor:pointer; border:none; background:none; font-family:inherit; }
+.nav-links a:hover { color:var(--text-primary); background:var(--bg-tertiary); }
+.content-area { padding:28px; max-width:1200px; margin:0 auto; }
+.page-header { text-align:center; margin-bottom:40px; }
+.page-header h1 { font-size:32px; font-weight:800; margin-bottom:8px; }
+.page-header p { font-size:15px; color:var(--text-secondary); }
+.stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:40px; }
+.stat-card { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:24px; text-align:center; transition:all 0.2s; }
+.stat-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-lg); }
+.stat-card .value { font-size:36px; font-weight:800; color:var(--accent-primary); margin-bottom:4px; }
+.stat-card .label { font-size:13px; color:var(--text-muted); }
+.testimonials-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(340px,1fr)); gap:20px; }
+.testimonial-card { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:28px; transition:all 0.2s; position:relative; }
+.testimonial-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-lg); border-color:var(--accent-primary); }
+.testimonial-card .quote { font-size:15px; color:var(--text-secondary); line-height:1.7; margin-bottom:20px; font-style:italic; }
+.testimonial-card .author { display:flex; align-items:center; gap:12px; }
+.testimonial-card .author .avatar { width:44px; height:44px; background:var(--gradient); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:700; color:white; }
+.testimonial-card .author .info h4 { font-size:15px; font-weight:700; }
+.testimonial-card .author .info p { font-size:12px; color:var(--text-muted); }
+.testimonial-card .author .info .stars { color:var(--accent-warning); font-size:14px; margin-top:2px; }
+.testimonial-card .badge { position:absolute; top:16px; right:16px; padding:4px 12px; border-radius:20px; font-size:11px; font-weight:600; background:rgba(34,197,94,0.15); color:#86efac; }
+.btn { padding:14px 28px; border:none; border-radius:var(--radius); font-size:15px; font-weight:600; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:8px; text-decoration:none; }
+.btn-primary { background:var(--gradient); color:white; box-shadow:0 4px 15px rgba(99,102,241,0.35); }
+.btn-primary:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(99,102,241,0.45); }
+.cta-section { text-align:center; margin-top:48px; padding:48px 24px; background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); }
+.cta-section h2 { font-size:24px; font-weight:700; margin-bottom:12px; }
+.cta-section p { font-size:15px; color:var(--text-secondary); margin-bottom:24px; }
+@media(max-width:768px){ .nav-links { display:none; } .content-area { padding:16px; } .stats-row { grid-template-columns:repeat(2,1fr); } }
+@media(max-width:480px){ .stats-row { grid-template-columns:1fr 1fr; } }
+</style>
+</head>
+<body>
+<nav class="nav-bar">
+<a href="index.html" class="nav-logo"><div class="logo-icon">C</div>CareerOS</a>
+<div class="nav-links">
+<a href="index.html">Home</a>
+<a href="jobs.html">Jobs</a>
+<a href="help.html">Help</a>
+</div>
+</nav>
+<div class="content-area">
+<div class="page-header">
+<h1>Success Stories 🌟</h1>
+<p>Real professionals, real results. See how CareerOS changed their job search.</p>
+</div>
+<div class="stats-row">
+<div class="stat-card"><div class="value">2,000+</div><div class="label">Professionals Helped</div></div>
+<div class="stat-card"><div class="value">4.8/5</div><div class="label">Average Rating</div></div>
+<div class="stat-card"><div class="value">47%</div><div class="label">Better Job Offers</div></div>
+<div class="stat-card"><div class="value">3.2x</div><div class="label">Faster Job Search</div></div>
+</div>
+<div class="testimonials-grid">
+<div class="testimonial-card">
+<span class="badge">Got 3 Offers</span>
+<div class="quote">"CareerOS helped me land 3 interview calls in the first week. The AI resume scoring was brutal but honest — I fixed 6 critical issues and my response rate went from 2% to 18%."</div>
+<div class="author">
+<div class="avatar">R</div>
+<div class="info">
+<h4>Rahul Sharma</h4>
+<p>Senior Software Engineer at Google</p>
+<div class="stars">⭐⭐⭐⭐⭐</div>
+</div>
+</div>
+</div>
+<div class="testimonial-card">
+<span class="badge">2x Salary</span>
+<div class="quote">"I was underpaid for 3 years. CareerOS showed me exactly what I should be earning. The salary negotiation guide alone paid for 2 years of Elite. I got a 95% raise."</div>
+<div class="author">
+<div class="avatar">P</div>
+<div class="info">
+<h4>Priya Menon</h4>
+<p>Product Manager at Swiggy</p>
+<div class="stars">⭐⭐⭐⭐⭐</div>
+</div>
+</div>
+</div>
+<div class="testimonial-card">
+<span class="badge">First Job</span>
+<div class="quote">"As a fresher, I had no idea how to apply. CareerOS auto-applied to 50 jobs and scored my resume. I got my first offer at Flipkart within 3 weeks. The mock interviews were a game-changer."</div>
+<div class="author">
+<div class="avatar">A</div>
+<div class="info">
+<h4>Amit Kumar</h4>
+<p>Data Scientist at Flipkart</p>
+<div class="stars">⭐⭐⭐⭐⭐</div>
+</div>
+</div>
+</div>
+<div class="testimonial-card">
+<span class="badge">Remote Dream</span>
+<div class="quote">"I wanted to work remotely but didn't know where to start. CareerOS matched me with remote-first companies and my resume passed every ATS. Now I work from Goa for a US startup."</div>
+<div class="author">
+<div class="avatar">S</div>
+<div class="info">
+<h4>Sneha Patel</h4>
+<p>UX Designer at Zomato</p>
+<div class="stars">⭐⭐⭐⭐⭐</div>
+</div>
+</div>
+</div>
+<div class="testimonial-card">
+<span class="badge">Career Pivot</span>
+<div class="quote">"I switched from finance to tech. The AI career roadmap showed me exactly what skills to learn and in what order. 6 months later, I'm a backend engineer at Razorpay."</div>
+<div class="author">
+<div class="avatar">V</div>
+<div class="info">
+<h4>Vikram Rao</h4>
+<p>Backend Engineer at Razorpay</p>
+<div class="stars">⭐⭐⭐⭐⭐</div>
+</div>
+</div>
+</div>
+<div class="testimonial-card">
+<span class="badge">Referral King</span>
+<div class="quote">"I referred 8 friends and earned 800 XP. Used the credits to unlock career coaching sessions. The referral dashboard makes sharing super easy — one click to WhatsApp."</div>
+<div class="author">
+<div class="avatar">K</div>
+<div class="info">
+<h4>Karan Singh</h4>
+<p>DevOps Engineer at PhonePe</p>
+<div class="stars">⭐⭐⭐⭐⭐</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cta-section">
+<h2>Your Success Story Starts Here</h2>
+<p>Join 2,000+ professionals who transformed their careers with CareerOS.</p>
+<a href="index.html" class="btn btn-primary">Get Started Free →</a>
+</div>
+</div>
+</body>
+</html>
