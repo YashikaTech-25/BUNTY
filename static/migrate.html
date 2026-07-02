@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerOS — Switch from LinkedIn/Naukri</title>
+<meta name="description" content="Switching from LinkedIn Premium or Naukri? Migrate your data to CareerOS in 2 minutes. Better AI matching, lower price, more features.">
+<style>
+:root { --bg-primary:#0f172a; --bg-secondary:#1e293b; --bg-tertiary:#334155; --text-primary:#f8fafc; --text-secondary:#94a3b8; --text-muted:#64748b; --accent-primary:#6366f1; --accent-success:#22c55e; --border-color:#334155; --radius:12px; --shadow-lg:0 10px 25px -5px rgba(0,0,0,0.4); --gradient:linear-gradient(135deg,#6366f1,#8b5cf6); }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg-primary); color:var(--text-primary); min-height:100vh; line-height:1.6; }
+.nav-bar { display:flex; align-items:center; justify-content:space-between; padding:16px 28px; background:var(--bg-secondary); border-bottom:1px solid var(--border-color); position:sticky; top:0; z-index:100; }
+.nav-logo { display:flex; align-items:center; gap:10px; font-size:20px; font-weight:800; color:var(--text-primary); text-decoration:none; }
+.nav-logo .logo-icon { width:36px; height:36px; background:var(--gradient); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; color:white; }
+.nav-links { display:flex; gap:6px; }
+.nav-links a { padding:8px 16px; border-radius:var(--radius); color:var(--text-secondary); text-decoration:none; font-size:14px; font-weight:500; transition:all 0.2s; cursor:pointer; border:none; background:none; font-family:inherit; }
+.nav-links a:hover { color:var(--text-primary); background:var(--bg-tertiary); }
+.content-area { padding:28px; max-width:900px; margin:0 auto; }
+.page-header { text-align:center; margin-bottom:48px; padding:48px 0; }
+.page-header .switch { font-size:64px; margin-bottom:16px; }
+.page-header h1 { font-size:36px; font-weight:800; margin-bottom:12px; }
+.page-header p { font-size:16px; color:var(--text-secondary); max-width:600px; margin:0 auto; }
+.step-card { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:28px; margin-bottom:20px; }
+.step-card .step-header { display:flex; align-items:center; gap:16px; margin-bottom:16px; }
+.step-card .step-number { width:40px; height:40px; background:var(--gradient); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:700; color:white; flex-shrink:0; }
+.step-card h2 { font-size:18px; font-weight:700; }
+.step-card p { font-size:14px; color:var(--text-secondary); margin-bottom:12px; }
+.step-card ul { margin-left:20px; margin-bottom:12px; }
+.step-card li { font-size:14px; color:var(--text-secondary); margin-bottom:8px; }
+.step-card .btn { margin-top:8px; }
+.btn { padding:10px 20px; border:none; border-radius:var(--radius); font-size:14px; font-weight:600; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:8px; text-decoration:none; }
+.btn-primary { background:var(--gradient); color:white; }
+.btn-secondary { background:var(--bg-tertiary); color:var(--text-primary); border:1px solid var(--border-color); }
+.compare-mini { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+.compare-mini .from, .compare-mini .to { padding:16px; background:var(--bg-primary); border-radius:var(--radius); }
+.compare-mini .from h4, .compare-mini .to h4 { font-size:14px; font-weight:700; margin-bottom:8px; }
+.compare-mini .from h4 { color:var(--text-muted); }
+.compare-mini .to h4 { color:var(--accent-primary); }
+.compare-mini .from p, .compare-mini .to p { font-size:13px; color:var(--text-secondary); }
+.compare-mini .arrow { display:flex; align-items:center; justify-content:center; font-size:24px; color:var(--accent-success); }
+.testimonial { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:24px; margin-bottom:16px; }
+.testimonial p { font-size:14px; color:var(--text-secondary); font-style:italic; margin-bottom:12px; }
+.testimonial .author { font-size:13px; font-weight:600; }
+.testimonial .author span { font-weight:400; color:var(--text-muted); }
+.cta-section { text-align:center; padding:48px 28px; background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); margin-bottom:32px; }
+.cta-section h2 { font-size:24px; font-weight:700; margin-bottom:12px; }
+.cta-section p { font-size:14px; color:var(--text-secondary); margin-bottom:20px; }
+.faq-section { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:28px; margin-bottom:24px; }
+.faq-section h2 { font-size:20px; font-weight:700; margin-bottom:16px; }
+.faq-item { padding:16px 0; border-bottom:1px solid var(--border-color); }
+.faq-item:last-child { border-bottom:none; }
+.faq-item h3 { font-size:15px; font-weight:600; margin-bottom:8px; }
+.faq-item p { font-size:13px; color:var(--text-secondary); line-height:1.5; }
+@media(max-width:768px){ .content-area { padding:16px; } .page-header { padding:32px 16px; } .compare-mini { grid-template-columns:1fr; } .step-card .step-header { flex-direction:column; align-items:flex-start; } }
+</style>
+</head>
+<body>
+<nav class="nav-bar">
+<a href="index.html" class="nav-logo"><div class="logo-icon">C</div>CareerOS</a>
+<div class="nav-links">
+<a href="index.html">Home</a>
+<a href="migrate.html" style="color:var(--text-primary); background:var(--bg-tertiary);">Migrate</a>
+</div>
+</nav>
+<div class="content-area">
+<div class="page-header">
+<div class="switch">🔄</div>
+<h1>Switch to CareerOS in 2 Minutes</h1>
+<p>Coming from LinkedIn Premium or Naukri? We make migration painless. Import your data, keep your progress, and get better features at 1/3rd the price.</p>
+</div>
+<div class="step-card">
+<div class="step-header">
+<div class="step-number">1</div>
+<h2>Export Your Data</h2>
+</div>
+<div class="compare-mini">
+<div class="from">
+<h4>From LinkedIn</h4>
+<p>Settings → Data Privacy → Get a copy of your data → Request archive</p>
+</div>
+<div class="arrow">→</div>
+<div class="to">
+<h4>To CareerOS</h4>
+<p>We'll import your profile, connections, and job history automatically</p>
+</div>
+</div>
+<div class="compare-mini">
+<div class="from">
+<h4>From Naukri</h4>
+<p>Profile → Download Resume → Export job applications</p>
+</div>
+<div class="arrow">→</div>
+<div class="to">
+<h4>To CareerOS</h4>
+<p>Upload your resume and we'll extract everything</p>
+</div>
+</div>
+</div>
+<div class="step-card">
+<div class="step-header">
+<div class="step-number">2</div>
+<h2>Import to CareerOS</h2>
+</div>
+<p>Our AI-powered importer handles:</p>
+<ul>
+<li>Profile information (name, contact, experience, education)</li>
+<li>Skills and endorsements</li>
+<li>Job application history</li>
+<li>Saved jobs and companies</li>
+</ul>
+<p>No manual data entry. No lost information. Just upload and go.</p>
+<button class="btn btn-primary" onclick="alert('Import wizard opens')">📥 Start Import</button>
+</div>
+<div class="step-card">
+<div class="step-header">
+<div class="step-number">3</div>
+<h2>Get Better Results</h2>
+</div>
+<p>Once imported, CareerOS immediately starts working for you:</p>
+<ul>
+<li><strong>AI Resume Score:</strong> See how your resume ranks against job descriptions</li>
+<li><strong>Smart Matching:</strong> Get job recommendations with 92% relevance</li>
+<li><strong>Interview Prep:</strong> Practice with AI-generated questions and STAR feedback</li>
+<li><strong>Application Tracker:</strong> Never lose track of where you applied</li>
+</ul>
+</div>
+<div class="testimonial">
+<p>"I was paying ₹2,400/month for LinkedIn Premium and barely getting views. Switched to CareerOS, imported everything in 5 minutes, and started getting actual interview calls within a week. The AI matching is unreal."</p>
+<div class="author">— Arjun Mehta <span>• Data Scientist at PhonePe</span></div>
+</div>
+<div class="testimonial">
+<p>"Naukri was just a resume dump. CareerOS actually tells me why I'm not getting shortlisted and what to fix. The resume scoring alone is worth 10x the subscription price."</p>
+<div class="author">— Sneha Rao <span>• Marketing Manager at Unacademy</span></div>
+</div>
+<div class="faq-section">
+<h2>❓ Migration FAQ</h2>
+<div class="faq-item">
+<h3>Will I lose my LinkedIn connections?</h3>
+<p>No. We import your connections list but don't alter your LinkedIn account. You can use both platforms simultaneously.</p>
+</div>
+<div class="faq-item">
+<h3>How long does migration take?</h3>
+<p>Most users complete migration in under 5 minutes. Large profiles with 10+ years of experience may take up to 10 minutes.</p>
+</div>
+<div class="faq-item">
+<h3>Is my data safe during migration?</h3>
+<p>Absolutely. All data is encrypted in transit (TLS 1.3) and at rest (AES-256). We delete import files after 24 hours.</p>
+</div>
+<div class="faq-item">
+<h3>Can I try CareerOS before cancelling my old subscription?</h3>
+<p>Yes! We offer a 14-day free trial. Test everything before making the switch. No credit card required.</p>
+</div>
+<div class="faq-item">
+<h3>What if I don't like CareerOS?</h3>
+<p>We offer a 30-day money-back guarantee. If you're not satisfied, we'll refund your first month no questions asked.</p>
+</div>
+</div>
+<div class="cta-section">
+<h2>Ready to Make the Switch?</h2>
+<p>Join 10,000+ professionals who migrated and never looked back. 14-day free trial, no credit card required.</p>
+<a href="index.html" class="btn btn-primary">🚀 Start Free Trial</a>
+</div>
+</div>
+</body>
+</html>
