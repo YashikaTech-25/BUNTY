@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerOS — Billing & Subscription</title>
+<style>
+:root { --bg-primary:#0f172a; --bg-secondary:#1e293b; --bg-tertiary:#334155; --text-primary:#f8fafc; --text-secondary:#94a3b8; --text-muted:#64748b; --accent-primary:#6366f1; --accent-success:#22c55e; --accent-warning:#f59e0b; --accent-danger:#ef4444; --border-color:#334155; --radius:12px; --shadow-lg:0 10px 25px -5px rgba(0,0,0,0.4); --gradient:linear-gradient(135deg,#6366f1,#8b5cf6); }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg-primary); color:var(--text-primary); min-height:100vh; }
+.nav-bar { display:flex; align-items:center; justify-content:space-between; padding:16px 28px; background:var(--bg-secondary); border-bottom:1px solid var(--border-color); position:sticky; top:0; z-index:100; }
+.nav-logo { display:flex; align-items:center; gap:10px; font-size:20px; font-weight:800; color:var(--text-primary); text-decoration:none; }
+.nav-logo .logo-icon { width:36px; height:36px; background:var(--gradient); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; color:white; }
+.nav-links { display:flex; gap:6px; }
+.nav-links a { padding:8px 16px; border-radius:var(--radius); color:var(--text-secondary); text-decoration:none; font-size:14px; font-weight:500; transition:all 0.2s; cursor:pointer; border:none; background:none; font-family:inherit; }
+.nav-links a:hover { color:var(--text-primary); background:var(--bg-tertiary); }
+.nav-links a.active { color:white; background:var(--gradient); }
+.content-area { padding:28px; max-width:800px; margin:0 auto; }
+.page-header { margin-bottom:32px; }
+.page-header h1 { font-size:28px; font-weight:800; margin-bottom:8px; }
+.page-header p { font-size:15px; color:var(--text-secondary); }
+.plan-card { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:28px; margin-bottom:20px; }
+.plan-card .plan-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.plan-card .plan-header h2 { font-size:20px; font-weight:700; }
+.plan-card .plan-header .badge { padding:6px 14px; background:rgba(34,197,94,0.15); border:1px solid rgba(34,197,94,0.3); border-radius:100px; font-size:12px; font-weight:600; color:var(--accent-success); }
+.plan-card .price { font-size:36px; font-weight:800; margin-bottom:4px; }
+.plan-card .price span { font-size:14px; color:var(--text-secondary); font-weight:400; }
+.plan-card .renewal { font-size:13px; color:var(--text-muted); margin-bottom:20px; }
+.plan-card .features { list-style:none; margin-bottom:20px; }
+.plan-card .features li { display:flex; align-items:center; gap:10px; padding:8px 0; font-size:14px; color:var(--text-secondary); border-bottom:1px solid rgba(51,65,85,0.3); }
+.plan-card .features li:last-child { border-bottom:none; }
+.plan-card .features li::before { content:'✓'; color:var(--accent-success); font-weight:700; }
+.btn { padding:10px 20px; border:none; border-radius:var(--radius); font-size:14px; font-weight:600; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:8px; }
+.btn-primary { background:var(--gradient); color:white; }
+.btn-secondary { background:var(--bg-tertiary); color:var(--text-primary); border:1px solid var(--border-color); }
+.btn-danger { background:var(--accent-danger); color:white; }
+.payment-methods { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:28px; margin-bottom:20px; }
+.payment-methods h2 { font-size:18px; font-weight:700; margin-bottom:16px; }
+.payment-card { display:flex; align-items:center; gap:16px; padding:16px; background:var(--bg-primary); border:1px solid var(--border-color); border-radius:var(--radius); margin-bottom:12px; }
+.payment-card .card-icon { font-size:28px; }
+.payment-card .card-info h4 { font-size:14px; font-weight:600; margin-bottom:2px; }
+.payment-card .card-info p { font-size:12px; color:var(--text-muted); }
+.payment-card .card-badge { margin-left:auto; padding:4px 10px; background:var(--accent-success); color:white; border-radius:100px; font-size:11px; font-weight:600; }
+.payment-card .card-actions { margin-left:auto; display:flex; gap:8px; }
+.invoices-table { width:100%; border-collapse:collapse; margin-top:12px; }
+.invoices-table th, .invoices-table td { padding:14px; text-align:left; font-size:14px; border-bottom:1px solid var(--border-color); }
+.invoices-table th { color:var(--text-muted); font-weight:600; font-size:12px; text-transform:uppercase; }
+.invoices-table td { color:var(--text-secondary); }
+.invoices-table .status { display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; padding:4px 10px; border-radius:100px; }
+.invoices-table .status.paid { background:rgba(34,197,94,0.15); color:var(--accent-success); }
+.invoices-table .status.pending { background:rgba(245,158,11,0.15); color:var(--accent-warning); }
+.invoices-table .status.failed { background:rgba(239,68,68,0.15); color:var(--accent-danger); }
+.invoices-table .download { color:var(--accent-primary); font-size:13px; font-weight:600; cursor:pointer; text-decoration:none; }
+.invoices-table .download:hover { text-decoration:underline; }
+.cancel-section { background:var(--bg-primary); border:1px solid var(--border-color); border-radius:var(--radius); padding:20px; margin-top:20px; text-align:center; }
+.cancel-section p { font-size:13px; color:var(--text-secondary); margin-bottom:12px; }
+.toast-container { position:fixed; top:24px; right:24px; z-index:1000; display:flex; flex-direction:column; gap:10px; }
+.toast { padding:14px 20px; border-radius:var(--radius); font-size:14px; font-weight:500; display:flex; align-items:center; gap:10px; animation:slideIn 0.3s ease; max-width:400px; box-shadow:var(--shadow-lg); }
+.toast.success { background:var(--accent-success); color:white; }
+.toast.info { background:var(--accent-primary); color:white; }
+@keyframes slideIn { from { transform:translateX(100%); opacity:0; } to { transform:translateX(0); opacity:1; } }
+@media(max-width:768px){ .content-area { padding:16px; } .plan-card .plan-header { flex-direction:column; align-items:flex-start; gap:8px; } }
+</style>
+</head>
+<body>
+<nav class="nav-bar">
+<a href="index.html" class="nav-logo"><div class="logo-icon">C</div>CareerOS</a>
+<div class="nav-links">
+<a href="index.html">Home</a>
+<a href="settings.html">Settings</a>
+<a href="billing.html" class="active">Billing</a>
+</div>
+</nav>
+<div class="content-area">
+<div class="page-header">
+<h1>💳 Billing & Subscription</h1>
+<p>Manage your plan, payment methods, and invoices.</p>
+</div>
+<div class="plan-card">
+<div class="plan-header">
+<h2>Pro Plan</h2>
+<span class="badge">● Active</span>
+</div>
+<div class="price">₹999 <span>/ month</span></div>
+<div class="renewal">Renews on July 15, 2026 • Next billing: ₹999 + ₹179.82 GST = ₹1,178.82</div>
+<ul class="features">
+<li>Unlimited AI resume scoring</li>
+<li>Priority job matching</li>
+<li>Interview prep with AI feedback</li>
+<li>Application tracking & analytics</li>
+<li>Referral program access</li>
+</ul>
+<div style="display:flex; gap:12px;">
+<button class="btn btn-secondary" onclick="showToast('Upgrade options coming soon','info')">⬆️ Upgrade</button>
+<button class="btn btn-secondary" onclick="showToast('Downgrade options coming soon','info')">⬇️ Downgrade</button>
+</div>
+</div>
+<div class="payment-methods">
+<h2>💰 Payment Methods</h2>
+<div class="payment-card">
+<div class="card-icon">💳</div>
+<div class="card-info">
+<h4>Visa ending in 4242</h4>
+<p>Expires 12/2027</p>
+</div>
+<span class="card-badge">Default</span>
+</div>
+<button class="btn btn-secondary" onclick="showToast('Add payment method — Razorpay checkout','info')">➕ Add Payment Method</button>
+</div>
+<div class="plan-card">
+<h2 style="font-size:18px; font-weight:700; margin-bottom:16px;">📄 Invoices</h2>
+<table class="invoices-table">
+<thead><tr><th>Date</th><th>Amount</th><th>Status</th><th></th></tr></thead>
+<tbody>
+<tr><td>Jun 15, 2026</td><td>₹1,178.82</td><td><span class="status paid">● Paid</span></td><td><a href="#" class="download" onclick="showToast('Invoice downloaded','success'); return false;">📥 Download</a></td></tr>
+<tr><td>May 15, 2026</td><td>₹1,178.82</td><td><span class="status paid">● Paid</span></td><td><a href="#" class="download" onclick="showToast('Invoice downloaded','success'); return false;">📥 Download</a></td></tr>
+<tr><td>Apr 15, 2026</td><td>₹1,178.82</td><td><span class="status paid">● Paid</span></td><td><a href="#" class="download" onclick="showToast('Invoice downloaded','success'); return false;">📥 Download</a></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cancel-section">
+<p>Need to cancel? You can pause your subscription or export your data before cancelling.</p>
+<button class="btn btn-danger" onclick="showToast('Cancellation flow — redirect to retention offers','info')">🚫 Cancel Subscription</button>
+</div>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+<script>
+function showToast(m, t = 'info') {
+const c = document.getElementById('toastContainer');
+const d = document.createElement('div'); d.className = 'toast ' + t;
+const i = { success: '✅', info: 'ℹ️' };
+d.innerHTML = (i[t] || 'ℹ️') + ' ' + m; c.appendChild(d); setTimeout(() => d.remove(), 5000);
+}
+</script>
+</body>
+</html>
