@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerOS — Why CareerOS</title>
+<style>
+:root { --bg-primary:#0f172a; --bg-secondary:#1e293b; --bg-tertiary:#334155; --text-primary:#f8fafc; --text-secondary:#94a3b8; --text-muted:#64748b; --accent-primary:#6366f1; --accent-success:#22c55e; --border-color:#334155; --radius:12px; --shadow-lg:0 10px 25px -5px rgba(0,0,0,0.4); --gradient:linear-gradient(135deg,#6366f1,#8b5cf6); }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg-primary); color:var(--text-primary); min-height:100vh; line-height:1.6; }
+.nav-bar { display:flex; align-items:center; justify-content:space-between; padding:16px 28px; background:var(--bg-secondary); border-bottom:1px solid var(--border-color); position:sticky; top:0; z-index:100; }
+.nav-logo { display:flex; align-items:center; gap:10px; font-size:20px; font-weight:800; color:var(--text-primary); text-decoration:none; }
+.nav-logo .logo-icon { width:36px; height:36px; background:var(--gradient); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; color:white; }
+.nav-links { display:flex; gap:6px; }
+.nav-links a { padding:8px 16px; border-radius:var(--radius); color:var(--text-secondary); text-decoration:none; font-size:14px; font-weight:500; transition:all 0.2s; cursor:pointer; border:none; background:none; font-family:inherit; }
+.nav-links a:hover { color:var(--text-primary); background:var(--bg-tertiary); }
+.content-area { padding:28px; max-width:900px; margin:0 auto; }
+.page-header { text-align:center; margin-bottom:48px; padding:48px 0; }
+.page-header h1 { font-size:36px; font-weight:800; margin-bottom:12px; }
+.page-header p { font-size:16px; color:var(--text-secondary); max-width:600px; margin:0 auto; }
+.why-card { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:28px; margin-bottom:20px; }
+.why-card h2 { font-size:18px; font-weight:700; margin-bottom:12px; color:var(--accent-primary); }
+.why-card p { font-size:14px; color:var(--text-secondary); margin-bottom:12px; }
+.why-card ul { margin-left:20px; margin-bottom:12px; }
+.why-card li { font-size:14px; color:var(--text-secondary); margin-bottom:8px; }
+.number-highlight { font-size:48px; font-weight:800; color:var(--accent-primary); margin-bottom:4px; }
+.label { font-size:14px; color:var(--text-secondary); }
+.cta-section { text-align:center; padding:48px 28px; background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); margin-bottom:32px; }
+.cta-section h2 { font-size:24px; font-weight:700; margin-bottom:12px; }
+.cta-section p { font-size:14px; color:var(--text-secondary); margin-bottom:20px; }
+.btn { padding:12px 24px; border:none; border-radius:var(--radius); font-size:14px; font-weight:600; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:8px; text-decoration:none; }
+.btn-primary { background:var(--gradient); color:white; }
+@media(max-width:768px){ .content-area { padding:16px; } .page-header { padding:32px 16px; } }
+</style>
+</head>
+<body>
+<nav class="nav-bar">
+<a href="index.html" class="nav-logo"><div class="logo-icon">C</div>CareerOS</a>
+<div class="nav-links">
+<a href="index.html">Home</a>
+<a href="why-us.html" style="color:var(--text-primary); background:var(--bg-tertiary);">Why Us</a>
+</div>
+</nav>
+<div class="content-area">
+<div class="page-header">
+<h1>Why CareerOS?</h1>
+<p>Built differently. For job seekers, by job seekers.</p>
+</div>
+<div class="why-card">
+<h2>🤖 AI That Actually Understands You</h2>
+<p>Most job boards use keyword matching. We use semantic understanding. Our AI scores your resume across 6 dimensions, matches you to jobs with 92% accuracy, and preps you for interviews with personalized questions.</p>
+<ul>
+<li>Resume scoring across 6 dimensions (skills, experience, education, format, ATS, impact)</li>
+<li>Job matching using sentence embeddings (not just keyword search)</li>
+<li>Interview prep with AI-generated questions based on your target role</li>
+</ul>
+</div>
+<div class="why-card">
+<h2>💰 1/3rd The Price, 3x The Features</h2>
+<p>LinkedIn Premium: ₹2,400/month. Naukri FastForward: ₹1,800/month. CareerOS Pro: ₹999/month. And we give you features they don't even have.</p>
+<ul>
+<li>AI resume scoring (they don't have this)</li>
+<li>Interview prep with STAR framework (they don't have this)</li>
+<li>Application tracking with Kanban pipeline (they don't have this)</li>
+<li>Referral program that pays you (they don't have this)</li>
+</ul>
+</div>
+<div class="why-card">
+<h2>🔒 Your Data, Your Control</h2>
+<p>We don't sell your data to recruiters. We don't show you ads. We don't track you across the internet. Your resume, your job search, your privacy.</p>
+<ul>
+<li>GDPR + IT Act compliant</li>
+<li>Full data export in 1 click</li>
+<li>Account deletion within 24 hours</li>
+<li>No third-party tracking pixels</li>
+</ul>
+</div>
+<div class="why-card">
+<h2>📊 Track Everything</h2>
+<p>Stop using spreadsheets. Our application tracker shows you exactly where every application stands — which companies are interested, which interviews are upcoming, and which offers to negotiate.</p>
+<ul>
+<li>5-stage Kanban pipeline (Applied → Screening → Interview → Offer → Hired)</li>
+<li>Real-time status updates</li>
+<li>Interview reminders and prep notes</li>
+<li>Salary negotiation tracker</li>
+</ul>
+</div>
+<div class="why-card">
+<h2>🚀 Built for Speed</h2>
+<p>From signup to first interview in 48 hours. No long forms. No complicated setups. Just upload your resume and start getting matched.</p>
+<ul>
+<li>4-step onboarding (5 minutes)</li>
+<li>Instant AI resume score</li>
+<li>Immediate job recommendations</li>
+<li>One-click application tracking</li>
+</ul>
+</div>
+<div class="cta-section">
+<h2>Ready to Experience the Difference?</h2>
+<p>Join 10,000+ professionals who switched to CareerOS. 14-day free trial, no credit card required.</p>
+<a href="index.html" class="btn btn-primary">🚀 Start Free Trial</a>
+</div>
+</div>
+</body>
+</html>
