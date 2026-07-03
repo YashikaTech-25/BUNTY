@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerOS — Gift Subscription</title>
+<style>
+:root { --bg-primary:#0f172a; --bg-secondary:#1e293b; --bg-tertiary:#334155; --text-primary:#f8fafc; --text-secondary:#94a3b8; --text-muted:#64748b; --accent-primary:#6366f1; --accent-success:#22c55e; --border-color:#334155; --radius:12px; --shadow-lg:0 10px 25px -5px rgba(0,0,0,0.4); --gradient:linear-gradient(135deg,#6366f1,#8b5cf6); }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg-primary); color:var(--text-primary); min-height:100vh; }
+.nav-bar { display:flex; align-items:center; justify-content:space-between; padding:16px 28px; background:var(--bg-secondary); border-bottom:1px solid var(--border-color); }
+.nav-logo { display:flex; align-items:center; gap:10px; font-size:20px; font-weight:800; color:var(--text-primary); text-decoration:none; }
+.nav-logo .logo-icon { width:36px; height:36px; background:var(--gradient); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; color:white; }
+.content-area { padding:28px; max-width:600px; margin:0 auto; }
+.page-header { text-align:center; margin-bottom:32px; padding:32px 0; }
+.page-header .gift { font-size:64px; margin-bottom:16px; }
+.page-header h1 { font-size:32px; font-weight:800; margin-bottom:12px; }
+.page-header p { font-size:16px; color:var(--text-secondary); }
+.gift-card { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius); padding:28px; margin-bottom:20px; }
+.gift-card h2 { font-size:18px; font-weight:700; margin-bottom:16px; }
+.form-group { margin-bottom:16px; }
+.form-group label { display:block; font-size:13px; font-weight:500; color:var(--text-secondary); margin-bottom:6px; }
+.form-group input, .form-group select, .form-group textarea {
+width:100%; padding:10px 14px; background:var(--bg-primary); border:1px solid var(--border-color); border-radius:var(--radius); color:var(--text-primary); font-size:13px; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline:none; border-color:var(--accent-primary); }
+.form-group textarea { min-height:80px; resize:vertical; }
+.plan-row { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:16px; }
+.plan-option { padding:16px; background:var(--bg-primary); border:2px solid var(--border-color); border-radius:var(--radius); text-align:center; cursor:pointer; transition:all 0.2s; }
+.plan-option:hover { border-color:var(--accent-primary); }
+.plan-option.selected { border-color:var(--accent-primary); background:rgba(99,102,241,0.1); }
+.plan-option h4 { font-size:14px; font-weight:600; margin-bottom:4px; }
+.plan-option .price { font-size:18px; font-weight:800; color:var(--accent-primary); }
+.plan-option .period { font-size:12px; color:var(--text-muted); }
+.btn { padding:12px 24px; border:none; border-radius:var(--radius); font-size:14px; font-weight:600; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:8px; width:100%; justify-content:center; }
+.btn-primary { background:var(--gradient); color:white; }
+.toast-container { position:fixed; top:24px; right:24px; z-index:1000; display:flex; flex-direction:column; gap:10px; }
+.toast { padding:14px 20px; border-radius:var(--radius); font-size:14px; font-weight:500; display:flex; align-items:center; gap:10px; animation:slideIn 0.3s ease; max-width:400px; box-shadow:var(--shadow-lg); }
+.toast.success { background:var(--accent-success); color:white; }
+@keyframes slideIn { from { transform:translateX(100%); opacity:0; } to { transform:translateX(0); opacity:1; } }
+@media(max-width:768px){ .content-area { padding:16px; } .plan-row { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<nav class="nav-bar">
+<a href="index.html" class="nav-logo"><div class="logo-icon">C</div>CareerOS</a>
+</nav>
+<div class="content-area">
+<div class="page-header">
+<div class="gift">🎁</div>
+<h1>Gift CareerOS</h1>
+<p>Give the gift of career growth. Perfect for graduates, friends, or family members.</p>
+</div>
+<div class="gift-card">
+<h2>1. Choose a Plan</h2>
+<div class="plan-row">
+<div class="plan-option selected" onclick="selectPlan(this, 1)">
+<h4>Pro Monthly</h4>
+<div class="price">₹999</div>
+<div class="period">1 month</div>
+</div>
+<div class="plan-option" onclick="selectPlan(this, 3)">
+<h4>Pro Quarterly</h4>
+<div class="price">₹2,699</div>
+<div class="period">3 months</div>
+</div>
+<div class="plan-option" onclick="selectPlan(this, 12)">
+<h4>Pro Annual</h4>
+<div class="price">₹9,999</div>
+<div class="period">12 months</div>
+</div>
+</div>
+</div>
+<div class="gift-card">
+<h2>2. Recipient Details</h2>
+<div class="form-group">
+<label>Recipient's Email</label>
+<input type="email" id="recipientEmail" placeholder="friend@example.com">
+</div>
+<div class="form-group">
+<label>Recipient's Name</label>
+<input type="text" id="recipientName" placeholder="John Doe">
+</div>
+<div class="form-group">
+<label>Your Name</label>
+<input type="text" id="senderName" placeholder="Your name">
+</div>
+<div class="form-group">
+<label>Personal Message (optional)</label>
+<textarea id="message" placeholder="Good luck with your job search! 🚀"></textarea>
+</div>
+</div>
+<div class="gift-card">
+<h2>3. Your Details</h2>
+<div class="form-group">
+<label>Your Email</label>
+<input type="email" id="senderEmail" placeholder="your@email.com">
+</div>
+</div>
+<button class="btn btn-primary" onclick="sendGift()">🎁 Send Gift</button>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+<script>
+let selectedMonths = 1;
+function selectPlan(el, months) {
+document.querySelectorAll('.plan-option').forEach(o => o.classList.remove('selected'));
+el.classList.add('selected');
+selectedMonths = months;
+}
+function sendGift() {
+const email = document.getElementById('recipientEmail').value;
+const name = document.getElementById('recipientName').value;
+if (!email || !email.includes('@')) { showToast('Please enter a valid recipient email'); return; }
+if (!name) { showToast('Please enter recipient name'); return; }
+showToast('Gift sent! They will receive an email with activation instructions.', 'success');
+}
+function showToast(m, t = 'info') {
+const c = document.getElementById('toastContainer');
+const d = document.createElement('div'); d.className = 'toast ' + t;
+const i = { success: '✅', info: 'ℹ️' };
+d.innerHTML = (i[t] || 'ℹ️') + ' ' + m; c.appendChild(d); setTimeout(() => d.remove(), 5000);
+}
+</script>
+</body>
+</html>
